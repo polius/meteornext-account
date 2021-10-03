@@ -10,8 +10,7 @@
             <v-text-field readonly v-model="license.current" :loading="loading" :disabled="loading" label="Current License" style="padding-top:5px"></v-text-field>
             <v-text-field readonly v-model="license.pricing" :loading="loading" :disabled="loading" label="Pricing" style="padding-top:0px"></v-text-field>
             <v-text-field readonly v-model="license.expiration" :loading="loading" :disabled="loading" label="Expiration Date" style="padding-top:0px" hide-details></v-text-field>
-            <v-btn :block="$vuetify.breakpoint.mdAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Change License</v-btn>
-            <!-- <v-btn :block="$vuetify.breakpoint.mdAndDown" :disabled="loading" color="#424242" style="margin-top:15px">Download Meteor</v-btn> -->
+            <v-btn :block="$vuetify.breakpoint.smAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Change License</v-btn>
           </v-flex>
         </v-layout>
       </v-container>

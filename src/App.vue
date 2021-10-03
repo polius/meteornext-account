@@ -4,7 +4,7 @@
       <v-img class="mr-2" :src="require('./assets/logo.png')" max-height="40" max-width="40" contain style="margin-bottom:2px"></v-img>
       <v-toolbar-title>Meteor Next | Account</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn class="d-none d-sm-flex" title="Logout">Logout</v-btn>
+      <v-btn class="d-none d-sm-flex">Logout</v-btn>
       <v-btn icon class="d-flex d-sm-none" title="Logout"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
     </v-app-bar>
     <v-main style="background-color:#303030">

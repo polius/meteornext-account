@@ -9,10 +9,10 @@
           <v-flex xs12>
             <v-text-field readonly v-model="account.email" :loading="loading" :disabled="loading" label="Email" style="padding-top:5px"></v-text-field>
             <v-text-field readonly v-model="account.creation_date" :loading="loading" :disabled="loading" label="Creation Date" style="padding-top:0px" hide-details></v-text-field>
-            <v-btn :block="$vuetify.breakpoint.mdAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Change Email</v-btn>
-            <v-btn :block="$vuetify.breakpoint.mdAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Change Password</v-btn>
-            <v-btn :block="$vuetify.breakpoint.mdAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Manage MFA</v-btn>
-            <v-btn :block="$vuetify.breakpoint.mdAndDown" :disabled="loading" color="#424242" style="margin-top:15px">Delete Account</v-btn>
+            <v-btn :block="$vuetify.breakpoint.smAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Change Email</v-btn>
+            <v-btn :block="$vuetify.breakpoint.smAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Change Password</v-btn>
+            <v-btn :block="$vuetify.breakpoint.smAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Manage MFA</v-btn>
+            <v-btn :block="$vuetify.breakpoint.smAndDown" :disabled="loading" color="#424242" style="margin-top:15px">Delete Account</v-btn>
           </v-flex>
         </v-layout>
       </v-container>

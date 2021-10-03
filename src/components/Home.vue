@@ -1,20 +1,20 @@
 <template>
-  <v-container :style="$vuetify.breakpoint.mdAndDown ? '' : 'max-width:98%; padding-top:15px'">
-    <div v-show="!$vuetify.breakpoint.mdAndDown">
+  <v-container style="max-width:100%">
+    <div v-show="!$vuetify.breakpoint.smAndDown">
       <v-row no-gutters>
-        <v-col cols="5">
+        <v-col cols="6" style="padding-right:6px">
           <Profile style="height:296px"/>
         </v-col>
-        <v-col cols="7" style="padding-left:15px">
+        <v-col cols="6" style="padding-left:6px">
           <License/>
         </v-col>
       </v-row>
-      <Billing style="margin-top:15px"/>
+      <Billing style="margin-top:12px"/>
     </div>
-    <div v-show="$vuetify.breakpoint.mdAndDown">
+    <div v-show="$vuetify.breakpoint.smAndDown">
       <Profile/>
-      <License style="margin-top:15px"/>
-      <Billing style="margin-top:15px"/>
+      <License style="margin-top:12px"/>
+      <Billing style="margin-top:12px"/>
     </div>
   </v-container>
 </template>
