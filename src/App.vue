@@ -14,6 +14,9 @@
 </template>
 
 <style>
+body {
+  background-color:#303030;
+}
 /* Dark Scrollbar */
 .dark_scrollbar::-webkit-scrollbar {
   -webkit-appearance: none;
