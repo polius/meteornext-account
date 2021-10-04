@@ -1,14 +1,14 @@
 <template>
   <v-app>
-    <v-app-bar app color="#424242" dark>
+    <v-toolbar v-if="isLoggedIn" color="#424242" dark style="max-height:64px">
       <v-img class="mr-2" :src="require('./assets/logo.png')" max-height="40" max-width="40" contain style="margin-bottom:2px"></v-img>
       <v-toolbar-title>Meteor Next | Account</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn class="d-none d-sm-flex">Logout</v-btn>
-      <v-btn icon class="d-flex d-sm-none" title="Logout"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
-    </v-app-bar>
+      <v-btn @click="logout" class="d-none d-sm-flex">Logout</v-btn>
+      <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
+    </v-toolbar>
     <v-main style="background-color:#303030">
-      <Home/>
+      <router-view/>
     </v-main>
   </v-app>
 </template>
@@ -62,13 +62,16 @@ document.documentElement.style.setProperty('scrollbar-color', '#303030 #424242')
 // Scrollbar - Chrome
 document.documentElement.classList.add("dark_scrollbar");
 
-import Home from './components/Home';
-
 export default {
-  name: 'App',
-  components: { Home },
   data: () => ({
-
   }),
+  computed: {
+    isLoggedIn: function() { return this.$store.getters['app/isLoggedIn'] },
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
+    },
+  }
 }
 </script>

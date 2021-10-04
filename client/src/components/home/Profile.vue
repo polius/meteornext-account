@@ -12,7 +12,7 @@
             <v-btn :block="$vuetify.breakpoint.smAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Change Email</v-btn>
             <v-btn :block="$vuetify.breakpoint.smAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Change Password</v-btn>
             <v-btn :block="$vuetify.breakpoint.smAndDown" :disabled="loading" color="#424242" style="margin-right:10px; margin-top:15px">Manage MFA</v-btn>
-            <v-btn :block="$vuetify.breakpoint.smAndDown" :disabled="loading" color="#424242" style="margin-top:15px">Delete Account</v-btn>
+            <v-btn :block="$vuetify.breakpoint.smAndDown" :disabled="loading" color="#EF5354" style="margin-top:15px" outlined>Delete Account</v-btn>
           </v-flex>
         </v-layout>
       </v-container>
