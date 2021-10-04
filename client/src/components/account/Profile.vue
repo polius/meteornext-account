@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card>
+    <v-card style="height:100%">
       <v-toolbar flat dense color="primary">
         <v-toolbar-title class="white--text subtitle-1"><v-icon small style="margin-right:10px; margin-bottom:3px">fas fa-user</v-icon>PROFILE</v-toolbar-title>
       </v-toolbar>
@@ -21,7 +21,7 @@
     </v-card>
     <v-dialog v-model="passwordDialog" max-width="640px">
       <v-card>
-        <v-toolbar dense flat>
+        <v-toolbar dense flat color="primary">
           <v-toolbar-title class="white--text subtitle-1">CHANGE PASSWORD</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn @click="passwordDialog = false" icon><v-icon style="font-size:22px">fas fa-times-circle</v-icon></v-btn>
