@@ -6,16 +6,16 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
-    component: () => import('../components/Home'),
-    meta: { requiresAuth: true }
-  },
-  {
     path: '/login',
     name: 'login',
     props: true,
     component: () => import('../components/Login')
+  },
+  {
+    path: '/',
+    name: 'account',
+    component: () => import('../components/Account'),
+    meta: { requiresAuth: true }
   },
 ]
 

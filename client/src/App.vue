@@ -1,15 +1,21 @@
 <template>
   <v-app>
-    <v-toolbar v-if="isLoggedIn" color="#424242" dark style="max-height:64px">
+    <v-toolbar v-if="isLoggedIn" color="#424242" style="max-height:64px">
       <v-img class="mr-2" :src="require('./assets/logo.png')" max-height="40" max-width="40" contain style="margin-bottom:2px"></v-img>
       <v-toolbar-title>Meteor Next | Account</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn @click="logout" class="d-none d-sm-flex">Logout</v-btn>
       <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
     </v-toolbar>
-    <v-main style="background-color:#303030">
+    <v-main>
       <router-view/>
     </v-main>
+    <v-snackbar v-model="snackbar" :multi-line="false" :timeout="snackbarTimeout" :color="snackbarColor" top style="padding-top:0px;">
+      {{ snackbarText }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">Close</v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -64,6 +70,11 @@ document.documentElement.classList.add("dark_scrollbar");
 
 export default {
   data: () => ({
+    // Snackbar
+    snackbar: false,
+    snackbarTimeout: Number(3000),
+    snackbarText: '',
+    snackbarColor: ''
   }),
   computed: {
     isLoggedIn: function() { return this.$store.getters['app/isLoggedIn'] },

@@ -5,11 +5,11 @@
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
-              <v-card dark style="border-radius:5px; background-color:#424242">
+              <v-card style="border-radius:5px">
                 <v-card-text>
                   <v-avatar :size="130" style="margin-top:10px;"><img :src="require('../assets/logo.png')" /></v-avatar>
                   <div class="display-2" style="color:rgba(255,255,255,.9); margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
-                  <div class="headline" style="color:rgba(255,255,255,.9); margin-top:10px; margin-bottom:20px">LOGIN</div>
+                  <div class="headline" style="font-size:1.3rem!important; color:rgba(255,255,255,.9); margin-top:10px; margin-bottom:20px">ACCOUNT</div>
                   <v-divider></v-divider>
                   <v-form ref="form" @submit.prevent style="margin-top:20px">
                     <div v-if="mfa == '2fa'">
@@ -27,6 +27,7 @@
                     </div>
                   </v-form>
                   <v-btn x-large type="submit" color="info" :loading="loading" block style="margin-top:0px;" @click="login()">LOGIN</v-btn>
+                  <v-btn text block style="margin-top:10px">Create account</v-btn>
                 </v-card-text>
               </v-card>
             </v-slide-y-transition>

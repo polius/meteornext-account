@@ -5,8 +5,10 @@ from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_compress import Compress
+
 import connectors
 import routes.login
+import routes.account
 
 # Instantiate Flask App
 app = Flask(__name__)
@@ -33,7 +35,9 @@ SQL = connectors.Pool(conf['sql'])
 # Register blueprints
 URL_PREFIX = "/api"
 login = routes.login.Login(SQL)
+account = routes.account.Account(SQL)
 app.register_blueprint(login.blueprint(), url_prefix=URL_PREFIX)
+app.register_blueprint(account.blueprint(), url_prefix=URL_PREFIX)
 
 # Enable CORS
 CORS(app)

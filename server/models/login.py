@@ -10,6 +10,7 @@ class Login:
                 a.id,
                 a.email,
                 a.password,
+                a.disabled,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
                     ELSE NULL

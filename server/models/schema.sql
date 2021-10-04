@@ -2,6 +2,7 @@ CREATE TABLE `accounts` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(191) NOT NULL,
   `password` VARCHAR(191) NOT NULL,
+  `disabled` TINYINT(1) UNSIGNED NOT NULL,
   `last_login` DATETIME NULL,
   `ip` VARCHAR(191) NULL,
   `created` DATETIME NOT NULL,
