@@ -13,6 +13,7 @@ class Login:
                 a.disabled,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
+                    WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
                     ELSE NULL
                 END AS 'mfa'
             FROM accounts a
@@ -24,7 +25,7 @@ class Login:
     def get_mfa(self, account_id):
         query = """
             SELECT *
-            FROM account_mfa
+            FROM accounts_mfa
             WHERE account_id = %s
         """
         return self._sql.execute(query, (account_id))

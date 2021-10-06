@@ -5,11 +5,14 @@ from flask import request, jsonify, Blueprint
 from flask_jwt_extended import (create_access_token, set_access_cookies, unset_access_cookies)
 
 import models.login
+import routes.mfa
 
 class Login:
     def __init__(self, sql):
         # Init models
         self._login = models.login.Login(sql)
+        # Init routes
+        self._mfa = routes.mfa.MFA(sql)
 
     def blueprint(self):
         # Init blueprint
@@ -42,6 +45,14 @@ class Login:
                         return jsonify({"code": "2fa", "message": "Requesting 2FA credentials"}), 202
                     elif not pyotp.TOTP(account_mfa['2fa_hash'], interval=30).verify(login_json['mfa'], valid_window=1):
                         return jsonify({"message": "Invalid MFA Code"}), 400
+                elif account['mfa'] == 'webauthn':
+                    try:
+                        if 'mfa' not in login_json:
+                            return jsonify({"code": "webauthn", "data": self._mfa.get_webauthn_login(account, account_mfa), "message": "Requesting Webauthn credentials"}), 202
+                        else:
+                            self._mfa.post_webauthn_login(account, account_mfa)
+                    except Exception as e:
+                        return jsonify({'message': str(e)}), 400
 
             # Generate access tokens
             access_token = create_access_token(identity=account['id'], fresh=timedelta(days=30))

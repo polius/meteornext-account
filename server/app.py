@@ -9,6 +9,7 @@ from flask_compress import Compress
 import connectors
 import routes.login
 import routes.account
+import routes.mfa
 
 # Instantiate Flask App
 app = Flask(__name__)
@@ -36,8 +37,10 @@ SQL = connectors.Pool(conf['sql'])
 URL_PREFIX = "/api"
 login = routes.login.Login(SQL)
 account = routes.account.Account(SQL)
+mfa = routes.mfa.MFA(SQL)
 app.register_blueprint(login.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(account.blueprint(), url_prefix=URL_PREFIX)
+app.register_blueprint(mfa.blueprint(), url_prefix=URL_PREFIX)
 
 # Enable CORS
 CORS(app)

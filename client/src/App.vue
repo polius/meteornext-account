@@ -63,6 +63,8 @@ body {
 </style>
 
 <script>
+import EventBus from './js/event-bus'
+
 // Scrollbar - Firefox
 document.documentElement.style.setProperty('scrollbar-color', '#303030 #424242');
 // Scrollbar - Chrome
@@ -79,9 +81,17 @@ export default {
   computed: {
     isLoggedIn: function() { return this.$store.getters['app/isLoggedIn'] },
   },
+  mounted() {
+    EventBus.$on('send-notification', this.notification)
+  },
   methods: {
     logout() {
       this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
+    },
+    notification(message, color) {
+      this.snackbarText = message
+      this.snackbarColor = color 
+      this.snackbar = true
     },
   }
 }

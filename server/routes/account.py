@@ -27,7 +27,7 @@ class Account:
                 return jsonify({"message": "Account disabled"}), 401
 
             # Get data
-            profile = self._account.get_profile(get_jwt_identity())
+            profile = self._account.get_profile(get_jwt_identity())[0]
             license = self._account.get_license(get_jwt_identity())
             billing = self._account.get_billing(get_jwt_identity())
             return jsonify({'profile': profile, 'license': license, 'billing': billing}), 200
@@ -53,6 +53,30 @@ class Account:
             try:
                 self.change_password(account, data['current'], data['new'], data['repeat'])
                 return jsonify({'message': 'Password successfully changed'}), 200
+            except Exception as e:
+                return jsonify({'message': str(e)}), 400
+
+        @account_blueprint.route('/account/email', methods=['PUT'])
+        @jwt_required()
+        def account_email_method():
+            # Get account
+            account = self._account.get(get_jwt_identity())[0]
+
+            # Check disabled
+            if account['disabled']:
+                return jsonify({"message": "Account disabled"}), 401
+
+            # Get Request Json
+            data = request.get_json()
+
+            # Check parameters
+            if 'email' not in data:
+                return jsonify({'message': 'Insufficient parameters'}), 400
+
+            # Change email
+            try:
+                self._account.change_email(account, data['email'])
+                return jsonify({'message': 'Email successfully changed'}), 200
             except Exception as e:
                 return jsonify({'message': str(e)}), 400
 
