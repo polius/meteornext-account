@@ -2,11 +2,12 @@ CREATE TABLE `accounts` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(191) NOT NULL,
   `password` VARCHAR(191) NOT NULL,
-  `disabled` TINYINT(1) UNSIGNED NOT NULL,
   `last_login` DATETIME NULL,
   `ip` VARCHAR(191) NULL,
-  `created` DATETIME NOT NULL,
-  `updated` DATETIME NULL,
+  `disabled` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+  `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
+  `created_at` DATETIME NOT NULL,
+  `deleted_at` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;

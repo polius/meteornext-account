@@ -29,7 +29,7 @@ class Login:
             account = self._login.get(login_json['email'])
 
             # Check email & password
-            if len(account) == 0 or not bcrypt.checkpw(login_json['password'].encode('utf-8'), account[0]['password'].encode('utf-8')):
+            if len(account) == 0 or account[0]['deleted'] or not bcrypt.checkpw(login_json['password'].encode('utf-8'), account[0]['password'].encode('utf-8')):
                 return jsonify({"message": "Invalid credentials"}), 401
             account = account[0]
 

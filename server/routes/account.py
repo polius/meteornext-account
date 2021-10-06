@@ -74,11 +74,22 @@ class Account:
                 return jsonify({'message': 'Insufficient parameters'}), 400
 
             # Change email
-            try:
-                self._account.change_email(account, data['email'])
-                return jsonify({'message': 'Email successfully changed'}), 200
-            except Exception as e:
-                return jsonify({'message': str(e)}), 400
+            self._account.change_email(account, data['email'])
+            return jsonify({'message': 'Email successfully changed'}), 200
+
+        @account_blueprint.route('/account', methods=['DELETE'])
+        @jwt_required()
+        def account_delete_method():
+            # Get account
+            account = self._account.get(get_jwt_identity())[0]
+
+            # Check disabled
+            if account['disabled']:
+                return jsonify({"message": "Account disabled"}), 401
+
+            # Delete account
+            self._account.delete(get_jwt_identity())
+            return jsonify({'message': 'Account successfully deleted.'}), 200
 
         return account_blueprint
 

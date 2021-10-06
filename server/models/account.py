@@ -11,6 +11,7 @@ class Account:
                 a.email,
                 a.password,
                 a.disabled,
+                a.deleted,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
                     WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
@@ -25,8 +26,8 @@ class Account:
     def get_profile(self, account_id):
         query = """
             SELECT
-                email,
-                created,
+                a.email,
+                a.created_at,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
                     WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
@@ -68,6 +69,9 @@ class Account:
     def change_email(self, account, email):
         self._sql.execute("UPDATE accounts SET email = %s WHERE id = %s", (email, account['id']))
     
+    def delete(self, account_id):
+        self._sql.execute("UPDATE accounts SET deleted = 1, deleted_at = %s WHERE id = %s", (datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), account_id))
+
     def get_mfa(self, account_id):
         query = """
             SELECT 2fa_hash, webauthn_ukey, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created_at

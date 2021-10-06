@@ -324,11 +324,6 @@ export default {
       if (date) return moment.utc(date).local().format("YYYY-MM-DD HH:mm:ss")
       return date
     },
-    notification(message, color) {
-      this.snackbarText = message
-      this.snackbarColor = color 
-      this.snackbar = true
-    },
   }
 }
 </script>

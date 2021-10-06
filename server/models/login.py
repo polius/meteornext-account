@@ -11,6 +11,7 @@ class Login:
                 a.email,
                 a.password,
                 a.disabled,
+                a.deleted,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
                     WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
