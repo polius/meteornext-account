@@ -4,7 +4,7 @@
       <v-toolbar-title class="white--text subtitle-1"><v-icon small style="margin-right:10px; margin-bottom:3px">fas fa-coins</v-icon>BILLING</v-toolbar-title>
     </v-toolbar>
     <v-card-text>
-      <div v-if="!$vuetify.breakpoint.smAndDown">
+      <div v-show="!$vuetify.breakpoint.smAndDown">
         <v-row no-gutters>
           <v-col cols="auto">
             <v-btn :disabled="loading" style="margin-right:10px">Change Payment Method</v-btn>
@@ -13,14 +13,14 @@
           <v-col cols="auto">
           </v-col>
           <v-col style="margin-left:10px">
-            <v-text-field placeholder="Search billings" style="padding-top:0px" hide-details></v-text-field>
+            <v-text-field v-model="search" placeholder="Search billings" style="padding-top:0px" hide-details></v-text-field>
           </v-col>
         </v-row>
       </div>
-      <div v-else>
+      <div v-show="$vuetify.breakpoint.smAndDown">
         <v-btn block :disabled="loading" style="margin-right:10px">Change Payment Method</v-btn>
         <v-btn block :disabled="loading" style="margin-right:10px; margin-top:15px">Export Billings</v-btn>
-        <v-text-field solo v-show="$vuetify.breakpoint.smAndDown" v-model="search" placeholder="Search billings" background-color="#303030" style="margin-top:15px; margin-bottom:15px" hide-details></v-text-field>
+        <v-text-field solo v-model="search" placeholder="Search billings" background-color="#303030" style="margin-top:15px; margin-bottom:15px" hide-details></v-text-field>
       </div>
       <v-card style="margin-top:15px">
         <v-data-table :headers="headers" :items="items" :search="search" :options="{itemsPerPage: 3}" :footer-props="{'items-per-page-options':[3, 6, 12, -1]}">

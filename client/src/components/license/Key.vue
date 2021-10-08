@@ -12,8 +12,8 @@
             <v-flex xs12>
               <v-form ref="form" @submit.prevent>
                 <div class="body-1" style="margin-bottom:10px">Use the following credentials to register your copy of Meteor Next.</div>
-                <v-text-field @focus="$event.target.select()" outlined v-model="email" readonly label="Email" style="padding-top:5px" hide-details></v-text-field>
-                <v-text-field @focus="$event.target.select()" outlined v-model="key" readonly label="Key" style="margin-top:20px" hide-details></v-text-field>
+                <v-text-field @click="$event.target.select()" outlined v-model="email" readonly label="Email" style="padding-top:5px" hide-details></v-text-field>
+                <v-text-field @click="$event.target.select()" outlined v-model="key" readonly label="Key" style="margin-top:20px" hide-details></v-text-field>
                 <div class="body-1 white--text" style="margin-top:15px; margin-bottom:15px"><v-icon :style="`font-size:18px; margin-right:10px; margin-bottom:3px; color:${in_use ? '#ff9800' : '#00b16a'}`">{{ in_use ? 'fas fa-lock' : 'fas fa-unlock' }}</v-icon>{{ in_use ? 'License registered.' : 'License ready to be registered.' }}</div>
               </v-form>
               <v-divider></v-divider>
