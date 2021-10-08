@@ -11,7 +11,7 @@
           <v-layout wrap>
             <v-flex xs12>
               <v-form ref="form" @submit.prevent>
-                <v-text-field v-model="email" readonly label="Current email" style="padding-top:5px"></v-text-field>
+                <v-text-field v-model="email" readonly label="Current email" style="padding-top:10px"></v-text-field>
                 <v-text-field v-on:keyup.enter="submitEmail()" ref="email" v-model="item" :readonly="loading" label="New email" :rules="[v => !!v || '', v => /.+@.+\..+/.test(v) || '']" required style="padding-top:0px"></v-text-field>
               </v-form>
               <v-divider></v-divider>

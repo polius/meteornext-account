@@ -12,11 +12,9 @@
             <v-flex xs12>
               <v-form ref="form" @submit.prevent>
                 <v-alert colored-border elevation="2">
-                  <v-icon color="#ff9900" style="margin-bottom:2px; margin-right:10px; font-size:20px">fas fa-exclamation-triangle</v-icon>
-                  Caution! This action is non-reversible.
+                  <v-icon color="#ff9900" style="margin-bottom:2px; margin-right:10px; font-size:20px">fas fa-exclamation-triangle</v-icon>Caution! This action is non-reversible.
                 </v-alert>
                 <div class="body-1">Are you sure you want to proceed with the deletion of your Meteor Next account?</div>
-                <!-- <div class="body-1">Your account will be </div> -->
                 <v-checkbox v-model="confirm" label="I confirm I want to delete my Meteor Next account.">
                   <template v-slot:label>
                     <div style="margin-left:5px">

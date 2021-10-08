@@ -41,22 +41,22 @@ class Account:
 
     def get_license(self, account_id):
         query = """
-            SELECT l.servers, l.price, al.purchase_date, al.expiration_date, al.status
-            FROM account_licenses al
-            JOIN licenses l ON l.id = al.license_id
-            WHERE al.account_id = %s
-            AND al.status = 'active'
-            ORDER BY l.id
+            SELECT l.resources, b.price, l.expiration, l.key, l.in_use
+            FROM licenses l
+            LEFT JOIN billing b ON b.license_id = l.id
+            WHERE l.account_id = %s
+            AND (b.status = 'success' OR b.license_id IS NULL)
+            ORDER BY l.id DESC
+            LIMIT 1
         """
-        return self._sql.execute(query, (account_id))
+        return self._sql.execute(query, (account_id))[0]
 
     def get_billing(self, account_id):
         query = """
-            SELECT l.servers, l.price, al.purchase_date, al.expiration_date, al.status
-            FROM account_licenses al
-            JOIN licenses l ON l.id = al.license_id
-            WHERE al.account_id = %s 
-            ORDER BY l.id DESC
+            SELECT l.resources, b.price, b.purchase_date, b.status
+            FROM billing b
+            JOIN licenses l ON l.id = b.license_id AND l.account_id = %s 
+            ORDER BY b.id DESC
         """
         return self._sql.execute(query, (account_id))
 
@@ -110,3 +110,22 @@ class Account:
             WHERE account_id = %s
         """
         self._sql.execute(query, (data['webauthn_sign_count'], data['account_id']))
+
+    ###########
+    # PROFILE #
+    ###########
+    def unregister_license(self, account_id):
+        query = """
+            UPDATE licenses
+            JOIN (
+                SELECT l.id
+                FROM licenses l
+                LEFT JOIN billing b ON b.license_id = l.id
+                WHERE l.account_id = %s
+                AND (b.status = 'success' OR b.license_id IS NULL)
+                ORDER BY l.id DESC
+                LIMIT 1
+            ) t USING (id)
+            SET in_use = 0
+        """
+        self._sql.execute(query, (account_id))

@@ -20,6 +20,7 @@ class Login:
             FROM accounts a
             LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id 
             WHERE a.email = %s
+            AND a.deleted = 0
         """
         return self._sql.execute(query, (email))
 

@@ -11,7 +11,7 @@
           <v-layout wrap>
             <v-flex xs12>
               <v-form ref="passwordForm" @submit.prevent>
-                <v-text-field ref="passwordCurrent" v-model="item.current" :readonly="loading" label="Current password" type="password" :rules="[v => !!v || '']" required style="padding-top:5px" autocomplete="new-password" v-on:keyup.enter="submitPassword"></v-text-field>
+                <v-text-field ref="passwordCurrent" v-model="item.current" :readonly="loading" label="Current password" type="password" :rules="[v => !!v || '']" required style="padding-top:10px" autocomplete="new-password" v-on:keyup.enter="submitPassword"></v-text-field>
                 <v-text-field v-model="item.new" :readonly="loading" label="New password" type="password" :rules="[v => !!v || '']" required style="padding-top:0px" autocomplete="new-password" v-on:keyup.enter="submitPassword"></v-text-field>
                 <v-text-field v-model="item.repeat" :readonly="loading" label="Repeat new password" type="password" :rules="[v => !!v || '']" required style="padding-top:0px" autocomplete="new-password" v-on:keyup.enter="submitPassword"></v-text-field>
               </v-form>

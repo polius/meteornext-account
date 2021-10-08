@@ -7,14 +7,14 @@
             <Profile :loading="loading" :account="account" style="height:296px"/>
           </v-col>
           <v-col cols="6" style="padding-left:6px">
-            <License/>
+            <License :loading="loading" :account="account"/>
           </v-col>
         </v-row>
         <Billing style="margin-top:12px"/>
       </div>
       <div v-show="$vuetify.breakpoint.smAndDown">
-        <Profile/>
-        <License style="margin-top:12px"/>
+        <Profile :loading="loading" :account="account"/>
+        <License :loading="loading" :account="account" style="margin-top:12px"/>
         <Billing style="margin-top:12px"/>
       </div>
     </v-container>

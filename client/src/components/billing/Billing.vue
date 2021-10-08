@@ -20,10 +20,10 @@
       <div v-else>
         <v-btn block :disabled="loading" style="margin-right:10px">Change Payment Method</v-btn>
         <v-btn block :disabled="loading" style="margin-right:10px; margin-top:15px">Export Billings</v-btn>
-        <v-text-field solo v-show="$vuetify.breakpoint.smAndDown" placeholder="Search billings" background-color="#303030" style="margin-top:15px; margin-bottom:15px" hide-details></v-text-field>
+        <v-text-field solo v-show="$vuetify.breakpoint.smAndDown" v-model="search" placeholder="Search billings" background-color="#303030" style="margin-top:15px; margin-bottom:15px" hide-details></v-text-field>
       </div>
       <v-card style="margin-top:15px">
-        <v-data-table :headers="headers" :items="items" :options="{itemsPerPage: 3}" :footer-props="{'items-per-page-options':[3, 6, 12, -1]}">
+        <v-data-table :headers="headers" :items="items" :search="search" :options="{itemsPerPage: 3}" :footer-props="{'items-per-page-options':[3, 6, 12, -1]}">
           <template v-slot:[`item.status`]="{ item }">
             <v-icon :color="item.status == 'success' ? '#00b16a' : item.status == 'pending' ? '#ff9800' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>
             {{ item.status.charAt(0).toUpperCase() + item.status.slice(1) }}
@@ -51,7 +51,8 @@ export default {
       { date: '2021-08-01 12:00:00', servers: '10', price: '12.5€', status: 'failed'},
       { date: '2021-07-01 12:00:00', servers: '10', price: '12.5€', status: 'success'},
       { date: '2021-06-01 12:00:00', servers: '10', price: '12.5€', status: 'success'},
-    ]
+    ],
+    search: '',
   }),
 }
 </script>

@@ -77,6 +77,20 @@ class Account:
             self._account.change_email(account, data['email'])
             return jsonify({'message': 'Email successfully changed'}), 200
 
+        @account_blueprint.route('/account/unregister', methods=['POST'])
+        @jwt_required()
+        def account_unregister_method():
+            # Get account
+            account = self._account.get(get_jwt_identity())[0]
+
+            # Check disabled
+            if account['disabled']:
+                return jsonify({"message": "Account disabled"}), 401
+
+            # Unregister license
+            self._account.unregister_license(get_jwt_identity())
+            return jsonify({'message': 'License successfully unregistered'}), 200
+
         @account_blueprint.route('/account', methods=['DELETE'])
         @jwt_required()
         def account_delete_method():
