@@ -21,7 +21,7 @@
     </v-card>
     <Password :enabled="passwordDialog" @update="passwordDialog = $event"/>
     <Email :enabled="emailDialog" :email="email" @update="emailDialog = $event"/>
-    <MFA :enabled="mfaDialog" @update="mfaDialog = $event" mode="profile"/>
+    <MFA :account="account" :enabled="mfaDialog" @update="mfaDialog = $event"/>
     <Delete :enabled="deleteDialog" @update="deleteDialog = $event"/>
   </div>
 </template>

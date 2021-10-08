@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="mfaDialog" :persistent="mode == 'login'" max-width="672px">
+    <v-dialog v-model="mfaDialog" max-width="672px">
       <v-card>
         <v-toolbar dense flat color="primary">
           <v-toolbar-title class="white--text subtitle-1">MANAGE MFA</v-toolbar-title>
@@ -155,9 +155,8 @@ export default {
     },
   }),
   props: { 
-    enabled: Boolean, 
-    account: { type: Object }, 
-    mode: String,
+    enabled: Boolean,
+    account: Object,
     dialog: Boolean
   },
   components: { QrcodeVue },
@@ -165,12 +164,12 @@ export default {
     mfaDialog: {
       get() { return this.enabled },
       set(value) { this.$emit('update', value) },
-    }
-  },
-  created() {
-    if (this.mode == 'profile') this.getMFA()
+    },
   },
   watch: {
+    account: function(val) {
+      this.mfa = val
+    },
     mfaDialog: function (val) {
       if (val && this.mfa.mode == null) this.get2FA()
       else {
@@ -198,8 +197,7 @@ export default {
   methods: {
     getMFA() {
       this.loading = true
-      const payload = (this.account !== undefined) ? this.account : {}
-      axios.get('/mfa', { params: payload })
+      axios.get('/mfa')
         .then((response) => {
           this.mfa = response.data.data
         })
@@ -211,8 +209,7 @@ export default {
     },
     get2FA() {
       this.twoFactor = { hash: null, uri: null, value: '' }
-      const payload = (this.account !== undefined) ? this.account : {}
-      axios.get('/mfa/2fa', { params: payload })
+      axios.get('/mfa/2fa')
         .then((response) => {
           this.twoFactor['hash'] = response.data['mfa_hash']
           this.twoFactor['uri'] = response.data['mfa_uri']
@@ -225,7 +222,7 @@ export default {
     async getWebauthn() {
       this.webauthn = { status: 'init', error: '', credentials: null }
       try {
-        const credentials = await webauthnRegisterBegin(this.account)
+        const credentials = await webauthnRegisterBegin()
         this.loadingFingerprint = true
         this.webauthn = { status: 'validating', error: '', credentials }
       }
@@ -234,7 +231,7 @@ export default {
         this.webauthn = { status: 'ko', error: error.response.data.message, credentials: null }
       }
       try {
-        await webauthnRegisterValidate(this.webauthn.credentials, this.account)
+        await webauthnRegisterValidate(this.webauthn.credentials)
         this.webauthn['status'] = 'ok'
       }
       catch (error) {
@@ -261,8 +258,7 @@ export default {
     },
     disableMFA() {
       this.loading = true
-      const payload = (this.account !== undefined) ? this.account : {}
-      axios.delete('/mfa', { data: payload })
+      axios.delete('/mfa')
         .then((response) => {
           this.mfaDialog = false
           this.getMFA()
@@ -282,11 +278,10 @@ export default {
       }
       this.loading = true
       let payload = {'hash': this.twoFactor.hash, 'value': this.twoFactor.value}
-      payload = (this.account !== undefined) ? {...payload, ...this.account} : payload
       axios.post('/mfa/2fa', payload)
         .then((response) => {
           this.mfaDialog = false
-          if (this.mode != 'login') this.getMFA()
+          this.getMFA()
           EventBus.$emit('send-notification', response.data.message, '#00b16a')
         })
         .catch((error) => {
@@ -297,10 +292,10 @@ export default {
     },
     enableWebauthn() {
       this.loading = true
-      webauthnRegisterFinish(this.webauthn.credentials, this.account)
+      webauthnRegisterFinish(this.webauthn.credentials)
       .then((response) => {
         this.mfaDialog = false
-        if (this.mode != 'login') this.getMFA()
+        this.getMFA()
         EventBus.$emit('send-notification', response.data.message, '#00b16a')
       })
       .catch((error) => {

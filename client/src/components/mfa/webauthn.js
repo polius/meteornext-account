@@ -1,10 +1,9 @@
 var axios = require('axios')
 var base64js = require('base64-js')
 
-export async function webauthnRegisterBegin(user={}) {
-  let payload = user
+export async function webauthnRegisterBegin() {
   // Get PublicKeyCredentialRequestOptions for this user from the server
-  const credentialCreateOptionsFromServer = await axios.get('/mfa/webauthn/register', { params: payload })
+  const credentialCreateOptionsFromServer = await axios.get('/mfa/webauthn/register')
   // Convert certain members of the PublicKeyCredentialCreateOptions into byte arrays as expected by the spec.
   const publicKeyCredentialCreateOptions = transformCredentialCreateOptions(credentialCreateOptionsFromServer.data)
   // Request the authenticator(s) to create a new credential keypair.
@@ -14,15 +13,15 @@ export async function webauthnRegisterBegin(user={}) {
   return newAssertionForServer
 }
 
-export async function webauthnRegisterValidate(credential, user={}) {
+export async function webauthnRegisterValidate(credential) {
   // Posts the new credential data to the server for validation and storage.
-  const payload = { ...user, credential }
+  const payload = { credential }
   await axios.post('/mfa/webauthn/register', payload)
 }
 
-export async function webauthnRegisterFinish(credential, user={}) {
+export async function webauthnRegisterFinish(credential) {
   // Posts the new credential data to the server for validation and storage.
-  const payload = {...user, credential, store: true}
+  const payload = { credential, store: true }
   return await axios.post('/mfa/webauthn/register', payload)
 }
 

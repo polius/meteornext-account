@@ -49,6 +49,17 @@ export default {
         .then((response) => {
           this.account = response.data
           console.log(this.account)
+          this.getMFA()
+        })
+        .catch((error) => {
+          if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
+          else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
+        })
+    },
+    getMFA() {
+      axios.get('/mfa')
+        .then((response) => {
+          this.account['mfa'] = response.data.data
         })
         .catch((error) => {
           if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))

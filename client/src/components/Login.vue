@@ -45,15 +45,12 @@
         </v-layout>
       </v-container>
     </v-main>
-    <MFA :enabled="mfaDialog" @update="mfaDialog = $event" mode="login" :account="{'email': email, 'password': password}"/>
   </div>
 </template>
 
 <script>
 import EventBus from '../js/event-bus'
-import MFA from './mfa/MFA'
 import { webauthnLogin } from './mfa/webauthn.js'
-// import axios from 'axios'
 
 export default {
   data: () => ({
@@ -63,8 +60,7 @@ export default {
     password: '',
     mfa: null,
 
-    // MFA Dialog
-    mfaDialog: false,
+    // MFA
     twoFactor: {
       hash: null,
       uri: null,
@@ -74,7 +70,6 @@ export default {
       status: 'init'
     },
   }),
-  components: { MFA },
   props: ['url'],
   watch: {
     mfa: function (val) {
@@ -106,8 +101,7 @@ export default {
         if (response.status == 200) this.$router.push('/')
         else if (response.status == 202) {
           // MFA Required
-          if (response.data.code == 'mfa_setup') this.mfaDialog = true
-          else if (['2fa','webauthn'].includes(response.data.code)) {
+          if (['2fa','webauthn'].includes(response.data.code)) {
             delete payload['currentPassword']
             delete payload['newPassword']
             delete payload['repeatPassword']

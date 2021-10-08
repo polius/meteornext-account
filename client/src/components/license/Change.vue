@@ -11,21 +11,41 @@
           <v-layout wrap>
             <v-flex xs12>
               <v-form ref="form" @submit.prevent>
-                <div class="text-body-1">Choose the amount of resources to purchase:</div>
-                <v-text-field outlined v-model="newLicense" label="Resources" :rules="[v => v == parseInt(v) && v > 0 || '']" style="padding-top:20px" autofocus hide-details></v-text-field>
-                <v-row no-gutters style="margin-top:20px">
-                  <v-col cols="auto" style="margin-right:5px">
-                    <div class="body-1 white--text">Price:</div>
-                  </v-col>
-                  <v-col>
-                    <div class="body-1 white--text">{{ pricing }}</div>
-                  </v-col>
-                </v-row>
+                <v-card>
+                  <v-card-text>
+                    <div class="text-h6 font-weight-light white--text">Current License</div>
+                    <v-text-field readonly v-model="resources" label="Resources" :rules="[v => v == parseInt(v) && v > 0 || '']" style="padding-top:20px" hide-details></v-text-field>
+                    <v-row no-gutters style="margin-top:20px">
+                      <v-col cols="auto" style="margin-right:5px">
+                        <div class="body-1 white--text">Price:</div>
+                      </v-col>
+                      <v-col>
+                        <div class="body-1 white--text">{{ pricing }}</div>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
+                <v-card style="margin-top:15px">
+                  <v-card-text>
+                    <div class="text-h6 font-weight-light white--text">New License</div>
+                    <v-text-field v-model="newLicense" label="Resources" :rules="[v => v == parseInt(v) && v > 0 || '']" style="padding-top:20px" autofocus hide-details></v-text-field>
+                    <v-row no-gutters style="margin-top:20px">
+                      <v-col cols="auto" style="margin-right:5px">
+                        <div class="body-1 white--text">Price:</div>
+                      </v-col>
+                      <v-col>
+                        <div class="body-1 white--text">{{ pricing }}</div>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
               </v-form>
               <v-divider style="margin-top:15px"></v-divider>
-              <v-row no-gutters style="margin-top:20px;">
+              <v-row no-gutters style="margin-top:15px">
                 <v-btn :disabled="newLicense == null || !parseInt(newLicense) || newLicense < 1 || newLicense == resources" :loading="loading" color="#00b16a" @click="submitChange">CONFIRM</v-btn>
                 <v-btn :disabled="loading" color="#EF5354" @click="dialog = false" style="margin-left:5px">CANCEL</v-btn>
+                <v-spacer/>
+                <v-btn text :disabled="loading" color="primary" @click="dialog = false" style="margin-left:5px">{{ $vuetify.breakpoint.smAndDown ? 'INFO' : 'INFORMATION' }}</v-btn>
               </v-row>
             </v-flex>
           </v-layout>
