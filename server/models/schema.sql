@@ -46,11 +46,27 @@ CREATE TABLE `licenses` (
 
 CREATE TABLE `pricing` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `base` DOUBLE NOT NULL,
-  `server` DOUBLE NOT NULL,
-  `reduction` NULL,
+  `units` INT NOT NULL,
+  `price` DOUBLE NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+
+INSERT INTO `pricing` (`units`, `price`) VALUES
+(1, 0),
+(5, 12.5),
+(10, 24),
+(25, 58),
+(50, 114),
+(100, 225),
+(200, 425),
+(300, 600),
+(400, 760),
+(500, 900),
+(750, 1275),
+(1000, 1600),
+(2000, 3000),
+(5000, 6500),
+(-1, 8500);
 
 CREATE TABLE `billing` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,

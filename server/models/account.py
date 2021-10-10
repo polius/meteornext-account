@@ -112,8 +112,16 @@ class Account:
         self._sql.execute(query, (data['webauthn_sign_count'], data['account_id']))
 
     ###########
-    # PROFILE #
+    # LICENSE #
     ###########
+    def get_pricing(self):
+        query = """
+            SELECT units, price
+            FROM pricing
+            ORDER BY id
+        """
+        return self._sql.execute(query)
+
     def unregister_license(self, account_id):
         query = """
             UPDATE licenses

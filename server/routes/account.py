@@ -30,7 +30,8 @@ class Account:
             profile = self._account.get_profile(get_jwt_identity())[0]
             license = self._account.get_license(get_jwt_identity())
             billing = self._account.get_billing(get_jwt_identity())
-            return jsonify({'profile': profile, 'license': license, 'billing': billing}), 200
+            pricing = self._account.get_pricing()
+            return jsonify({'profile': profile, 'license': license, 'billing': billing, 'pricing': pricing}), 200
 
         @account_blueprint.route('/account/password', methods=['PUT'])
         @jwt_required()

@@ -45,8 +45,8 @@ export default {
     },
     pricing() {
       if (this.loading || this.account === undefined) return ''
-      else if (this.account.license.price) return this.account.license.price
-      else return 'Free'
+      if (this.account.license.resources == 1) return 'Free'
+      return '$' + this.account.pricing.filter(x => x.units == this.account.license.resources)[0]['price'] + ' / Month'
     },
     expiration() {
       if (this.loading || this.account === undefined) return ''

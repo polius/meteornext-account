@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="640px">
+  <v-dialog v-model="dialog" max-width="512px">
     <v-card>
       <v-toolbar dense flat color="primary">
         <v-toolbar-title class="white--text subtitle-1">CHANGE LICENSE</v-toolbar-title>
@@ -11,41 +11,26 @@
           <v-layout wrap>
             <v-flex xs12>
               <v-form ref="form" @submit.prevent>
-                <v-card>
-                  <v-card-text>
-                    <div class="text-h6 font-weight-light white--text">Current License</div>
-                    <v-text-field readonly v-model="resources" label="Resources" :rules="[v => v == parseInt(v) && v > 0 || '']" style="padding-top:20px" hide-details></v-text-field>
-                    <v-row no-gutters style="margin-top:20px">
-                      <v-col cols="auto" style="margin-right:5px">
-                        <div class="body-1 white--text">Price:</div>
-                      </v-col>
-                      <v-col>
-                        <div class="body-1 white--text">{{ pricing }}</div>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                </v-card>
-                <v-card style="margin-top:15px">
-                  <v-card-text>
-                    <div class="text-h6 font-weight-light white--text">New License</div>
-                    <v-text-field v-model="newLicense" label="Resources" :rules="[v => v == parseInt(v) && v > 0 || '']" style="padding-top:20px" autofocus hide-details></v-text-field>
-                    <v-row no-gutters style="margin-top:20px">
-                      <v-col cols="auto" style="margin-right:5px">
-                        <div class="body-1 white--text">Price:</div>
-                      </v-col>
-                      <v-col>
-                        <div class="body-1 white--text">{{ pricing }}</div>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                </v-card>
+                <p class="text-h6 font-weight-regular white--text" style="font-size:1.8rem!important; text-align:center; margin-top:10px; margin-bottom:10px">{{ price == 0 ? 'Free' : '$' + price }}<span v-if="price != 0" class="text-h6 font-weight-light white--text" style="font-size:1.4rem!important; margin-left:5px">/ Month</span></p>
+                <div class="text-body-1 font-weight-regular" style="font-size:1.1rem !important; text-align:center; margin-bottom:15px">How many servers?</div>
+                <v-select outlined v-model="license" :items="account.pricing" item-value="units" item-text="units" class="text-body-1 white--text" style="margin-left:auto; margin-right:auto; max-width:150px" hide-details>
+                  <template v-slot:[`selection`]="{ item }">
+                    <span v-if="item.units == -1">Unlimited</span>
+                    <span v-else>{{ item.units + (item.units == 1 ? ' server' : ' servers')}}</span>
+                  </template>
+                  <template v-slot:[`item`]="{ item }">
+                    <span v-if="item.units == -1">Unlimited</span>
+                    <span v-else>{{ item.units + (item.units == 1 ? ' server' : ' servers')}}</span>
+                  </template>
+                </v-select>
+                <div v-if="license > 1" class="text-body-1 font-weight-regular white--text" style="text-align:center; margin-top:15px; margin-bottom:5px">{{ `Avg. $${average} per server` }}</div>
               </v-form>
-              <v-divider style="margin-top:15px"></v-divider>
+              <v-divider style="margin-top:20px"></v-divider>
               <v-row no-gutters style="margin-top:15px">
-                <v-btn :disabled="newLicense == null || !parseInt(newLicense) || newLicense < 1 || newLicense == resources" :loading="loading" color="#00b16a" @click="submitChange">CONFIRM</v-btn>
+                <v-btn :disabled="!validLicense" :loading="loading" color="#00b16a" @click="submitChange">CONFIRM</v-btn>
                 <v-btn :disabled="loading" color="#EF5354" @click="dialog = false" style="margin-left:5px">CANCEL</v-btn>
                 <v-spacer/>
-                <v-btn text :disabled="loading" color="primary" @click="dialog = false" style="margin-left:5px">{{ $vuetify.breakpoint.smAndDown ? 'INFO' : 'INFORMATION' }}</v-btn>
+                <v-btn text :disabled="loading" color="white" @click="dialog = false" style="margin-left:5px">{{ $vuetify.breakpoint.smAndDown ? 'INFO' : 'INFORMATION' }}</v-btn>
               </v-row>
             </v-flex>
           </v-layout>
@@ -62,7 +47,7 @@ import EventBus from '../../js/event-bus'
 export default {
   data: () => ({
     loading: false,
-    newLicense: null,
+    license: null,
   }),
   props: {
     enabled: Boolean,
@@ -73,19 +58,24 @@ export default {
       get() { return this.enabled },
       set(value) { this.$emit('update', value) },
     },
-    resources_label() {
-      if (this.loading || this.account === undefined || this.account.license === undefined) return ''
-      else return this.account.license.resources + (this.account.license.resources == 1 ? ' Server' : ' Servers') + ' / User'
-    },
     resources() {
       if (this.loading || this.account === undefined || this.account.license === undefined) return ''
-      else return this.account.license.resources
+      return this.account.license.resources
     },
-    pricing() {
+    price() {
       if (this.loading || this.account === undefined || this.account.license === undefined) return ''
-      else if (this.account.license.price) return this.account.license.price + ' €'
-      else return 'Free'
+      if (this.license != null) return this.account.pricing.filter(x => x.units == this.license)[0]['price']
+      return this.account.pricing.filter(x => x.units == this.resources)[0]['price']
     },
+    validLicense() {
+      if (this.license == null || parseInt(this.license) != this.license || this.license < 1 || this.license == this.resources) return false
+      return true
+    },
+    average() {
+      if (this.loading || this.account === undefined || this.account.license === undefined) return ''
+      if (this.license == null) return (this.account.pricing.filter(x => x.units == this.resources)[0]['price'] / this.license).toFixed(1)
+      return (this.account.pricing.filter(x => x.units == this.license)[0]['price'] / this.license).toFixed(1)
+    }
   },
   methods: {
     submitChange() {
@@ -105,7 +95,7 @@ export default {
   watch: {
     dialog: function(val) {
       if (val) {
-        this.newLicense = null // = { current: '', new: '', repeat: ''}
+        this.license = this.resources
         requestAnimationFrame(() => {
           if (typeof this.$refs.form !== 'undefined') this.$refs.form.resetValidation()
           // if (typeof this.$refs.form !== 'undefined') this.$refs.passwordCurrent.focus()
