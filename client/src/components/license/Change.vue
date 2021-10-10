@@ -68,7 +68,7 @@ export default {
       return this.account.pricing.filter(x => x.units == this.resources)[0]['price']
     },
     validLicense() {
-      if (this.license == null || parseInt(this.license) != this.license || this.license < 1 || this.license == this.resources) return false
+      if (this.license == null || parseInt(this.license) != this.license || this.license == this.resources) return false
       return true
     },
     average() {
