@@ -10,6 +10,8 @@ class License:
             FROM `licenses` l
             JOIN `accounts` a ON a.`id` = l.`account_id`
             WHERE a.`email` = %s
+            ORDER BY l.`id` DESC
+            LIMIT 1
         """
         return self._sql.execute(query, (email))
 
