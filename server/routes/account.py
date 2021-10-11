@@ -1,6 +1,4 @@
-import json
 import bcrypt
-import string
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 
@@ -16,7 +14,7 @@ class Account:
         # Init blueprint
         account_blueprint = Blueprint('account', __name__, template_folder='profile')
 
-        @account_blueprint.route('/account', methods=['GET'])
+        @account_blueprint.route('/account', methods=['GET','DELETE'])
         @jwt_required()
         def account_method():
             # Get account
@@ -26,12 +24,18 @@ class Account:
             if account['disabled']:
                 return jsonify({"message": "Account disabled"}), 401
 
-            # Get data
-            profile = self._account.get_profile(get_jwt_identity())[0]
-            license = self._account.get_license(get_jwt_identity())
-            billing = self._account.get_billing(get_jwt_identity())
-            pricing = self._account.get_pricing()
-            return jsonify({'profile': profile, 'license': license, 'billing': billing, 'pricing': pricing}), 200
+            # Get account
+            if request.method == 'GET':
+                profile = self._account.get_profile(get_jwt_identity())[0]
+                license = self._account.get_license(get_jwt_identity())
+                billing = self._account.get_billing(get_jwt_identity())
+                pricing = self._account.get_pricing()
+                return jsonify({'profile': profile, 'license': license, 'billing': billing, 'pricing': pricing}), 200
+
+            # Delete account
+            elif request.method == 'DELETE':
+                self._account.delete(get_jwt_identity())
+                return jsonify({'message': 'Account successfully deleted.'}), 200
 
         @account_blueprint.route('/account/password', methods=['PUT'])
         @jwt_required()
@@ -92,9 +96,9 @@ class Account:
             self._account.unregister_license(get_jwt_identity())
             return jsonify({'message': 'License successfully unregistered'}), 200
 
-        @account_blueprint.route('/account', methods=['DELETE'])
+        @account_blueprint.route('/account/change', methods=['POST'])
         @jwt_required()
-        def account_delete_method():
+        def account_change_method():
             # Get account
             account = self._account.get(get_jwt_identity())[0]
 
@@ -102,9 +106,19 @@ class Account:
             if account['disabled']:
                 return jsonify({"message": "Account disabled"}), 401
 
-            # Delete account
-            self._account.delete(get_jwt_identity())
-            return jsonify({'message': 'Account successfully deleted.'}), 200
+            # Check parameters
+            data = request.get_json()
+            if 'resources' not in data:
+                return jsonify({'message': 'Insufficient parameters'}), 400
+            try:
+                if int(data['resources']) not in [1,5,10,25,50,100,200,300,400,500,750,1000,2000,5000,-1]:
+                    raise Exception()
+            except Exception:
+                return jsonify({'message': 'License value is not valid'}), 400
+
+            # Change license value
+            self._account.change_license(get_jwt_identity(), data['resources'])
+            return jsonify({'message': 'License successfully changed'}), 200
 
         return account_blueprint
 

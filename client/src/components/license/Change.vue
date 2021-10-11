@@ -59,11 +59,11 @@ export default {
       set(value) { this.$emit('update', value) },
     },
     resources() {
-      if (this.loading || this.account === undefined || this.account.license === undefined) return ''
+      if (this.account === undefined || this.account.license === undefined) return ''
       return this.account.license.resources
     },
     price() {
-      if (this.loading || this.account === undefined || this.account.license === undefined) return ''
+      if (this.account === undefined || this.account.license === undefined) return ''
       if (this.license != null) return this.account.pricing.filter(x => x.units == this.license)[0]['price']
       return this.account.pricing.filter(x => x.units == this.resources)[0]['price']
     },
@@ -72,7 +72,7 @@ export default {
       return true
     },
     average() {
-      if (this.loading || this.account === undefined || this.account.license === undefined) return ''
+      if (this.account === undefined || this.account.license === undefined) return ''
       if (this.license == null) return (this.account.pricing.filter(x => x.units == this.resources)[0]['price'] / this.license).toFixed(1)
       return (this.account.pricing.filter(x => x.units == this.license)[0]['price'] / this.license).toFixed(1)
     }
@@ -80,8 +80,10 @@ export default {
   methods: {
     submitChange() {
       this.loading = true
-      axios.post('/account/change')
+      const payload = { 'resources': this.license }
+      axios.post('/account/change', payload)
         .then((response) => {
+          this.dialog = false
           EventBus.$emit('send-notification', response.data.message, '#00b16a')
           EventBus.$emit('get-account')
         })
@@ -94,13 +96,7 @@ export default {
   },
   watch: {
     dialog: function(val) {
-      if (val) {
-        this.license = this.resources
-        requestAnimationFrame(() => {
-          if (typeof this.$refs.form !== 'undefined') this.$refs.form.resetValidation()
-          // if (typeof this.$refs.form !== 'undefined') this.$refs.passwordCurrent.focus()
-        })
-      }
+      if (val) this.license = this.resources
     }
   },
 }

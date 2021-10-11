@@ -41,7 +41,8 @@ export default {
   computed: {
     resources() {
       if (this.loading || this.account === undefined) return ''
-      else return this.account.license.resources + (this.account.license.resources == 1 ? ' Server' : ' Servers') + ' / User'
+      if (this.account.license.resources == -1) return 'Unlimited'
+      return this.account.license.resources + (this.account.license.resources == 1 ? ' Server' : ' Servers') + ' / User'
     },
     pricing() {
       if (this.loading || this.account === undefined) return ''
@@ -50,8 +51,8 @@ export default {
     },
     expiration() {
       if (this.loading || this.account === undefined) return ''
-      else if (this.account.license.expiration) return this.account.license.expiration_date
-      else return 'Lifetime'
+      if (this.account.license.expiration) return this.account.license.expiration_date
+      return 'Lifetime'
     },
   },
 }

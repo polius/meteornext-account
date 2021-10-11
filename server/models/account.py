@@ -137,3 +137,11 @@ class Account:
             SET in_use = 0
         """
         self._sql.execute(query, (account_id))
+
+    def change_license(self, account_id, resources):
+        query = """
+            UPDATE licenses
+            SET resources = %s
+            WHERE account_id = %s
+        """
+        self._sql.execute(query, (resources, account_id))
