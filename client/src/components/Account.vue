@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container style="max-width:100%">
+    <v-container style="max-width:min(100%,100em)">
       <div v-show="!$vuetify.breakpoint.smAndDown">
         <v-row no-gutters>
           <v-col cols="6" style="padding-right:6px">
