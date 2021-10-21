@@ -13,7 +13,7 @@
               <v-form ref="form" @submit.prevent>
                 <p class="text-h6 font-weight-regular white--text" style="font-size:1.8rem!important; text-align:center; margin-top:10px; margin-bottom:10px">{{ price == 0 ? 'Free' : '$' + price }}<span v-if="price != 0" class="text-h6 font-weight-light white--text" style="font-size:1.4rem!important; margin-left:5px">/ Month</span></p>
                 <div class="text-body-1 font-weight-regular" style="font-size:1.1rem !important; text-align:center; margin-bottom:15px">How many servers?</div>
-                <v-select outlined v-model="license" :items="account.pricing" item-value="units" item-text="units" class="text-body-1 white--text" style="margin-left:auto; margin-right:auto; max-width:150px" hide-details>
+                <v-select outlined v-model="license" :items="account.pricing" item-value="units" item-text="units" class="text-body-1 white--text" style="margin-left:auto; margin-right:auto; max-width:160px" hide-details>
                   <template v-slot:[`selection`]="{ item }">
                     <span v-if="item.units == -1">Unlimited</span>
                     <span v-else>{{ item.units + (item.units == 1 ? ' server' : ' servers')}}</span>
