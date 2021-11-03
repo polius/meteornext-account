@@ -1,7 +1,10 @@
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
+
 module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
+  productionSourceMap: false,
   devServer: {
     disableHostCheck: true,
     headers: { 'Access-Control-Allow-Origin': '*' }
@@ -13,4 +16,9 @@ module.exports = {
       }
     }
   },
+  configureWebpack: {
+    plugins: [
+      new CompressionWebpackPlugin() // Remove "{ cache: false }" for Production
+    ]
+  }
 }

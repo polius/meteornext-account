@@ -1,9 +1,4 @@
-# curl -d "{\"email\":\"poliuscorp\",\"key\":\"KeyXc4et9qksf3ajMjItPpQyvCBWwYwO7fRT6xBnrAY=\",\"uuid\":\"3037522049778\",\"challenge\":\"123\"}" -H "Content-Type:application/json" https://license.meteor2.io/
 from gunicorn.app.base import Application, Config
-import json
-import gunicorn
-from gunicorn import glogging
-from gunicorn.workers import sync
 from app import app
 
 class GUnicornFlaskApplication(Application):

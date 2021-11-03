@@ -42,7 +42,7 @@ export default {
     resources() {
       if (this.loading || this.account === undefined) return ''
       if (this.account.license.resources == -1) return 'Unlimited'
-      return this.account.license.resources + (this.account.license.resources == 1 ? ' Server' : ' Servers')
+      return this.account.license.resources + (this.account.license.resources == 1 ? ' Server' : ' Servers') + ' / User'
     },
     pricing() {
       if (this.loading || this.account === undefined) return ''
