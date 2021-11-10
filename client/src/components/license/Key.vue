@@ -1,34 +1,24 @@
 <template>
-  <v-dialog v-model="dialog" max-width="640px">
-    <v-card>
-      <v-toolbar dense flat color="primary">
-        <v-toolbar-title class="white--text subtitle-1">LICENSE KEY</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn @click="dialog = false" icon><v-icon style="font-size:22px">fas fa-times-circle</v-icon></v-btn>
-      </v-toolbar>
-      <v-card-text style="padding:15px">
-        <v-container style="padding:0px">
-          <v-layout wrap>
-            <v-flex xs12>
-              <v-form ref="form" @submit.prevent>
-                <div class="body-1" style="margin-bottom:10px">Use the following credentials to register your copy of Meteor Next.</div>
-                <v-text-field @click="$event.target.select()" outlined v-model="email" readonly label="Email" style="padding-top:5px" hide-details></v-text-field>
-                <v-text-field @click="$event.target.select()" outlined v-model="key" readonly label="Key" style="margin-top:20px" hide-details></v-text-field>
-                <div class="body-1 white--text" style="margin-top:15px; margin-bottom:15px"><v-icon :style="`font-size:18px; margin-right:10px; margin-bottom:3px; color:${in_use ? '#ff9800' : '#00b16a'}`">{{ in_use ? 'fas fa-lock' : 'fas fa-unlock' }}</v-icon>{{ in_use ? 'License registered.' : 'License ready to be registered.' }}</div>
-              </v-form>
-              <v-divider></v-divider>
-              <v-row no-gutters style="margin-top:20px;">
-                <v-btn color="primary" @click="dialog = false">CLOSE</v-btn>
-                <v-spacer/>
-                <v-btn @click="submitUnregister" text :disabled="!in_use" :loading="loading">UNREGISTER LICENSE</v-btn>
-              </v-row>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+  <div>
+    <div class="text-h6 font-weight-medium">License key</div>
+    <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:10px">Use the following credentials to register your copy of Meteor Next.</div>
+    <div class="text-body-2 font-weight-medium" style="margin-top:15px">Email</div>
+    <v-text-field flat @click="$event.target.select()" solo v-model="email" readonly label="Email" style="padding-top:5px" hide-details></v-text-field>
+    <div class="text-body-2 font-weight-medium" style="margin-top:15px">Key</div>
+    <v-text-field flat @click="$event.target.select()" solo v-model="key" readonly label="Key" style="padding-top:5px" hide-details></v-text-field>
+    <div class="body-1" style="margin-top:15px; margin-bottom:15px"><v-icon :style="`font-size:16px; margin-right:10px; margin-bottom:5px; color:${in_use ? '#00b16a' : '#00b16a'}`">{{ in_use ? 'fas fa-lock' : 'fas fa-unlock' }}</v-icon>{{ in_use ? 'License registered' : 'License ready to be registered' }}</div>
+    <v-divider style="margin-top:20px; margin-bottom:20px"></v-divider>
+    <div class="text-h6 font-weight-medium">Unregister license</div>
+    <div class="text-body-1 font-weight-light" style="margin-top:15px">A license key can be used only in one device. To be able to use it in another device, first you have to unregister it.</div>
+    <v-btn @click="submitUnregister" color="#2c7be5" title="Unregister your existing license to use it in another computer" style="font-size:0.9375rem; font-weight:400; text-transform:none; color:white; margin-top:15px" :disabled="!in_use" :loading="loading">Unregister license</v-btn>
+  </div>
 </template>
+
+<style scoped>
+::v-deep .v-input__control {
+  border: 1px solid #d2ddec !important;
+}
+</style>
 
 <script>
 import axios from 'axios'

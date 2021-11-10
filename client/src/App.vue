@@ -1,13 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar v-if="isLoggedIn" color="#424242" style="max-height:64px">
-      <v-img class="mr-2" :src="require('./assets/logo.png')" max-height="40" max-width="40" contain style="margin-bottom:2px"></v-img>
-      <v-toolbar-title>Meteor Next | Account</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn @click="logout" class="d-none d-sm-flex">Logout</v-btn>
-      <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
-    </v-toolbar>
-    <v-main>
+    <v-main style="background-color:#f6f7ff">
       <router-view/>
     </v-main>
     <v-snackbar v-model="snackbar" :multi-line="false" :timeout="snackbarTimeout" :color="snackbarColor" top style="padding-top:0px;">
@@ -21,10 +14,10 @@
 
 <style>
 body {
-  background-color:#303030;
+  background-color:#f6f7ff;
 }
 /* Dark Scrollbar */
-.dark_scrollbar::-webkit-scrollbar {
+/* .dark_scrollbar::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 15px;
   background-color: #424242;
@@ -59,16 +52,16 @@ body {
 }
 ::-webkit-scrollbar-corner {
   background: #303030 ;
-}
+} */
 </style>
 
 <script>
 import EventBus from './js/event-bus'
 
 // Scrollbar - Firefox
-document.documentElement.style.setProperty('scrollbar-color', '#303030 #424242');
+// document.documentElement.style.setProperty('scrollbar-color', '#303030 #424242');
 // Scrollbar - Chrome
-document.documentElement.classList.add("dark_scrollbar");
+// document.documentElement.classList.add("dark_scrollbar");
 
 export default {
   data: () => ({
@@ -78,16 +71,10 @@ export default {
     snackbarText: '',
     snackbarColor: ''
   }),
-  computed: {
-    isLoggedIn: function() { return this.$store.getters['app/isLoggedIn'] },
-  },
   mounted() {
     EventBus.$on('send-notification', this.notification)
   },
   methods: {
-    logout() {
-      this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
-    },
     notification(message, color) {
       this.snackbarText = message
       this.snackbarColor = color 

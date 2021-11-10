@@ -1,14 +1,29 @@
 <template>
   <div>
+    <div class="text-h6 font-weight-medium">Two factor security</div>
+    <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</div>
+    <v-card v-if="mfa.mode != null" style="margin-bottom:20px">
+      <v-row no-gutters>
+        <v-col cols="auto" style="display:flex; margin:15px">
+          <v-icon color="#00b16a">fas fa-check-circle</v-icon>
+        </v-col>
+        <v-col style="padding-top:5px">
+          <div class="text-body-1" style="color:#00b16a">{{ `The MFA (${mfa.mode == '2fa' ? '2FA' : 'Security Key'}) is currently enabled.` }}</div>
+          <div class="text-body-2">Active since: {{ dateFormat(mfa.created) }}</div>
+        </v-col>
+      </v-row>
+    </v-card>
+    <v-btn v-if="mfa.mode != null" :loading="loading" color="warning" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Disable 2FA</v-btn>
+    <v-btn v-else :loading="loading" color="#2c7be5" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Enable 2FA</v-btn>
     <v-dialog v-model="mfaDialog" max-width="672px">
-      <v-card>
-        <v-toolbar dense flat color="primary">
-          <v-toolbar-title class="white--text subtitle-1">MANAGE MFA</v-toolbar-title>
+      <v-card style="background-color:#f6f7ff">
+        <v-toolbar dense flat color="#536dfe">
+          <v-toolbar-title class="white--text subtitle-1">Two factor security</v-toolbar-title>
           <v-divider v-if="mfa.mode != null || mfaDialogStep == 2" class="mx-3" inset vertical></v-divider>
-          <div v-if="mfa.mode == '2fa' || (mfaDialogStep == 2 && mfaMode == '2fa')" class="text-body-1">Virtual 2FA Device</div>
-          <div v-if="mfa.mode == 'webauthn' || (mfaDialogStep == 2 && mfaMode == 'webauthn')" class="text-body-1">Security Key</div>
+          <div v-if="mfa.mode == '2fa' || (mfaDialogStep == 2 && mfaMode == '2fa')" class="text-body-1 white--text">Virtual 2FA Device</div>
+          <div v-if="mfa.mode == 'webauthn' || (mfaDialogStep == 2 && mfaMode == 'webauthn')" class="text-body-1 white--text">Security Key</div>
           <v-spacer></v-spacer>
-          <v-btn @click="mfaDialog = false" icon><v-icon style="font-size:22px">fas fa-times-circle</v-icon></v-btn>
+          <v-btn @click="mfaDialog = false" icon><v-icon style="font-size:22px; color:white">fas fa-times-circle</v-icon></v-btn>
         </v-toolbar>
         <v-card-text style="padding:15px">
           <v-container style="padding:0px">
@@ -27,12 +42,12 @@
                           </v-col>
                         </v-row>
                       </v-card>
-                      <div class="text-body-1 white--text" style="margin-top:20px">Choose the type of MFA device to assign:</div>
+                      <div class="text-body-1" style="color:black; margin-top:20px">Choose the type of MFA device to assign:</div>
                       <v-radio-group v-model="mfaMode" hide-details style="margin-top:10px">
                         <v-radio value="2fa">
                           <template v-slot:label>
                             <div>
-                              <div class="white--text">Virtual 2FA Device</div>
+                              <div style="color:black">Virtual 2FA Device</div>
                               <div class="font-weight-regular caption" style="font-size:0.85rem !important">Authenticator app installed on your mobile device or computer</div>
                             </div>
                           </template>
@@ -40,7 +55,7 @@
                         <v-radio value="webauthn" style="margin-top:5px">
                           <template v-slot:label>
                             <div>
-                              <div class="white--text">Security Key</div>
+                              <div style="color:black">Security Key</div>
                               <div class="font-weight-regular caption" style="font-size:0.85rem !important">YubiKey or any other compliant device</div>
                             </div>
                           </template>
@@ -61,10 +76,10 @@
                               </v-text-field>
                             </v-col>
                             <v-col style="margin-left:15px">
-                              <div class="text-body-1 white--text" style="margin-bottom:15px">How to enable app based authentication</div>
-                              <div class="text-body-1" style="margin-bottom:10px">1. Download and install an app (such as Google Authenticator) on your mobile device.</div>
-                              <div class="text-body-1" style="margin-bottom:10px">2. Scan the QR code.</div>
-                              <div class="text-body-1">3. Enter and verify the authentication code generated by the app.</div>
+                              <div class="text-body-1 font-weight-regular" style="color:black; margin-bottom:20px">How to enable app based authentication</div>
+                              <div class="text-body-1 font-weight-light" style="color:black; margin-bottom:15px">1. Download and install an app (such as Google Authenticator) on your mobile device.</div>
+                              <div class="text-body-1 font-weight-light" style="color:black; margin-bottom:15px">2. Scan the QR code.</div>
+                              <div class="text-body-1 font-weight-light" style="color:black">3. Enter and verify the authentication code generated by the app.</div>
                             </v-col>
                           </v-row>
                         </v-card-text>
@@ -72,9 +87,9 @@
                       <v-card v-else-if="mfaMode == 'webauthn'">
                         <v-progress-linear v-show="loadingFingerprint" indeterminate></v-progress-linear>
                         <v-card-text>
-                          <div class="text-h5 font-weight-light white--text" style="text-align:center; font-size:1.4rem !important">Verify your identity</div>
+                          <div class="text-h5 font-weight-light" style="color:black; text-align:center; font-size:1.4rem !important">Verify your identity</div>
                           <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#00b16a' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
-                          <div class="text-subtitle-1 white--text" style="text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
+                          <div class="text-subtitle-1" style="color:black; text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
                         </v-card-text>
                       </v-card>
                     </div>
@@ -95,8 +110,8 @@
                 </v-form>
                 <v-divider></v-divider>
                 <v-row no-gutters style="margin-top:20px;">
-                  <v-btn :disabled="mfa.mode == null && mfaDialogStep == 2 && mfaMode == 'webauthn' && webauthn.status != 'ok'" :loading="loading" color="#00b16a" @click="submitMFA">{{ mfa.mode ? 'DISABLE MFA' : 'CONFIRM' }}</v-btn>
-                  <v-btn :disabled="loading" color="#EF5354" @click="cancelMFA" style="margin-left:5px">CANCEL</v-btn>
+                  <v-btn :disabled="mfa.mode == null && mfaDialogStep == 2 && mfaMode == 'webauthn' && webauthn.status != 'ok'" :loading="loading" color="#00b16a" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitMFA">{{ mfa.mode ? 'Disable MFA' : 'Confirm' }}</v-btn>
+                  <v-btn :disabled="loading" color="#e74c3c" @click="cancelMFA" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
                 </v-row>
               </v-flex>
             </v-layout>
@@ -107,13 +122,13 @@
     <v-dialog v-model="twoFactorCodeDialog" max-width="512px">
       <v-card>
         <v-toolbar dense flat color="primary">
-          <v-toolbar-title class="white--text subtitle-1"><v-icon small style="margin-right:10px; margin-bottom:3px">fas fa-qrcode</v-icon>QR CODE</v-toolbar-title>
+          <v-toolbar-title class="white--text subtitle-1"><v-icon small color="white" style="margin-right:10px; margin-bottom:3px">fas fa-qrcode</v-icon>QR CODE</v-toolbar-title>
         </v-toolbar>
         <v-card-text style="padding:0px">
           <v-container>
             <v-layout wrap>
               <v-flex xs12>
-                <div class="white--text" style="font-size:18px; letter-spacing:0.08em; text-align:center;">{{ twoFactor['hash'] }}</div>
+                <div style="color:black; font-size:18px; letter-spacing:0.08em; text-align:center;">{{ twoFactor['hash'] }}</div>
               </v-flex>
             </v-layout>
           </v-container>
@@ -124,15 +139,16 @@
 </template>
 
 <script>
-import EventBus from '../../js/event-bus'
+import EventBus from '../../js/event-bus.js'
 
-import { webauthnRegisterBegin, webauthnRegisterValidate, webauthnRegisterFinish } from './webauthn.js'
+import { webauthnRegisterBegin, webauthnRegisterValidate, webauthnRegisterFinish } from '../../plugins/webauthn.js'
 import axios from 'axios'
 import moment from 'moment'
 import QrcodeVue from 'qrcode.vue'
 
 export default {
   data: () => ({
+    mfaDialog: false,
     mfa: { mode: null, created: null },
 
     // Loading
@@ -155,21 +171,14 @@ export default {
     },
   }),
   props: { 
-    enabled: Boolean,
     account: Object,
     dialog: Boolean
   },
   components: { QrcodeVue },
-  computed: {
-    mfaDialog: {
-      get() { return this.enabled },
-      set(value) { this.$emit('update', value) },
-    },
+  created() {
+    this.getMFA()
   },
   watch: {
-    account: function(val) {
-      this.mfa = val
-    },
     mfaDialog: function (val) {
       if (val && this.mfa.mode == null) this.get2FA()
       else {

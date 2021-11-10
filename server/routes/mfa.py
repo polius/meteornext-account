@@ -28,7 +28,7 @@ class MFA:
             if request.method == 'GET':
                 # Get 2FA challenge
                 mfa = self._account.get_mfa(get_jwt_identity())
-                return_data = { 'mfa': None, 'created': None }
+                return_data = { 'mode': None, 'created': None }
                 if len(mfa) > 0:
                     return_data['mode'] = '2fa' if mfa[0]['2fa_hash'] is not None else 'webauthn' if mfa[0]['webauthn_ukey'] is not None else None
                     return_data['created'] = mfa[0]['created_at']

@@ -6,6 +6,12 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/register',
+    name: 'register',
+    props: true,
+    component: () => import('../components/Register')
+  },
+  {
     path: '/login',
     name: 'login',
     props: true,
@@ -27,7 +33,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.path == '/logout') store.dispatch('app/logout').then(() => next({ path: '/login' }))
-  else if (to.path == '/login' && store.getters['app/isLoggedIn']) next('/')
+  else if (['/login','/register'].includes(to.path) && store.getters['app/isLoggedIn']) next('/')
   else if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.getters['app/isLoggedIn']) next()
     else next({ path: '/login' })

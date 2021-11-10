@@ -28,16 +28,12 @@
                       </v-card>
                     </div>
                     <div v-else>
-                      <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="[v => !!v || '']" required v-on:keyup.enter="login()" style="margin-bottom:20px;" hide-details autofocus>
-                        <template v-slot:append><v-icon small style="margin-top:4px; margin-right:4px">fas fa-user</v-icon></template>
-                      </v-text-field>
-                      <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="login()" style="margin-bottom:20px;" hide-details>
-                        <template v-slot:append><v-icon small style="margin-top:4px; margin-right:4px">fas fa-lock</v-icon></template>
-                      </v-text-field>
+                      <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="[v => !!v || '']" required v-on:keyup.enter="login()" style="margin-bottom:20px;" hide-details autofocus></v-text-field>
+                      <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="login()" style="margin-bottom:20px;" hide-details></v-text-field>
                     </div>
                   </v-form>
                   <v-btn v-if="!(mfa == 'webauthn')" x-large type="submit" color="info" :loading="loading" block style="margin-top:0px;" @click="login()">LOGIN</v-btn>
-                  <v-btn v-if="!(mfa == 'webauthn')" text block style="margin-top:10px">Create account</v-btn>
+                  <div v-if="!(mfa == 'webauthn')" class="text-body-2 white--text" style="margin-top:15px">Don't have an account? <router-link to="/register" style="text-decoration:none; font-weight:500">Sign up</router-link></div>
                 </v-card-text>
               </v-card>
             </v-slide-y-transition>
@@ -50,7 +46,7 @@
 
 <script>
 import EventBus from '../js/event-bus'
-import { webauthnLogin } from './mfa/webauthn.js'
+import { webauthnLogin } from '../plugins/webauthn.js'
 
 export default {
   data: () => ({

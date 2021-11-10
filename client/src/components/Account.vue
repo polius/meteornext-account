@@ -1,25 +1,29 @@
 <template>
   <div>
-    <v-container style="max-width:min(100%,100em)">
-      <div v-show="!$vuetify.breakpoint.smAndDown">
-        <v-row no-gutters>
-          <v-col cols="6" style="padding-right:6px">
-            <Profile :loading="loading" :account="account" style="height:296px"/>
-          </v-col>
-          <v-col cols="6" style="padding-left:6px">
-            <License :loading="loading" :account="account"/>
-          </v-col>
-        </v-row>
-        <Billing style="margin-top:12px"/>
-      </div>
-      <div v-show="$vuetify.breakpoint.smAndDown">
-        <Profile :loading="loading" :account="account"/>
-        <License :loading="loading" :account="account" style="margin-top:12px"/>
-        <Billing style="margin-top:12px"/>
-      </div>
+    <v-toolbar color="#536dfe" style="max-height:64px">
+      <v-img class="mr-2" :src="require('../assets/logo.png')" max-height="40" max-width="40" contain style="margin-bottom:2px"></v-img>
+      <v-toolbar-title style="color:white">Meteor Next | Account</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn @click="logout" class="d-none d-sm-flex" text style="color:white; height:45px"><v-icon style="margin-right:10px">fas fa-sign-out-alt</v-icon>Logout</v-btn>
+      <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout" style="color:white"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
+    </v-toolbar>
+    <v-container style="max-width:min(100%,90em)">
+      <v-tabs v-model="tab" background-color="#e3e7ff" style="border-radius:3px;">
+        <v-tab active-class="active" style="color:black">License</v-tab>
+        <v-tab active-class="active" style="color:black">Billing</v-tab>
+        <v-tab active-class="active" style="color:black">Profile</v-tab>
+      </v-tabs>
+      <License v-show="tab == 0" :loading="loading" :account="account"/>
+      <Profile v-show="tab == 2" :loading="loading" :account="account"/>
     </v-container>
   </div>
 </template>
+
+<style scoped>
+.active {
+  color: #536dfe!important;
+}
+</style>
 
 <script>
 import EventBus from '../js/event-bus'
@@ -34,6 +38,7 @@ export default {
   data: () => ({
     loading: false,
     account: {},
+    tab: 0,
   }),
   components: { Profile, License, Billing },
   created() {
@@ -49,23 +54,15 @@ export default {
         .then((response) => {
           this.account = response.data
           console.log(this.account)
-          this.getMFA()
-        })
-        .catch((error) => {
-          if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
-          else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
-        })
-    },
-    getMFA() {
-      axios.get('/mfa')
-        .then((response) => {
-          this.account['mfa'] = response.data.data
         })
         .catch((error) => {
           if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
           else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
         })
         .finally(() => this.loading = false)
+    },
+    logout() {
+      this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
     },
     dateFormat(date) {
       if (date) return moment.utc(date).local().format("YYYY-MM-DD HH:mm:ss")

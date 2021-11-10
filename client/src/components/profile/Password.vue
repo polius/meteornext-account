@@ -1,32 +1,27 @@
 <template>
-  <v-dialog v-model="dialog" max-width="640px">
-    <v-card>
-      <v-toolbar dense flat color="primary">
-        <v-toolbar-title class="white--text subtitle-1">CHANGE PASSWORD</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn @click="dialog = false" icon><v-icon style="font-size:22px">fas fa-times-circle</v-icon></v-btn>
-      </v-toolbar>
-      <v-card-text style="padding:15px">
-        <v-container style="padding:0px">
-          <v-layout wrap>
-            <v-flex xs12>
-              <v-form ref="passwordForm" @submit.prevent>
-                <v-text-field ref="passwordCurrent" v-model="item.current" :readonly="loading" label="Current password" type="password" :rules="[v => !!v || '']" required style="padding-top:10px" autocomplete="new-password" v-on:keyup.enter="submitPassword"></v-text-field>
-                <v-text-field v-model="item.new" :readonly="loading" label="New password" type="password" :rules="[v => !!v || '']" required style="padding-top:0px" autocomplete="new-password" v-on:keyup.enter="submitPassword"></v-text-field>
-                <v-text-field v-model="item.repeat" :readonly="loading" label="Repeat new password" type="password" :rules="[v => !!v || '']" required style="padding-top:0px" autocomplete="new-password" v-on:keyup.enter="submitPassword"></v-text-field>
-              </v-form>
-              <v-divider></v-divider>
-              <v-row no-gutters style="margin-top:20px;">
-                <v-btn :loading="loading" color="#00b16a" @click="submitPassword">CONFIRM</v-btn>
-                <v-btn :disabled="loading" color="#EF5354" @click="dialog = false" style="margin-left:5px">CANCEL</v-btn>
-              </v-row>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+  <div>
+      <div class="text-h6 font-weight-medium">Change password</div>
+      <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">We will email you a confirmation when changing your password, so please expect that email after submitting.</div>
+      <v-form ref="passwordForm" @submit.prevent>
+        <div class="text-body-2 font-weight-medium" style="margin-top:15px">Current password</div>
+        <v-text-field flat v-model="item.current" :readonly="loading" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
+        <div class="text-body-2 font-weight-medium" style="margin-top:15px">New password</div>
+        <v-text-field flat v-model="item.new" :readonly="loading" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
+        <div class="text-body-2 font-weight-medium" style="margin-top:15px">Confirm new password</div>
+        <v-text-field flat v-model="item.repeat" :readonly="loading" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
+      </v-form>
+      <v-btn :loading="loading" color="#2c7be5" @click="submitPassword" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Update password</v-btn>
+  </div>
 </template>
+
+<style scoped>
+::v-deep .v-input--is-focused .v-input__control {
+  border: 1px solid #2c7be5 !important; /* #005fcc */
+}
+::v-deep .v-input__control {
+  border: 1px solid #d2ddec !important;
+}
+</style>
 
 <script>
 import axios from 'axios'
@@ -66,17 +61,6 @@ export default {
         })
         .finally(() => this.loading = false)
     },
-  },
-  watch: {
-    dialog: function(val) {
-      if (val) {
-        this.item = { current: '', new: '', repeat: ''}
-        requestAnimationFrame(() => {
-          if (typeof this.$refs.passwordForm !== 'undefined') this.$refs.passwordForm.resetValidation()
-          if (typeof this.$refs.passwordCurrent !== 'undefined') this.$refs.passwordCurrent.focus()
-        })
-      }
-    }
   },
 }
 </script>

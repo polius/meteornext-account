@@ -1,40 +1,17 @@
 <template>
-  <v-dialog v-model="dialog" max-width="645px">
-    <v-card>
-      <v-toolbar dense flat color="primary">
-        <v-toolbar-title class="white--text subtitle-1">DELETE ACCOUNT</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn @click="dialog = false" icon><v-icon style="font-size:22px">fas fa-times-circle</v-icon></v-btn>
-      </v-toolbar>
-      <v-card-text style="padding:15px">
-        <v-container style="padding:0px">
-          <v-layout wrap>
-            <v-flex xs12>
-              <v-form ref="form" @submit.prevent>
-                <v-alert colored-border elevation="2">
-                  <v-icon color="#ff9900" style="margin-bottom:2px; margin-right:10px; font-size:20px">fas fa-exclamation-triangle</v-icon>Caution! This action is non-reversible.
-                </v-alert>
-                <div class="body-1">Are you sure you want to proceed with the deletion of your Meteor Next account?</div>
-                <v-checkbox v-model="confirm" label="I confirm I want to delete my Meteor Next account.">
-                  <template v-slot:label>
-                    <div style="margin-left:5px">
-                      <div class="white--text">I confirm I want to delete my Meteor Next account.</div>
-                      <div class="font-weight-regular caption" style="font-size:0.85rem !important">Existing active licenses will be canceled.</div>
-                    </div>
-                  </template>
-                </v-checkbox>
-              </v-form>
-              <v-divider></v-divider>
-              <v-row no-gutters style="margin-top:20px;">
-                <v-btn :disabled="!confirm" :loading="loading" color="#00b16a" @click="submitDelete">CONFIRM</v-btn>
-                <v-btn :disabled="loading" color="#EF5354" @click="dialog = false" style="margin-left:5px">CANCEL</v-btn>
-              </v-row>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-card-text>
-    </v-card>
-  </v-dialog>
+  <div>
+    <div class="text-h6 font-weight-medium">Delete account</div>
+    <div class="body-1 font-weight-light" style="margin-top:15px">Please note, deleting your account is a permanent action and will no be recoverable once completed.</div>
+    <v-checkbox v-model="confirm" color="red" label="I confirm I want to delete my Meteor Next account." style="margin-top:15px" hide-details>
+      <template v-slot:label>
+        <div style="margin-left:5px">
+          <div style="color:black">I confirm I want to delete my Meteor Next account.</div>
+          <div class="font-weight-regular caption" style="color:black; font-size:0.85rem !important">Existing active licenses will be canceled.</div>
+        </div>
+      </template>
+    </v-checkbox>
+    <v-btn :loading="loading" color="#e74c3c" @click="submitDelete" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
+  </div>
 </template>
 
 <script>
