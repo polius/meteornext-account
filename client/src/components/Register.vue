@@ -8,8 +8,8 @@
               <v-card style="border-radius:5px">
                 <v-card-text>
                   <v-avatar :size="130" style="margin-top:10px;"><img :src="require('../assets/logo.png')" /></v-avatar>
-                  <div class="display-2" style="color:rgba(255,255,255,.9); margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
-                  <div class="headline" style="font-size:1.3rem!important; color:rgba(255,255,255,.9); margin-top:10px; margin-bottom:20px">ACCOUNT | REGISTER</div>
+                  <div class="display-2" style="color:black; margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
+                  <div class="headline" style="font-size:1.3rem!important; color:black; margin-top:10px; margin-bottom:20px">ACCOUNT | REGISTER</div>
                   <v-divider></v-divider>
                   <v-form ref="form" @submit.prevent style="margin-top:20px">
                     <v-text-field ref="name" filled v-model="name" label="Full Name" :rules="[v => !!v || '']" required v-on:keyup.enter="register()" style="margin-bottom:20px;" hide-details autofocus></v-text-field>
@@ -17,7 +17,7 @@
                     <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="register()" style="margin-bottom:20px;" hide-details></v-text-field>
                   </v-form>
                   <v-btn x-large type="submit" color="info" :loading="loading" block style="margin-top:0px;" @click="register()">CREATE ACCOUNT</v-btn>
-                  <div class="text-body-2 white--text" style="margin-top:15px">Have an account? <router-link to="/login" style="text-decoration:none; font-weight:500">Sign in</router-link></div>
+                  <div class="text-body-2" style="color:black; margin-top:15px">Have an account? <router-link to="/login" style="text-decoration:none; font-weight:500">Sign in</router-link></div>
                 </v-card-text>
               </v-card>
             </v-slide-y-transition>

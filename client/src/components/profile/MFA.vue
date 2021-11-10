@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="text-h6 font-weight-medium">Two factor security</div>
-    <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">Two-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</div>
+    <div class="text-h6 font-weight-medium">Multi factor security</div>
+    <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">Multi-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</div>
     <v-card v-if="mfa.mode != null" style="margin-bottom:20px">
       <v-row no-gutters>
         <v-col cols="auto" style="display:flex; margin:15px">
@@ -13,11 +13,11 @@
         </v-col>
       </v-row>
     </v-card>
-    <v-btn v-if="mfa.mode != null" :loading="loading" color="warning" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Disable 2FA</v-btn>
-    <v-btn v-else :loading="loading" color="#2c7be5" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Enable 2FA</v-btn>
+    <v-btn v-if="mfa.mode != null" :loading="loading" color="warning" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Disable MFA</v-btn>
+    <v-btn v-else :loading="loading" color="#2c7be5" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Enable MFA</v-btn>
     <v-dialog v-model="mfaDialog" max-width="672px">
-      <v-card style="background-color:#f6f7ff">
-        <v-toolbar dense flat color="#536dfe">
+      <v-card style="background-color:#fffcfa">
+        <v-toolbar dense flat color="#f5983b">
           <v-toolbar-title class="white--text subtitle-1">Two factor security</v-toolbar-title>
           <v-divider v-if="mfa.mode != null || mfaDialogStep == 2" class="mx-3" inset vertical></v-divider>
           <div v-if="mfa.mode == '2fa' || (mfaDialogStep == 2 && mfaMode == '2fa')" class="text-body-1 white--text">Virtual 2FA Device</div>

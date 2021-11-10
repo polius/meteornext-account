@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main style="background-color:#f6f7ff">
+    <v-main style="background-color:#fffcfa">
       <router-view/>
     </v-main>
     <v-snackbar v-model="snackbar" :multi-line="false" :timeout="snackbarTimeout" :color="snackbarColor" top style="padding-top:0px;">
@@ -14,7 +14,7 @@
 
 <style>
 body {
-  background-color:#f6f7ff;
+  background-color:#fffcfa;
 }
 /* Dark Scrollbar */
 /* .dark_scrollbar::-webkit-scrollbar {

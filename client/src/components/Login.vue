@@ -8,8 +8,8 @@
               <v-card style="border-radius:5px">
                 <v-card-text>
                   <v-avatar :size="130" style="margin-top:10px;"><img :src="require('../assets/logo.png')" /></v-avatar>
-                  <div class="display-2" style="color:rgba(255,255,255,.9); margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
-                  <div class="headline" style="font-size:1.3rem!important; color:rgba(255,255,255,.9); margin-top:10px; margin-bottom:20px">ACCOUNT | LOGIN</div>
+                  <div class="display-2" style="color:black; margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
+                  <div class="headline" style="font-size:1.3rem!important; color:black; margin-top:10px; margin-bottom:20px">ACCOUNT | LOGIN</div>
                   <v-divider></v-divider>
                   <v-form ref="form" @submit.prevent style="margin-top:20px">
                     <div v-if="mfa == '2fa'">
@@ -21,9 +21,9 @@
                       <v-card>
                         <v-progress-linear v-show="loading" indeterminate></v-progress-linear>
                         <v-card-text>
-                          <div class="text-h5 font-weight-light white--text" style="text-align:center; font-size:1.4rem !important">Verify your identity</div>
+                          <div class="text-h5 font-weight-light" style="color:black; text-align:center; font-size:1.4rem !important">Verify your identity</div>
                           <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#00b16a' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
-                          <div class="text-subtitle-1 white--text" style="text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
+                          <div class="text-subtitle-1" style="color:black; text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
                         </v-card-text>
                       </v-card>
                     </div>
@@ -33,7 +33,7 @@
                     </div>
                   </v-form>
                   <v-btn v-if="!(mfa == 'webauthn')" x-large type="submit" color="info" :loading="loading" block style="margin-top:0px;" @click="login()">LOGIN</v-btn>
-                  <div v-if="!(mfa == 'webauthn')" class="text-body-2 white--text" style="margin-top:15px">Don't have an account? <router-link to="/register" style="text-decoration:none; font-weight:500">Sign up</router-link></div>
+                  <div v-if="!(mfa == 'webauthn')" class="text-body-2" style="color:black; margin-top:15px">Don't have an account? <router-link to="/register" style="text-decoration:none; font-weight:500">Sign up</router-link></div>
                 </v-card-text>
               </v-card>
             </v-slide-y-transition>
