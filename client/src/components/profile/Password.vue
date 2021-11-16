@@ -1,7 +1,14 @@
 <template>
   <div>
       <div class="text-h6 font-weight-medium">Change password</div>
-      <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">We will email you a confirmation when changing your password, so please expect that email after submitting.</div>
+      <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">To create a new password, you have to meet all of the following requirements:</div>
+      <v-card elevation="1">
+        <v-card-text style="padding:10px 26px">
+          <li class="text-body-2">Minimum 8 characters</li>
+          <li class="text-body-2">At least one number</li>
+          <li class="text-body-2">Cannot be the same as the previous password</li>
+        </v-card-text>
+      </v-card>
       <v-form ref="passwordForm" @submit.prevent>
         <div class="text-body-2 font-weight-medium" style="margin-top:15px">Current password</div>
         <v-text-field flat v-model="item.current" :readonly="loading" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>

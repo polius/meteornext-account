@@ -8,6 +8,7 @@ from flask_compress import Compress
 
 import connectors
 import routes.login
+import routes.register
 import routes.account
 import routes.mfa
 
@@ -36,9 +37,11 @@ SQL = connectors.Pool(conf['sql'])
 # Register blueprints
 URL_PREFIX = "/api"
 login = routes.login.Login(SQL)
+register = routes.register.Register(SQL)
 account = routes.account.Account(SQL)
 mfa = routes.mfa.MFA(SQL)
 app.register_blueprint(login.blueprint(), url_prefix=URL_PREFIX)
+app.register_blueprint(register.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(account.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(mfa.blueprint(), url_prefix=URL_PREFIX)
 

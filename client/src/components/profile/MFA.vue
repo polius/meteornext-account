@@ -2,7 +2,17 @@
   <div>
     <div class="text-h6 font-weight-medium">Multi factor security</div>
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">Multi-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</div>
-    <v-card v-if="mfa.mode != null" style="margin-bottom:20px">
+    <v-card v-if="mfa.mode == null" style="margin-bottom:20px">
+      <v-row no-gutters align="center" justify="center">
+        <v-col cols="auto" style="display:flex; margin:15px">
+          <v-icon color="#00b16a">fas fa-shield-alt</v-icon>
+        </v-col>
+        <v-col>
+          <div class="text-body-1">Protect your account by requiring an additional layer of security to sign in.</div>
+        </v-col>
+      </v-row>
+    </v-card>
+    <v-card v-else style="margin-bottom:20px">
       <v-row no-gutters>
         <v-col cols="auto" style="display:flex; margin:15px">
           <v-icon color="#00b16a">fas fa-check-circle</v-icon>
@@ -32,17 +42,7 @@
                 <v-form ref="mfaForm" @submit.prevent style="margin-bottom:15px">
                   <div v-if="mfa.mode == null">
                     <div v-if="mfaDialogStep == 1">
-                      <v-card>
-                        <v-row no-gutters align="center" justify="center">
-                          <v-col cols="auto" style="display:flex; margin:15px">
-                            <v-icon color="#00b16a">fas fa-shield-alt</v-icon>
-                          </v-col>
-                          <v-col>
-                            <div class="text-body-1">Protect your account by requiring an additional layer of security to sign in.</div>
-                          </v-col>
-                        </v-row>
-                      </v-card>
-                      <div class="text-body-1" style="color:black; margin-top:20px">Choose the type of MFA device to assign:</div>
+                      <div class="text-body-1" style="color:black">Choose the type of MFA device to assign:</div>
                       <v-radio-group v-model="mfaMode" hide-details style="margin-top:10px">
                         <v-radio value="2fa">
                           <template v-slot:label>
@@ -65,9 +65,9 @@
                     <div v-else>
                       <v-alert dense v-if="mfaMode == 'webauthn' && webauthn.status == 'ko'" color="#EF5354">{{ webauthn.error }}</v-alert>
                       <v-card v-if="mfaMode == '2fa'">
-                        <v-card-text>
+                        <v-card-text style="padding:0px">
                           <v-row no-gutters>
-                            <v-col cols="auto">
+                            <v-col style="margin:15px">
                               <v-progress-circular v-if="twoFactor['uri'] == null" indeterminate style="margin-left:auto; margin-right:auto; display:table;"></v-progress-circular>
                               <qrcode-vue v-else :value="twoFactor['uri']" size="200" level="H" background="#ffffff" foreground="#000000" style="text-align:center"></qrcode-vue>
                               <v-btn @click="twoFactorCodeDialog = true" text block hide-details>CAN'T SCAN THE QR?</v-btn>
@@ -75,7 +75,7 @@
                                 <template v-slot:append><v-icon small style="margin-top:3px; margin-right:4px">fas fa-key</v-icon></template>
                               </v-text-field>
                             </v-col>
-                            <v-col style="margin-left:15px">
+                            <v-col style="margin:15px">
                               <div class="text-body-1 font-weight-regular" style="color:black; margin-bottom:20px">How to enable app based authentication</div>
                               <div class="text-body-1 font-weight-light" style="color:black; margin-bottom:15px">1. Download and install an app (such as Google Authenticator) on your mobile device.</div>
                               <div class="text-body-1 font-weight-light" style="color:black; margin-bottom:15px">2. Scan the QR code.</div>

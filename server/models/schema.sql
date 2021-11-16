@@ -1,5 +1,6 @@
 CREATE TABLE `accounts` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(191) NOT NULL,
   `email` VARCHAR(191) NOT NULL,
   `password` VARCHAR(191) NOT NULL,
   `last_login` DATETIME NULL,
@@ -7,12 +8,20 @@ CREATE TABLE `accounts` (
   `disabled` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   `created_at` DATETIME NOT NULL,
-  `deleted_at` DATETIME NOT NULL,
+  `deleted_at` DATETIME NULL,
   PRIMARY KEY (`id`),
   INDEX `email` (`email`),
   INDEX `last_login` (`last_login`),
   INDEX `disabled` (`disabled`),
   INDEX `deleted` (`deleted`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE `accounts_url` (
+  `account_id` INT UNSIGNED NOT NULL,
+  `mode` ENUM ('reset_password','validate_email') NOT NULL,
+  `code` VARCHAR(191) NOT NULL,
+  PRIMARY KEY (`account_id`),
+  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `accounts_mfa` (
@@ -65,8 +74,10 @@ INSERT INTO `pricing` (`units`, `price`) VALUES
 (750, 1200),
 (1000, 1500),
 (2000, 2800),
-(5000, 6500),
-(-1, 9200);
+(3000, 3900),
+(4000, 4800),
+(5000, 5500),
+(-1, 8200);
 
 CREATE TABLE `billing` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
