@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
+    "@hcaptcha/vue-hcaptcha": "^0.3.2",
     "@mdi/font": "^6.2.95",
     "axios": "^0.22.0",
     "compression-webpack-plugin": "^6.1.1",

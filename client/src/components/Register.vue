@@ -12,16 +12,16 @@
                   <div class="headline" style="font-size:1.3rem!important; color:black; margin-top:10px; margin-bottom:20px">ACCOUNT | REGISTER</div>
                   <v-divider></v-divider>
                   <div v-if="validate" style="margin-top:20px; margin-bottom:5px">
-                    <v-icon style="color:#3cbab3; margin-left:auto; margin-right:auto">fas fa-envelope-open-text</v-icon>
-                    <div class="text-h6" style="color:black">Validate your account</div>
-                    <div class="text-body-1 font-weight-light" style="color:black; margin-top:14px">We have sent an email to the address you entered</div>
-                    <div @click="resend" class="text-body-2 font-weight-medium" style="cursor:pointer; color:#1976d2; margin-top:16px">Resend validation email</div>
+                    <div class="text-h6" style="color:black; font-weight:400">Validate your email</div>
+                    <div class="text-body-1 font-weight-light" style="color:black; margin-top:15px; margin-bottom:15px">We have sent an email to the address you entered</div>
+                    <div @click="resend" class="text-body-2 font-weight-medium" style="cursor:pointer; color:#1976d2">Resend validation email</div>
                   </div>
                   <v-form v-else ref="form" @submit.prevent style="margin-top:20px">
-                    <v-text-field ref="name" filled v-model="name" label="Full Name" :rules="[v => !!v || '']" required v-on:keyup.enter="register()" style="margin-bottom:20px;" hide-details autofocus></v-text-field>
-                    <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="emailRules" required v-on:keyup.enter="register()" style="margin-bottom:20px;" hide-details></v-text-field>
-                    <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="register()" style="margin-bottom:20px;" hide-details></v-text-field>
-                    <v-btn x-large type="submit" color="info" :loading="loading" block style="margin-top:0px;" @click="register()">CREATE ACCOUNT</v-btn>
+                    <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="emailRules" required style="margin-bottom:20px;" hide-details autofocus></v-text-field>
+                    <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" style="margin-bottom:20px;" hide-details></v-text-field>
+                    <v-text-field ref="password2" filled v-model="password2" name="password2" label="Confirm Password" :rules="[v => !!v || '']" required type="password" style="margin-bottom:20px;" hide-details></v-text-field>
+                    <vue-hcaptcha sitekey="d4fcdf7d-363a-495b-8e51-aff6e138aa6c" @verify="onVerify"></vue-hcaptcha>
+                    <v-btn x-large type="submit" color="info" :loading="loading" block style="margin-top:10px;" @click="register()">CREATE ACCOUNT</v-btn>
                     <div class="text-body-2" style="color:black; margin-top:15px">Have an account? <router-link to="/login" style="text-decoration:none; font-weight:500">Sign in</router-link></div>
                   </v-form>
                 </v-card-text>
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import VueHcaptcha from '@hcaptcha/vue-hcaptcha';
 import axios from 'axios'
 import EventBus from '../js/event-bus'
 
@@ -45,19 +46,24 @@ export default {
       v => !!v || 'E-mail is required',
       v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail must be valid',
     ],
-    name: '',
     email: '',
     password: '',
+    password2: '',
+    token: '',
     validate: false,
   }),
+  components: { VueHcaptcha },
   methods: {
+    onVerify (token) {
+      this.token = token
+    },
     register() {
       if (!this.$refs.form.validate()) {
         EventBus.$emit('send-notification', 'Please make sure all required fields are filled out correctly', '#EF5354')
         return
       }
       this.loading = true
-      const payload = { name: this.name, email: this.email, password: this.password }
+      const payload = { email: this.email, password: this.password , password2: this.password2, token: this.token}
       axios.post('/register', payload)
         .then((response) => {
           this.validate = true
@@ -69,6 +75,7 @@ export default {
         .finally(() => this.loading = false)
     },
     resend() {
+      const payload = {}
       axios.post('/resend', payload)
         .then((response) => {
           EventBus.$emit('send-notification', response.data.message, '#00b16a')
