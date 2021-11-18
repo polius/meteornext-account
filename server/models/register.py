@@ -23,10 +23,10 @@ class Register:
 
         # Create email code
         query = """
-            INSERT INTO accounts_email (account_id, action, code)
-            VALUES (%s, 'verify_email', %s)
+            INSERT INTO accounts_email (account_id, action, code, created)
+            VALUES (%s, 'verify_email', %s, %s)
         """
-        self._sql.execute(query, (account_id, data['code']))
+        self._sql.execute(query, (account_id, data['code'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
 
         # Create license
         query = """

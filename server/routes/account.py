@@ -130,15 +130,16 @@ class Account:
         if not bcrypt.checkpw(current.encode('utf-8'), account['password'].encode('utf-8')):
             raise Exception("The current password is not valid.")
 
-        # Check repeat password
+        # Check password requirements
         if new != repeat:
-            raise Exception("The new password does not match")
-
-        # Check Password Policy
+            raise Exception('Passwords do not match')
         if len(new) < 8:
-            raise Exception(f"The password must be at least 8 characters long.")
+            raise Exception('The password must be at least 8 characters long')
+        if not any(c.islower() for c in new):
+            raise Exception('The password must contain a number')
+        if not any(c.isnumeric() for c in new):
+            raise Exception('The password must contain a number')
 
         # Change password
         encrypted_passw = bcrypt.hashpw(new.encode('utf8'), bcrypt.gensalt())
         self._account.change_password({'id': get_jwt_identity(), 'password': encrypted_passw})
-        return encrypted_passw

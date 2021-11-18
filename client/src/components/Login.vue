@@ -30,7 +30,7 @@
                     <div v-else>
                       <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="[v => !!v || '']" required v-on:keyup.enter="login()" style="margin-bottom:20px" hide-details autofocus></v-text-field>
                       <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="login()" hide-details></v-text-field>
-                      <p style="margin-top:8px; margin-bottom:8px; text-align:left"><span class="link font-weight-light">Forgot password?</span></p>
+                      <p style="margin-top:8px; margin-bottom:8px; text-align:left"><span @click="resetPassword" class="link">Forgot password?</span></p>
                     </div>
                   </v-form>
                   <v-btn v-if="!(mfa == 'webauthn')" x-large type="submit" color="info" :loading="loading" block style="margin-top:0px;" @click="login()">LOGIN</v-btn>
@@ -82,7 +82,8 @@ export default {
     })
   },
   mounted() {
-    if (this.prevRoute.name == 'verifyEmail')EventBus.$emit('send-notification', 'Account Verified', '#00b16a')
+    if (this.prevRoute.name == 'verifyEmail') EventBus.$emit('send-notification', 'Account Verified', '#00b16a')
+    else if (this.prevRoute.name == 'resetPasswordCode') EventBus.$emit('send-notification', 'Password Updated', '#00b16a')
   },
   watch: {
     mfa: function (val) {
@@ -142,6 +143,9 @@ export default {
         if (error.response === undefined)  EventBus.$emit('send-notification', "Can't establish a connection to the server", '#EF5354')
         else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
       }
+    },
+    resetPassword() {
+      this.$router.push('/reset_password')
     },
   }
 }

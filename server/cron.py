@@ -13,7 +13,7 @@ class Cron:
             # One-Time Tasks
             self.__one_time()
             # Schedule Tasks
-            schedule.every().day.at("00:00").do(self.__run_threaded, self.__clean_unverified_accounts)
+            schedule.every().day.at("00:00").do(self.__run_threaded, self.__clean_mails)
 
             # Start Cron Listener
             t = threading.Thread(target=self.__run_schedule)
@@ -31,7 +31,7 @@ class Cron:
             schedule.run_pending()
             time.sleep(1)
 
-    def __clean_unverified_accounts(self):
+    def __clean_mails(self):
         try:
             query = """
                 SELECT a.*
@@ -47,5 +47,13 @@ class Cron:
             #     WHERE DATE_ADD(a.created_at, INTERVAL 1 DAY) <= CURRENT_DATE
             # """
             # self._sql.execute(query)
+
+            query = """
+                DELETE FROM accounts_email
+                WHERE action = 'reset_password'
+                AND DATE_ADD(created, INTERVAL 1 DAY) <= CURRENT_DATE
+            """
+            self._sql.execute(query)
+
         except Exception:
             traceback.print_exc()

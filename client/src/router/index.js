@@ -18,15 +18,25 @@ const routes = [
     component: () => import('../components/Login')
   },
   {
+    path: '/',
+    name: 'account',
+    component: () => import('../components/Account'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/verify_email/:code',
     name: 'verifyEmail',
     component: () => import('../components/mail/VerifyEmail'),
   },
   {
-    path: '/',
-    name: 'account',
-    component: () => import('../components/Account'),
-    meta: { requiresAuth: true }
+    path: '/reset_password',
+    name: 'resetPassword',
+    component: () => import('../components/mail/ResetPassword'),
+  },
+  {
+    path: '/reset_password/:code',
+    name: 'resetPasswordCode',
+    component: () => import('../components/mail/ResetPassword'),
   },
 ]
 

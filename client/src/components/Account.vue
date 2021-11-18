@@ -32,7 +32,7 @@ import moment from 'moment'
 
 import Profile from './profile/Profile'
 import License from './license/License'
-import Billing from './billing/Billing'
+// import Billing from './billing/Billing'
 
 export default {
   data: () => ({
@@ -40,7 +40,7 @@ export default {
     account: {},
     tab: 0,
   }),
-  components: { Profile, License, Billing },
+  components: { Profile, License },
   created() {
     this.getAccount()
   },
