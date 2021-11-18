@@ -37,6 +37,10 @@ class Login:
             if account['disabled']:
                 return jsonify({"message": "Account disabled"}), 401
 
+            # Check verified
+            if not account['verified']:
+                return jsonify({"message": "Please verify your email address"}), 400
+
             # Check MFA
             if account['mfa']:
                 account_mfa = self._login.get_mfa(account['id'])[0]

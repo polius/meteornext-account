@@ -10,6 +10,7 @@ class Login:
                 a.id,
                 a.email,
                 a.password,
+                ae.account_id IS NULL AS 'verified',
                 a.disabled,
                 a.deleted,
                 CASE
@@ -18,7 +19,8 @@ class Login:
                     ELSE NULL
                 END AS 'mfa'
             FROM accounts a
-            LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id 
+            LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id
+            LEFT JOIN accounts_email ae ON ae.account_id = a.id AND ae.action = 'verify_email'
             WHERE a.email = %s
             AND a.deleted = 0
         """

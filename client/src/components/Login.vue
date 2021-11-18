@@ -7,7 +7,7 @@
             <v-slide-y-transition mode="out-in">
               <v-card style="border-radius:5px">
                 <v-card-text>
-                  <v-avatar :size="130" style="margin-top:10px;"><img :src="require('../assets/logo.png')" /></v-avatar>
+                  <v-avatar :size="130" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                   <div class="display-2" style="color:black; margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
                   <div class="headline" style="font-size:1.3rem!important; color:black; margin-top:10px; margin-bottom:20px">ACCOUNT | LOGIN</div>
                   <v-divider></v-divider>
@@ -28,8 +28,9 @@
                       </v-card>
                     </div>
                     <div v-else>
-                      <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="[v => !!v || '']" required v-on:keyup.enter="login()" style="margin-bottom:20px;" hide-details autofocus></v-text-field>
-                      <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="login()" style="margin-bottom:20px;" hide-details></v-text-field>
+                      <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="[v => !!v || '']" required v-on:keyup.enter="login()" style="margin-bottom:20px" hide-details autofocus></v-text-field>
+                      <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="login()" hide-details></v-text-field>
+                      <p style="margin-top:8px; margin-bottom:8px; text-align:left"><span class="link font-weight-light">Forgot password?</span></p>
                     </div>
                   </v-form>
                   <v-btn v-if="!(mfa == 'webauthn')" x-large type="submit" color="info" :loading="loading" block style="margin-top:0px;" @click="login()">LOGIN</v-btn>
@@ -44,6 +45,13 @@
   </div>
 </template>
 
+<style scoped>
+.link:hover {
+  color: #1976d2;
+  cursor: pointer;
+}
+</style>
+
 <script>
 import EventBus from '../js/event-bus'
 import { webauthnLogin } from '../plugins/webauthn.js'
@@ -55,7 +63,6 @@ export default {
     email: '',
     password: '',
     mfa: null,
-
     // MFA
     twoFactor: {
       hash: null,
@@ -65,8 +72,18 @@ export default {
     webauthn: { 
       status: 'init'
     },
+    // Previous route
+    prevRoute: null
   }),
   props: ['url'],
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.prevRoute = from
+    })
+  },
+  mounted() {
+    if (this.prevRoute.name == 'verifyEmail')EventBus.$emit('send-notification', 'Account Verified', '#00b16a')
+  },
   watch: {
     mfa: function (val) {
       if (val == '2fa') {
@@ -80,7 +97,7 @@ export default {
   methods: {
     async login() {
       if (!this.$refs.form.validate()) {
-         EventBus.$emit('send-notification', 'Please make sure all required fields are filled out correctly', '#EF5354')
+        EventBus.$emit('send-notification', 'Please make sure all required fields are filled out correctly', '#EF5354')
         return
       }
       this.loading = true
@@ -113,7 +130,7 @@ export default {
               catch (error) {
                 this.loading = true
                 this.webauthn = { status: 'ko' }
-                 EventBus.$emit('send-notification', 'response' in error ? error.response.data.message : error.message, '#EF5354')
+                EventBus.$emit('send-notification', 'response' in error ? error.response.data.message : error.message, '#EF5354')
                 setTimeout(() => { this.loading = false; this.mfa = null }, 1000)
               }
             }

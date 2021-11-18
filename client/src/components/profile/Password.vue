@@ -5,6 +5,7 @@
       <v-card elevation="1">
         <v-card-text style="padding:10px 26px">
           <li class="text-body-2">Minimum 8 characters</li>
+          <li class="text-body-2">At least one letter</li>
           <li class="text-body-2">At least one number</li>
           <li class="text-body-2">Cannot be the same as the previous password</li>
         </v-card-text>

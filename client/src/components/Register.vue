@@ -7,20 +7,19 @@
             <v-slide-y-transition mode="out-in">
               <v-card style="border-radius:5px">
                 <v-card-text>
-                  <v-avatar :size="130" style="margin-top:10px;"><img :src="require('../assets/logo.png')" /></v-avatar>
+                  <v-avatar :size="130" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                   <div class="display-2" style="color:black; margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
                   <div class="headline" style="font-size:1.3rem!important; color:black; margin-top:10px; margin-bottom:20px">ACCOUNT | REGISTER</div>
                   <v-divider></v-divider>
-                  <div v-if="validate" style="margin-top:20px; margin-bottom:5px">
-                    <div class="text-h6" style="color:black; font-weight:400">Validate your email</div>
+                  <div v-if="verify" style="margin-top:20px; margin-bottom:5px">
+                    <div class="text-h6" style="color:black; font-weight:400">Verify your email</div>
                     <div class="text-body-1 font-weight-light" style="color:black; margin-top:15px; margin-bottom:15px">We have sent an email to the address you entered</div>
-                    <div @click="resend" class="text-body-2 font-weight-medium" style="cursor:pointer; color:#1976d2">Resend validation email</div>
                   </div>
                   <v-form v-else ref="form" @submit.prevent style="margin-top:20px">
                     <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="emailRules" required style="margin-bottom:20px;" hide-details autofocus></v-text-field>
                     <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" style="margin-bottom:20px;" hide-details></v-text-field>
                     <v-text-field ref="password2" filled v-model="password2" name="password2" label="Confirm Password" :rules="[v => !!v || '']" required type="password" style="margin-bottom:20px;" hide-details></v-text-field>
-                    <vue-hcaptcha sitekey="d4fcdf7d-363a-495b-8e51-aff6e138aa6c" @verify="onVerify"></vue-hcaptcha>
+                    <vue-hcaptcha ref="captcha" sitekey="d4fcdf7d-363a-495b-8e51-aff6e138aa6c" @verify="onVerify"></vue-hcaptcha>
                     <v-btn x-large type="submit" color="info" :loading="loading" block style="margin-top:10px;" @click="register()">CREATE ACCOUNT</v-btn>
                     <div class="text-body-2" style="color:black; margin-top:15px">Have an account? <router-link to="/login" style="text-decoration:none; font-weight:500">Sign in</router-link></div>
                   </v-form>
@@ -50,7 +49,7 @@ export default {
     password: '',
     password2: '',
     token: '',
-    validate: false,
+    verify: false,
   }),
   components: { VueHcaptcha },
   methods: {
@@ -63,26 +62,16 @@ export default {
         return
       }
       this.loading = true
-      const payload = { email: this.email, password: this.password , password2: this.password2, token: this.token}
+      const payload = { email: this.email, password: this.password , password2: this.password2, captcha: this.token}
       axios.post('/register', payload)
-        .then((response) => {
-          this.validate = true
-          EventBus.$emit('send-notification', response.data.message, '#00b16a')
+        .then(() => {
+          this.verify = true
         })
         .catch((error) => {
           EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
+          this.$refs.captcha.reset()
         })
         .finally(() => this.loading = false)
-    },
-    resend() {
-      const payload = {}
-      axios.post('/resend', payload)
-        .then((response) => {
-          EventBus.$emit('send-notification', response.data.message, '#00b16a')
-        })
-        .catch((error) => {
-          EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
-        })
     },
   }
 }

@@ -1,6 +1,5 @@
 CREATE TABLE `accounts` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(191) NOT NULL,
   `email` VARCHAR(191) NOT NULL,
   `password` VARCHAR(191) NOT NULL,
   `last_login` DATETIME NULL,
@@ -16,12 +15,12 @@ CREATE TABLE `accounts` (
   INDEX `deleted` (`deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
-CREATE TABLE `accounts_url` (
+CREATE TABLE `accounts_email` (
   `account_id` INT UNSIGNED NOT NULL,
-  `mode` ENUM ('reset_password','validate_email') NOT NULL,
+  `action` ENUM ('reset_password','verify_email') NOT NULL,
   `code` VARCHAR(191) NOT NULL,
   PRIMARY KEY (`account_id`),
-  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
+  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `accounts_mfa` (
@@ -34,7 +33,7 @@ CREATE TABLE `accounts_mfa` (
   `webauthn_rp_id` TEXT NULL,
   `created_at` DATETIME NOT NULL,
   PRIMARY KEY (`account_id`),
-  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
+  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `licenses` (
@@ -42,7 +41,7 @@ CREATE TABLE `licenses` (
   `account_id` INT UNSIGNED NOT NULL,
   `key` VARCHAR(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `expiration` DATETIME NULL,
-  `resources` INT NOT NULL,
+  `resources` INT NOT NULL DEFAULT '1',
   `in_use` TINYINT(1) NOT NULL DEFAULT '0',
   `uuid` VARCHAR(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_used` DATETIME DEFAULT NULL,
@@ -50,7 +49,7 @@ CREATE TABLE `licenses` (
   INDEX `account_id` (`account_id`),
   INDEX `expiration` (`expiration`),
   INDEX `in_use` (`in_use`),
-  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
+  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `pricing` (
@@ -89,5 +88,5 @@ CREATE TABLE `billing` (
   `error` TEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `license_id` (`license_id`),
-  FOREIGN KEY (`license_id`) REFERENCES `licenses` (`id`)
+  FOREIGN KEY (`license_id`) REFERENCES `licenses` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;

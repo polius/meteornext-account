@@ -6,22 +6,31 @@ class Register:
 
     def get(self, email):
         query = """
-            SELECT a.account_id, u.account_id IS NULL AS 'validated'
-            FROM accounts a
-            LEFT JOIN accounts_url u ON u.account_id = a.id AND u.mode = 'validate_email'
-            WHERE a.email = %s
+            SELECT id
+            FROM accounts
+            WHERE deleted = 0
+            AND email = %s
         """
         return self._sql.execute(query, (email))
 
     def post(self, data):
+        # Create account
         query = """
-            INSERT INTO accounts (name, email, password, created_at)
+            INSERT INTO accounts (email, password, ip, created_at)
             VALUES (%s, %s, %s, %s)
         """
-        result = self._sql.execute(query, (data['name'], data['email'], data['password'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
+        account_id = self._sql.execute(query, (data['email'], data['password'], data['ip'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
 
+        # Create email code
         query = """
-            INSERT INTO accounts_url (account_id, mode, code)
-            VALUES (%s, 'validate_email', %s)
+            INSERT INTO accounts_email (account_id, action, code)
+            VALUES (%s, 'verify_email', %s)
         """
-        self._sql.execute(query, (result, data['code']))
+        self._sql.execute(query, (account_id, data['code']))
+
+        # Create license
+        query = """
+            INSERT INTO `licenses` (`account_id`, `key`)
+            VALUES (%s, %s)
+        """
+        self._sql.execute(query, (account_id, data['key']))

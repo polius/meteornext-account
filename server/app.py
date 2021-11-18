@@ -6,9 +6,11 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_compress import Compress
 
+from cron import Cron
 import connectors
 import routes.login
 import routes.register
+import routes.mail
 import routes.account
 import routes.mfa
 
@@ -32,16 +34,21 @@ Compress(app)
 # Init SQL Pool
 with open('server.conf') as file_open:
     conf = json.load(file_open)
-SQL = connectors.Pool(conf['sql'])
+sql = connectors.Pool(conf['sql'])
+
+# Init cron
+Cron(app, sql)
 
 # Register blueprints
 URL_PREFIX = "/api"
-login = routes.login.Login(SQL)
-register = routes.register.Register(SQL)
-account = routes.account.Account(SQL)
-mfa = routes.mfa.MFA(SQL)
+login = routes.login.Login(sql)
+register = routes.register.Register(sql)
+mail = routes.mail.Mail(sql)
+account = routes.account.Account(sql)
+mfa = routes.mfa.MFA(sql)
 app.register_blueprint(login.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(register.blueprint(), url_prefix=URL_PREFIX)
+app.register_blueprint(mail.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(account.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(mfa.blueprint(), url_prefix=URL_PREFIX)
 

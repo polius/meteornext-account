@@ -18,6 +18,11 @@ const routes = [
     component: () => import('../components/Login')
   },
   {
+    path: '/verify_email/:code',
+    name: 'verifyEmail',
+    component: () => import('../components/mail/VerifyEmail'),
+  },
+  {
     path: '/',
     name: 'account',
     component: () => import('../components/Account'),
