@@ -13,7 +13,7 @@
                   <v-divider></v-divider>
                   <div style="margin-top:20px; margin-bottom:10px">
                     <div class="text-body-1 font-weight-medium" style="color:black;">ERROR</div>
-                    <div class="text-body-1" style="color:black;">The code provided is invalid</div>
+                    <div class="text-body-1" style="color:black;">This link has expired</div>
                   </div>
                 </v-card-text>
               </v-card>

@@ -10,7 +10,20 @@
         </div>
       </template>
     </v-checkbox>
-    <v-btn :loading="loading" color="#e74c3c" @click="submitDelete" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
+    <v-btn :loading="loading" color="#e74c3c" @click="deleteAccount" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
+    <v-dialog v-model="dialog" max-width="672px">
+      <v-card style="background-color:#fffcfa">
+        <v-card-text style="padding:15px">
+          <div class="text-h5" style="color:black">Delete account</div>
+          <div class="text-body-1" style="margin-top:15px">Are you sure you want to delete your account?</div>
+          <v-divider style="margin-top:15px"></v-divider>
+          <v-row no-gutters style="margin-top:15px;">
+            <v-btn :loading="loading" color="#00b16a" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitDelete">Confirm</v-btn>
+            <v-btn :disabled="loading" color="#e74c3c" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -22,17 +35,13 @@ export default {
   data: () => ({
     confirm: false,
     loading: false,
+    dialog: false,
   }),
-  props: {
-    enabled: Boolean,
-  },
-  computed: {
-    dialog: {
-      get() { return this.enabled },
-      set(value) { this.$emit('update', value) },
-    }
-  },
   methods: {
+    deleteAccount() {
+      if (!this.confirm) EventBus.$emit('send-notification', 'Please confirm you want to delete your account.', '#EF5354')
+      else this.dialog = true
+    },
     submitDelete() {
       this.loading = true
       axios.delete('/account')
@@ -49,13 +58,6 @@ export default {
         })
         .finally(() => this.loading = false)
     },
-  },
-  watch: {
-    dialog: function(val) {
-      if (val) {
-        this.confirm = false
-      }
-    }
   },
 }
 </script>

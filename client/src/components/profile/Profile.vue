@@ -1,14 +1,14 @@
 <template>
   <div style="margin:10px">
-    <Summary :loading="loading" :account="account"/>
+    <Summary :account="account"/>
     <v-divider style="margin-top:20px; margin-bottom:20px"></v-divider>
-    <Email :loading="loading" :account="account"/>
+    <Email :account="account"/>
     <v-divider style="margin-top:20px; margin-bottom:20px"></v-divider>
-    <Password :loading="loading" :account="account"/>
+    <Password :account="account"/>
     <v-divider style="margin-top:20px; margin-bottom:20px"></v-divider>
-    <MFA :loading="loading" :account="account"/>
+    <MFA :account="account"/>
     <v-divider style="margin-top:20px; margin-bottom:20px"></v-divider>
-    <Delete :loading="loading" :account="account"/>
+    <Delete :account="account"/>
   </div>
 </template>
 
@@ -26,15 +26,14 @@ export default {
   }),
   components: { Summary, Password, Email, MFA, Delete },
   props: {
-    loading: Boolean,
     account: Object
   },
   computed: {
     email() {
-      return (this.loading || this.account === undefined) ? '' : this.account.profile.email
+      return (this.account === undefined) ? '' : this.account.profile.email
     },
     created_at() {
-      return (this.loading || this.account === undefined) ? '' : this.dateFormat(this.account.profile.created_at)
+      return (this.account === undefined) ? '' : this.dateFormat(this.account.profile.created_at)
     },
   },
   methods: {

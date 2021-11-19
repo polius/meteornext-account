@@ -24,7 +24,7 @@
       </v-row>
     </v-card>
     <v-btn v-if="mfa.mode != null" :loading="loading" color="warning" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Disable MFA</v-btn>
-    <v-btn v-else :loading="loading" color="#2c7be5" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Enable MFA</v-btn>
+    <v-btn v-else :loading="loading" color="#2196f3" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Enable MFA</v-btn>
     <v-dialog v-model="mfaDialog" max-width="672px">
       <v-card style="background-color:#fffcfa">
         <v-toolbar dense flat color="#f5983b">
@@ -172,7 +172,6 @@ export default {
   }),
   props: { 
     account: Object,
-    dialog: Boolean
   },
   components: { QrcodeVue },
   created() {

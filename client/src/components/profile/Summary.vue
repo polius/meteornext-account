@@ -1,9 +1,11 @@
 <template>
   <div>
+    <div class="text-h6 font-weight-medium" style="margin-top:15px">PROFILE</div>
+    <div class="body-1 font-weight-light" style="margin-top:15px">Here are your profile details.</div>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Email</div>
-    <v-text-field flat readonly solo v-model="email" :loading="loading" :disabled="loading" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field flat readonly solo v-model="email" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Creation Date</div>
-    <v-text-field flat readonly solo v-model="created_at" :loading="loading" :disabled="loading" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field flat readonly solo v-model="created_at" style="padding-top:5px" hide-details></v-text-field>
   </div>
 </template>
 
@@ -20,15 +22,14 @@ export default {
   data: () => ({
   }),
   props: {
-    loading: Boolean,
     account: Object
   },
   computed: {
     email() {
-      return (this.loading || this.account === undefined) ? '' : this.account.profile.email
+      return (this.account.profile === undefined) ? '' : this.account.profile.email
     },
     created_at() {
-      return (this.loading || this.account === undefined) ? '' : this.dateFormat(this.account.profile.created_at)
+      return (this.account.profile === undefined) ? '' : this.dateFormat(this.account.profile.created_at)
     },
   },
   methods: {

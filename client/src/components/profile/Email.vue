@@ -4,13 +4,13 @@
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">We will email you a confirmation when changing your email, so please expect that email after submitting.</div>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">New email</div>
     <v-text-field flat v-model="item" :readonly="loading" solo style="padding-top:5px" hide-details></v-text-field>
-    <v-btn :loading="loading" color="#2c7be5" @click="submitEmail" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Update email</v-btn>
+    <v-btn :loading="loading" color="info" @click="submitEmail" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Update email</v-btn>
   </div>
 </template>
 
 <style scoped>
 ::v-deep .v-input--is-focused .v-input__control {
-  border: 1px solid #2c7be5 !important; /* #005fcc */
+  border: 1px solid #2196f3 !important; /* #005fcc */
 }
 ::v-deep .v-input__control {
   border: 1px solid #d2ddec !important;
@@ -27,7 +27,6 @@ export default {
     item: '',
   }),
   props: {
-    enabled: Boolean,
     email: String
   },
   computed: {
@@ -38,11 +37,11 @@ export default {
   },
   methods: {
     submitEmail() {
+      // Check new email is different as current one
       this.loading = true
       const payload = { 'email': this.item }
       axios.put('/account/email', payload)
         .then((response) => {
-          this.dialog = false
           EventBus.$emit('send-notification', response.data.message, '#00b16a')
           EventBus.$emit('get-account')
         })

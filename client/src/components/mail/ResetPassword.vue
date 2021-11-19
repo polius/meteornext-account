@@ -36,7 +36,7 @@
                     </div>
                     <div v-else-if="valid != null && !valid" style="margin-top:20px; margin-bottom:10px">
                       <div class="text-body-1 font-weight-medium" style="color:black;">ERROR</div>
-                      <div class="text-body-1" style="color:black;">The code provided is invalid</div>
+                      <div class="text-body-1" style="color:black;">This link has expired</div>
                     </div>
                   </div>
                 </v-card-text>
@@ -51,7 +51,7 @@
 
 <style scoped>
 ::v-deep .v-input--is-focused .v-input__control {
-  border: 1px solid #2c7be5 !important; /* #005fcc */
+  border: 1px solid #2196f3 !important; /* #005fcc */
 }
 ::v-deep .v-input__control {
   border: 1px solid #d2ddec !important;

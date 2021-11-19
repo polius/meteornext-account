@@ -1,26 +1,26 @@
 <template>
   <div style="margin:10px">
-    <Summary :loading="loading" :account="account"/>
+    <Summary :account="account"/>
     <v-divider style="margin-top:20px; margin-bottom:20px"></v-divider>
-    <Key :loading="loading" :account="account"/>
+    <Key :account="account"/>
     <v-divider style="margin-top:20px; margin-bottom:20px"></v-divider>
-    <Change :loading="loading" :account="account"/>
+    <div class="text-h6 font-weight-medium">Change license</div>
+    <div class="body-1 font-weight-light" style="margin-top:15px">Choose the license that better suit your needs.</div>
+    <v-btn color="info" @click="$router.push('/license')" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:15px;">Change license</v-btn>
   </div>
 </template>
 
 <script>
 import Summary from './Summary'
 import Key from './Key'
-import Change from './Change'
 
 export default {
   name: 'License',
   data: () => ({
   }),
   props: {
-    loading: Boolean,
     account: Object
   },
-  components: { Summary, Key, Change },
+  components: { Summary, Key },
 }
 </script>

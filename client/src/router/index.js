@@ -38,6 +38,12 @@ const routes = [
     name: 'resetPasswordCode',
     component: () => import('../components/mail/ResetPassword'),
   },
+  {
+    path: '/license',
+    name: 'changeLicense',
+    component: () => import('../components/license/Change'),
+    meta: { requiresAuth: true }
+  },
 ]
 
 const router = new VueRouter({

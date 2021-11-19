@@ -1,12 +1,13 @@
 <template>
   <div>
-    <!-- <div class="text-h6 font-weight-medium" style="margin-top:15px">License summary</div> -->
+    <div class="text-h6 font-weight-medium" style="margin-top:15px">LICENSE</div>
+    <div class="body-1 font-weight-light" style="margin-top:15px">Here are your license details.</div>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Resources</div>
-    <v-text-field flat readonly solo v-model="resources" :loading="loading" :disabled="loading" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field flat readonly solo v-model="resources" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Pricing</div>
-    <v-text-field flat readonly solo v-model="pricing" :loading="loading" :disabled="loading" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field flat readonly solo v-model="pricing" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Expiration Date</div>
-    <v-text-field flat readonly solo v-model="expiration" :loading="loading" :disabled="loading" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field flat readonly solo v-model="expiration" style="padding-top:5px" hide-details></v-text-field>
   </div>
 </template>
 
@@ -22,22 +23,21 @@ export default {
   data: () => ({
   }),
   props: {
-    loading: Boolean,
     account: Object
   },
   computed: {
     resources() {
-      if (this.loading || this.account === undefined) return ''
+      if (this.account.license === undefined) return ''
       if (this.account.license.resources == -1) return 'Unlimited'
       return this.account.license.resources + (this.account.license.resources == 1 ? ' Server' : ' Servers') + ' / User'
     },
     pricing() {
-      if (this.loading || this.account === undefined) return ''
+      if (this.account.license === undefined) return ''
       if (this.account.license.resources == 1) return 'Free'
       return '$' + this.account.pricing.filter(x => x.units == this.account.license.resources)[0]['price'] + ' / Month'
     },
     expiration() {
-      if (this.loading || this.account === undefined) return ''
+      if (this.account.license === undefined) return ''
       if (this.account.license.expiration) return this.account.license.expiration_date
       return 'Lifetime'
     },
