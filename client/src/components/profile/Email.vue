@@ -42,7 +42,7 @@ export default {
       const payload = { 'email': this.item }
       axios.put('/account/email', payload)
         .then((response) => {
-          EventBus.$emit('send-notification', response.data.message, '#00b16a')
+          EventBus.$emit('send-notification', response.data.message, '#20bf6b')
           EventBus.$emit('get-account')
         })
         .catch((error) => {

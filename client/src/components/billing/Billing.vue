@@ -25,7 +25,7 @@
       <v-card style="margin-top:15px">
         <v-data-table :headers="headers" :items="items" :search="search" :options="{itemsPerPage: 3}" :footer-props="{'items-per-page-options':[3, 6, 12, -1]}">
           <template v-slot:[`item.status`]="{ item }">
-            <v-icon :color="item.status == 'success' ? '#00b16a' : item.status == 'pending' ? '#ff9800' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>
+            <v-icon :color="item.status == 'success' ? '#20bf6b' : item.status == 'pending' ? '#ff9800' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>
             {{ item.status.charAt(0).toUpperCase() + item.status.slice(1) }}
           </template>
         </v-data-table>

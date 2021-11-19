@@ -43,7 +43,7 @@ export default {
       const payload = this.item
       axios.put('/account/password', payload)
         .then((response) => {
-          EventBus.$emit('send-notification', response.data.message, '#00b16a')
+          EventBus.$emit('send-notification', response.data.message, '#20bf6b')
         })
         .catch((error) => {
           if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))

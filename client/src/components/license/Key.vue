@@ -6,18 +6,20 @@
     <v-text-field flat @click="$event.target.select()" solo v-model="email" readonly label="Email" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Key</div>
     <v-text-field flat @click="$event.target.select()" solo v-model="key" readonly label="Key" style="padding-top:5px" hide-details></v-text-field>
-    <div v-if="in_use != null" class="body-1" style="margin-top:15px; margin-bottom:15px"><v-icon :style="`font-size:16px; margin-right:10px; margin-bottom:3px; color:${in_use ? '#ff944d' : '#00b16a'}`">fas fa-circle</v-icon>{{ in_use ? 'License in use.' : 'License ready to be registered.' }}</div>
+    <div v-if="in_use != null" class="body-1" style="margin-top:15px; margin-bottom:15px"><v-icon :style="`font-size:16px; margin-right:10px; margin-bottom:3px; color:${in_use ? '#ff944d' : '#20bf6b'}`">fas fa-circle</v-icon>{{ in_use ? 'License in use.' : 'License ready to be registered.' }}</div>
     <div v-if="in_use" class="text-body-1 font-weight-light">A license key can be used only in one device. To be able to use it in another device, first you have to unregister it from the first one.</div>
     <v-btn v-if="in_use" @click="dialog = true" color="#fb8c00" title="Unregister your existing license to use it in another computer" style="font-size:0.9375rem; font-weight:400; text-transform:none; color:white; margin-top:15px" :disabled="!in_use">Unregister license</v-btn>
     <v-dialog v-model="dialog" max-width="672px">
       <v-card style="background-color:#fffcfa">
+        <v-toolbar dense flat color="#f5983b">
+          <v-toolbar-title class="white--text text-body-1 font-weight-medium">Unregister license</v-toolbar-title>
+        </v-toolbar>
         <v-card-text style="padding:15px">
-          <div class="text-h5" style="color:black">Unregister license</div>
-          <div class="text-body-1" style="margin-top:15px">Do you want to unregister your license to be used in another device?</div>
+          <div class="text-body-1" style="color:black">Do you want to unregister your license to be used in another device?</div>
           <v-divider style="margin-top:15px"></v-divider>
           <v-row no-gutters style="margin-top:15px;">
-            <v-btn :loading="loading" color="#00b16a" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitUnregister">Confirm</v-btn>
-            <v-btn :disabled="loading" color="#e74c3c" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
+            <v-btn :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitUnregister">Confirm</v-btn>
+            <v-btn :disabled="loading" color="#eb4d4b" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
           </v-row>
         </v-card-text>
       </v-card>
@@ -66,7 +68,7 @@ export default {
       this.loading = true
       axios.post('/account/unregister')
         .then((response) => {
-          EventBus.$emit('send-notification', response.data.message, '#00b16a')
+          EventBus.$emit('send-notification', response.data.message, '#20bf6b')
           EventBus.$emit('get-account')
           this.dialog = false
         })

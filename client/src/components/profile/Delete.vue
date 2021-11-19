@@ -10,16 +10,18 @@
         </div>
       </template>
     </v-checkbox>
-    <v-btn :loading="loading" color="#e74c3c" @click="deleteAccount" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
+    <v-btn :loading="loading" color="#eb4d4b" @click="deleteAccount" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
     <v-dialog v-model="dialog" max-width="672px">
       <v-card style="background-color:#fffcfa">
+        <v-toolbar dense flat color="#f5983b">
+          <v-toolbar-title class="white--text text-body-1 font-weight-medium">Delete account</v-toolbar-title>
+        </v-toolbar>
         <v-card-text style="padding:15px">
-          <div class="text-h5" style="color:black">Delete account</div>
-          <div class="text-body-1" style="margin-top:15px">Are you sure you want to delete your account?</div>
+          <div class="text-body-1" style="color:black">Are you sure you want to delete your account?</div>
           <v-divider style="margin-top:15px"></v-divider>
           <v-row no-gutters style="margin-top:15px;">
-            <v-btn :loading="loading" color="#00b16a" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitDelete">Confirm</v-btn>
-            <v-btn :disabled="loading" color="#e74c3c" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
+            <v-btn :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitDelete">Confirm</v-btn>
+            <v-btn :disabled="loading" color="#eb4d4b" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
           </v-row>
         </v-card-text>
       </v-card>
@@ -48,7 +50,7 @@ export default {
         .then((response) => {
           this.dialog = false
           this.$store.dispatch('app/logout').then(() => {
-            EventBus.$emit('send-notification', response.data.message,'#00b16a')
+            EventBus.$emit('send-notification', response.data.message,'#20bf6b')
             this.$router.push('/login')
           })
         })

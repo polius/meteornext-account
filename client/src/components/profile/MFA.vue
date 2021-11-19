@@ -5,7 +5,7 @@
     <v-card v-if="mfa.mode == null" style="margin-bottom:20px">
       <v-row no-gutters align="center" justify="center">
         <v-col cols="auto" style="display:flex; margin:15px">
-          <v-icon color="#00b16a">fas fa-shield-alt</v-icon>
+          <v-icon color="#20bf6b">fas fa-shield-alt</v-icon>
         </v-col>
         <v-col>
           <div class="text-body-1">Protect your account by requiring an additional layer of security to sign in.</div>
@@ -15,10 +15,10 @@
     <v-card v-else style="margin-bottom:20px">
       <v-row no-gutters>
         <v-col cols="auto" style="display:flex; margin:15px">
-          <v-icon color="#00b16a">fas fa-check-circle</v-icon>
+          <v-icon color="#20bf6b">fas fa-check-circle</v-icon>
         </v-col>
         <v-col style="padding-top:5px">
-          <div class="text-body-1" style="color:#00b16a">{{ `The MFA (${mfa.mode == '2fa' ? '2FA' : 'Security Key'}) is currently enabled.` }}</div>
+          <div class="text-body-1" style="color:#20bf6b">{{ `The MFA (${mfa.mode == '2fa' ? '2FA' : 'Security Key'}) is currently enabled.` }}</div>
           <div class="text-body-2">Active since: {{ dateFormat(mfa.created) }}</div>
         </v-col>
       </v-row>
@@ -28,7 +28,7 @@
     <v-dialog v-model="mfaDialog" max-width="672px">
       <v-card style="background-color:#fffcfa">
         <v-toolbar dense flat color="#f5983b">
-          <v-toolbar-title class="white--text subtitle-1">Multi factor security</v-toolbar-title>
+          <v-toolbar-title class="white--text text-body-1">Multi factor security</v-toolbar-title>
           <v-divider v-if="mfa.mode != null || mfaDialogStep == 2" class="mx-3" inset vertical></v-divider>
           <div v-if="mfa.mode == '2fa' || (mfaDialogStep == 2 && mfaMode == '2fa')" class="text-body-1 white--text">Virtual 2FA Device</div>
           <div v-if="mfa.mode == 'webauthn' || (mfaDialogStep == 2 && mfaMode == 'webauthn')" class="text-body-1 white--text">Security Key</div>
@@ -88,7 +88,7 @@
                         <v-progress-linear v-show="loadingFingerprint" indeterminate></v-progress-linear>
                         <v-card-text>
                           <div class="text-h5 font-weight-light" style="color:black; text-align:center; font-size:1.4rem !important">Verify your identity</div>
-                          <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#00b16a' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
+                          <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#20bf6b' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
                           <div class="text-subtitle-1" style="color:black; text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
                         </v-card-text>
                       </v-card>
@@ -98,10 +98,10 @@
                     <v-card>
                       <v-row no-gutters>
                         <v-col cols="auto" style="display:flex; margin:15px">
-                          <v-icon color="#00b16a">fas fa-check-circle</v-icon>
+                          <v-icon color="#20bf6b">fas fa-check-circle</v-icon>
                         </v-col>
                         <v-col style="padding-top:5px">
-                          <div class="text-body-1" style="color:#00b16a">The MFA is currently enabled.</div>
+                          <div class="text-body-1" style="color:#20bf6b">The MFA is currently enabled.</div>
                           <div class="text-body-2">Active since: {{ dateFormat(mfa.created) }}</div>
                         </v-col>
                       </v-row>
@@ -110,8 +110,8 @@
                 </v-form>
                 <v-divider></v-divider>
                 <v-row no-gutters style="margin-top:20px;">
-                  <v-btn :disabled="mfa.mode == null && mfaDialogStep == 2 && mfaMode == 'webauthn' && webauthn.status != 'ok'" :loading="loading" color="#00b16a" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitMFA">{{ mfa.mode ? 'Disable MFA' : 'Confirm' }}</v-btn>
-                  <v-btn :disabled="loading" color="#e74c3c" @click="cancelMFA" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
+                  <v-btn :disabled="mfa.mode == null && mfaDialogStep == 2 && mfaMode == 'webauthn' && webauthn.status != 'ok'" :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitMFA">{{ mfa.mode ? 'Disable MFA' : 'Confirm' }}</v-btn>
+                  <v-btn :disabled="loading" color="#eb4d4b" @click="cancelMFA" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
                 </v-row>
               </v-flex>
             </v-layout>
@@ -270,7 +270,7 @@ export default {
         .then((response) => {
           this.mfaDialog = false
           this.getMFA()
-          EventBus.$emit('send-notification', response.data.message, '#00b16a')
+          EventBus.$emit('send-notification', response.data.message, '#20bf6b')
         })
         .catch((error) => {
           if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
@@ -290,7 +290,7 @@ export default {
         .then((response) => {
           this.mfaDialog = false
           this.getMFA()
-          EventBus.$emit('send-notification', response.data.message, '#00b16a')
+          EventBus.$emit('send-notification', response.data.message, '#20bf6b')
         })
         .catch((error) => {
           if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
@@ -304,7 +304,7 @@ export default {
       .then((response) => {
         this.mfaDialog = false
         this.getMFA()
-        EventBus.$emit('send-notification', response.data.message, '#00b16a')
+        EventBus.$emit('send-notification', response.data.message, '#20bf6b')
       })
       .catch((error) => {
         if ([401,422,503].includes(error.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))

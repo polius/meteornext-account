@@ -22,7 +22,7 @@
                         <v-progress-linear v-show="loading" indeterminate></v-progress-linear>
                         <v-card-text>
                           <div class="text-h5 font-weight-light" style="color:black; text-align:center; font-size:1.4rem !important">Verify your identity</div>
-                          <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#00b16a' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
+                          <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#20bf6b' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
                           <div class="text-subtitle-1" style="color:black; text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
                         </v-card-text>
                       </v-card>
@@ -82,8 +82,8 @@ export default {
     })
   },
   mounted() {
-    if (this.prevRoute.name == 'verifyEmail') EventBus.$emit('send-notification', 'Account Verified', '#00b16a')
-    else if (this.prevRoute.name == 'resetPasswordCode') EventBus.$emit('send-notification', 'Password Updated', '#00b16a')
+    if (this.prevRoute.name == 'verifyEmail') EventBus.$emit('send-notification', 'Account Verified', '#20bf6b')
+    else if (this.prevRoute.name == 'resetPasswordCode') EventBus.$emit('send-notification', 'Password Updated', '#20bf6b')
   },
   watch: {
     mfa: function (val) {
