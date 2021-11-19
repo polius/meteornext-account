@@ -168,7 +168,7 @@ class Account:
         if len(new) < 8:
             raise Exception('The password must be at least 8 characters long')
         if not any(c.islower() for c in new):
-            raise Exception('The password must contain a number')
+            raise Exception('The password must contain a letter')
         if not any(c.isnumeric() for c in new):
             raise Exception('The password must contain a number')
 

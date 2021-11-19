@@ -8,7 +8,7 @@
         <div class="text-body-2 font-weight-medium" style="margin-top:15px">New password</div>
         <v-text-field flat v-model="item.new" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
         <div class="text-body-2 font-weight-medium" style="margin-top:15px">Confirm new password</div>
-        <v-text-field flat v-model="item.repeat" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
+        <v-text-field flat v-model="item.repeat" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details v-on:keyup.enter="submitPassword()"></v-text-field>
       </v-form>
       <v-btn :loading="loading" color="#2196f3" @click="submitPassword" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Change password</v-btn>
   </div>
@@ -43,6 +43,7 @@ export default {
       const payload = this.item
       axios.put('/account/password', payload)
         .then((response) => {
+          this.item = { current: '', new: '', repeat: '' }
           EventBus.$emit('send-notification', response.data.message, '#20bf6b')
         })
         .catch((error) => {

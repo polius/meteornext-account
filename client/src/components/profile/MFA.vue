@@ -32,8 +32,6 @@
           <v-divider v-if="mfa.mode != null || mfaDialogStep == 2" class="mx-3" inset vertical></v-divider>
           <div v-if="mfa.mode == '2fa' || (mfaDialogStep == 2 && mfaMode == '2fa')" class="text-body-1 white--text">Virtual 2FA Device</div>
           <div v-if="mfa.mode == 'webauthn' || (mfaDialogStep == 2 && mfaMode == 'webauthn')" class="text-body-1 white--text">Security Key</div>
-          <v-spacer></v-spacer>
-          <v-btn @click="mfaDialog = false" icon><v-icon style="font-size:22px; color:white">fas fa-times-circle</v-icon></v-btn>
         </v-toolbar>
         <v-card-text style="padding:15px">
           <v-container style="padding:0px">
@@ -89,23 +87,13 @@
                         <v-card-text>
                           <div class="text-h5 font-weight-light" style="color:black; text-align:center; font-size:1.4rem !important">Verify your identity</div>
                           <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#20bf6b' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
-                          <div class="text-subtitle-1" style="color:black; text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
+                          <div class="text-body-1" style="color:black; text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
                         </v-card-text>
                       </v-card>
                     </div>
                   </div>
                   <div v-else>
-                    <v-card>
-                      <v-row no-gutters>
-                        <v-col cols="auto" style="display:flex; margin:15px">
-                          <v-icon color="#20bf6b">fas fa-check-circle</v-icon>
-                        </v-col>
-                        <v-col style="padding-top:5px">
-                          <div class="text-body-1" style="color:#20bf6b">The MFA is currently enabled.</div>
-                          <div class="text-body-2">Active since: {{ dateFormat(mfa.created) }}</div>
-                        </v-col>
-                      </v-row>
-                    </v-card>
+                    <div class="text-body-1" style="color:black">Are you sure you want to disable the MFA method?</div>
                   </div>
                 </v-form>
                 <v-divider></v-divider>
@@ -121,10 +109,10 @@
     </v-dialog>
     <v-dialog v-model="twoFactorCodeDialog" max-width="512px">
       <v-card>
-        <v-toolbar dense flat color="primary">
-          <v-toolbar-title class="white--text subtitle-1"><v-icon small color="white" style="margin-right:10px; margin-bottom:3px">fas fa-qrcode</v-icon>QR CODE</v-toolbar-title>
+        <v-toolbar dense flat color="#f5983b">
+          <v-toolbar-title class="white--text text-body-1">QR CODE</v-toolbar-title>
         </v-toolbar>
-        <v-card-text style="padding:0px">
+        <v-card-text style="background-color:#fffcfa; padding:0px">
           <v-container>
             <v-layout wrap>
               <v-flex xs12>

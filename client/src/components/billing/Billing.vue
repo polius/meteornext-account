@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-toolbar flat dense color="primary">
-      <v-toolbar-title class="white--text subtitle-1"><v-icon small style="margin-right:10px; margin-bottom:3px">fas fa-coins</v-icon>BILLING</v-toolbar-title>
+      <v-toolbar-title class="white--text text-body-1"><v-icon small style="margin-right:10px; margin-bottom:3px">fas fa-coins</v-icon>BILLING</v-toolbar-title>
     </v-toolbar>
     <v-card-text>
       <div v-show="!$vuetify.breakpoint.smAndDown">
