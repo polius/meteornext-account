@@ -28,7 +28,7 @@
     <v-dialog v-model="mfaDialog" max-width="672px">
       <v-card style="background-color:#fffcfa">
         <v-toolbar dense flat color="#f5983b">
-          <v-toolbar-title class="white--text subtitle-1">Two factor security</v-toolbar-title>
+          <v-toolbar-title class="white--text subtitle-1">Multi factor security</v-toolbar-title>
           <v-divider v-if="mfa.mode != null || mfaDialogStep == 2" class="mx-3" inset vertical></v-divider>
           <div v-if="mfa.mode == '2fa' || (mfaDialogStep == 2 && mfaMode == '2fa')" class="text-body-1 white--text">Virtual 2FA Device</div>
           <div v-if="mfa.mode == 'webauthn' || (mfaDialogStep == 2 && mfaMode == 'webauthn')" class="text-body-1 white--text">Security Key</div>

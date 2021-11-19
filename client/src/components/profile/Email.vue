@@ -4,7 +4,7 @@
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">We will email you a confirmation when changing your email, so please expect that email after submitting.</div>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">New email</div>
     <v-text-field flat v-model="item" :readonly="loading" solo style="padding-top:5px" hide-details></v-text-field>
-    <v-btn :loading="loading" color="info" @click="submitEmail" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Update email</v-btn>
+    <v-btn :loading="loading" color="info" @click="submitEmail" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Change email</v-btn>
   </div>
 </template>
 
