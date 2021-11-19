@@ -7,7 +7,7 @@
       <v-btn @click="logout" class="d-none d-sm-flex" text style="color:white; height:45px"><v-icon size="22px" style="margin-right:10px">fas fa-sign-out-alt</v-icon>Logout</v-btn>
       <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout" style="color:white"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
     </v-app-bar>
-    <v-tabs v-model="tab" background-color="#ffe8c2" slider-color="#ffdea8" style="padding-top:64px">
+    <v-tabs v-model="tab" background-color="#ffe8c2" slider-color="#f5983b" style="padding-top:64px">
       <v-tab active-class="active" style="color:black">License</v-tab>
       <v-tab active-class="active" style="color:black">Billing</v-tab>
       <v-tab active-class="active" style="color:black">Profile</v-tab>
