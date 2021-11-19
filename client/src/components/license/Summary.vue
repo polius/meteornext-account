@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-h6 font-weight-medium" style="margin-top:15px">LICENSE</div>
+    <div class="text-h6 font-weight-medium">LICENSE</div>
     <div class="body-1 font-weight-light" style="margin-top:15px">Here are your license details.</div>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Resources</div>
     <v-text-field flat readonly solo v-model="resources" style="padding-top:5px" hide-details></v-text-field>

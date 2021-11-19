@@ -1,5 +1,5 @@
 <template>
-  <div style="margin:10px">
+  <div>
     <Summary :account="account"/>
     <v-divider style="margin-top:20px; margin-bottom:20px"></v-divider>
     <Key :account="account"/>
