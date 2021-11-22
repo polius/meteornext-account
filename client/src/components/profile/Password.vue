@@ -1,16 +1,16 @@
 <template>
   <div>
-      <div class="text-h6 font-weight-medium">Change password</div>
-      <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">The new password has to meet the following requirements: Minimum 8 characters, at least one letter and at least one number.</div>
-      <v-form ref="passwordForm" @submit.prevent>
-        <div class="text-body-2 font-weight-medium" style="margin-top:15px">Current password</div>
-        <v-text-field flat v-model="item.current" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
-        <div class="text-body-2 font-weight-medium" style="margin-top:15px">New password</div>
-        <v-text-field flat v-model="item.new" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
-        <div class="text-body-2 font-weight-medium" style="margin-top:15px">Confirm new password</div>
-        <v-text-field flat v-model="item.repeat" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details v-on:keyup.enter="submitPassword()"></v-text-field>
-      </v-form>
-      <v-btn :loading="loading" color="#2196f3" @click="submitPassword" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Change password</v-btn>
+    <div class="text-h6 font-weight-medium">Change password</div>
+    <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">The new password has to meet the following requirements: Minimum 8 characters, at least one letter and at least one number.</div>
+    <v-form ref="passwordForm" @submit.prevent>
+      <div class="text-body-2 font-weight-medium" style="margin-top:15px">Current password</div>
+      <v-text-field flat v-model="item.current" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
+      <div class="text-body-2 font-weight-medium" style="margin-top:15px">New password</div>
+      <v-text-field flat v-model="item.new" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
+      <div class="text-body-2 font-weight-medium" style="margin-top:15px">Confirm new password</div>
+      <v-text-field flat v-model="item.repeat" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details v-on:keyup.enter="submitPassword()"></v-text-field>
+    </v-form>
+    <v-btn :loading="loading" color="#2196f3" @click="submitPassword" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Change password</v-btn>
   </div>
 </template>
 

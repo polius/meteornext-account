@@ -13,8 +13,6 @@
 </template>
 
 <script>
-import moment from 'moment'
-
 import Summary from './Summary'
 import Password from './Password'
 import Email from './Email'
@@ -28,19 +26,5 @@ export default {
   props: {
     account: Object
   },
-  computed: {
-    email() {
-      return (this.account === undefined) ? '' : this.account.profile.email
-    },
-    created_at() {
-      return (this.account === undefined) ? '' : this.dateFormat(this.account.profile.created_at)
-    },
-  },
-  methods: {
-    dateFormat(date) {
-      if (date) return moment.utc(date).local().format("YYYY-MM-DD HH:mm:ss")
-      return date
-    },
-  }
 }
 </script>

@@ -11,7 +11,10 @@
                   <div class="display-2" style="color:black; margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
                   <div class="headline" style="font-size:1.3rem!important; color:black; margin-top:10px; margin-bottom:20px">ACCOUNT | CHANGE LICENSE</div>
                   <v-divider></v-divider>
-                  <div style="margin-top:20px">
+                  <div v-if="$route.params.id !== undefined && $route.params.id == 'success'" style="margin-top:20px">
+                    SUCCESS
+                  </div>
+                  <div v-else style="margin-top:20px">
                     <div v-if="license == null" class="text-center" style="margin-bottom:10px">
                       <v-progress-circular indeterminate color="primary"></v-progress-circular>
                     </div>
@@ -22,16 +25,16 @@
                         <template v-slot:activator="{ on }">
                           <span v-on="on" class="text-body-1" style="border-bottom: 1px solid #ddd">resources</span>
                         </template>
-                        <span>1 Resource = 1 Server and 1 Auxiliary Connection per user</span>
+                        <span>1 Resource = 1 Server / User</span>
                       </v-tooltip>?</div>
-                      <v-select solo :readonly="loading" v-model="newLicense" :items="pricing" item-value="units" item-text="units" class="text-body-1" style="max-width:180px; margin-top:10px; margin-left:auto; margin-right:auto" hide-details>
+                      <v-select solo :readonly="loading" v-model="newLicense" :items="products" item-value="resources" item-text="resources" class="text-body-1" style="max-width:180px; margin-top:10px; margin-left:auto; margin-right:auto" hide-details>
                         <template v-slot:[`selection`]="{ item }">
-                          <span v-if="item.units == -1" style="color:black">Unlimited</span>
-                          <span v-else>{{ item.units + (item.units == 1 ? ' resource' : ' resources')}}</span>
+                          <span v-if="item.resources == -1" style="color:black">Unlimited</span>
+                          <span v-else>{{ item.resources + (item.resources == 1 ? ' resource' : ' resources')}}</span>
                         </template>
                         <template v-slot:[`item`]="{ item }">
-                          <span v-if="item.units == -1" style="color:black">Unlimited</span>
-                          <span v-else>{{ item.units + (item.units == 1 ? ' resource' : ' resources')}}</span>
+                          <span v-if="item.resources == -1" style="color:black">Unlimited</span>
+                          <span v-else>{{ item.resources + (item.resources == 1 ? ' resource' : ' resources')}}</span>
                         </template>
                       </v-select>
                       <div v-if="newLicense > 1" class="text-body-1 font-weight-regular" style="color:black; margin-top:15px">{{ `Avg. $${average} per resource` }}</div>
@@ -55,12 +58,12 @@ import EventBus from '../../js/event-bus'
 export default {
   data: () => ({
     license: null,
-    pricing: [],
+    products: [],
     newLicense: null,
     loading: false,
   }),
   created() {
-    this.getLicense()
+    if (this.$route.params.id === undefined) this.getLicense()
   },
   computed: {
     resources() {
@@ -69,7 +72,7 @@ export default {
     },
     price() {
       if (this.license == null) return ''
-      return this.pricing.filter(x => x.units == this.newLicense)[0]['price']
+      return this.products.filter(x => x.resources == this.newLicense)[0]['price']
     },
     validLicense() {
       if (this.license == null || parseInt(this.newLicense) == this.license.resources) return false
@@ -77,7 +80,7 @@ export default {
     },
     average() {
       if (this.license == null) return ''
-      return (this.pricing.filter(x => x.units == this.newLicense)[0]['price'] / this.newLicense).toFixed(1)
+      return (this.products.filter(x => x.resources == this.newLicense)[0]['price'] / this.newLicense).toFixed(1)
     }
   },
   methods: {
@@ -85,7 +88,7 @@ export default {
       axios.get('/account/license')
         .then((response) => {
           this.license = response.data.license
-          this.pricing = response.data.pricing
+          this.products = response.data.products
           this.newLicense = this.license.resources
           console.log("LICENSE")
           console.log(this.license)
@@ -96,16 +99,17 @@ export default {
         })
     },
     submitChange() {
-      const payload = { 'resources': this.license }
+      this.loading = true
+      const payload = { 'resources': this.newLicense }
       axios.post('/account/license', payload)
         .then((response) => {
-          EventBus.$emit('send-notification', response.data.message, '#20bf6b')
-          EventBus.$emit('get-account')
+          window.location.href = response.data.url
         })
         .catch((error) => {
           if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
           else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
         })
+        .finally(() => this.loading = false)
     },
   },
 }

@@ -12,6 +12,7 @@ class Account:
                 a.password,
                 a.disabled,
                 a.deleted,
+                a.stripe_id,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
                     WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
@@ -41,11 +42,10 @@ class Account:
 
     def get_license(self, account_id):
         query = """
-            SELECT l.resources, b.price, l.expiration, l.key, l.in_use
+            SELECT l.resources, p.price, l.expiration, l.key, l.in_use
             FROM licenses l
-            LEFT JOIN billing b ON b.license_id = l.id
+            JOIN products p ON p.id = l.product_id
             WHERE l.account_id = %s
-            AND (b.status = 'success' OR b.license_id IS NULL)
             ORDER BY l.id DESC
             LIMIT 1
         """
@@ -53,10 +53,10 @@ class Account:
 
     def get_billing(self, account_id):
         query = """
-            SELECT l.resources, b.price, b.purchase_date, b.status
-            FROM billing b
-            JOIN licenses l ON l.id = b.license_id AND l.account_id = %s 
-            ORDER BY b.id DESC
+            SELECT id, date, resources, price, status, error
+            FROM billing
+            WHERE account_id = %s
+            ORDER BY id DESC
         """
         return self._sql.execute(query, (account_id))
 
@@ -111,30 +111,38 @@ class Account:
         """
         self._sql.execute(query, (data['webauthn_sign_count'], data['account_id']))
 
+    def put_customer(self, data):
+        query = """
+            UPDATE accounts
+            SET stripe_id = %s
+            WHERE account_id = %s
+        """
+        self._sql.execute(query, (data['stripe_id'], data['account_id']))
+
     ###########
     # LICENSE #
     ###########
-    def get_pricing(self):
-        query = """
-            SELECT units, price
-            FROM pricing
-            ORDER BY id
-        """
-        return self._sql.execute(query)
+    def get_products(self, resources=None):
+        if resources:
+            query = """
+                SELECT price, stripe_id
+                FROM products
+                WHERE resources = %s
+            """
+            return self._sql.execute(query, (resources))
+        else:
+            query = """
+                SELECT resources, price
+                FROM products
+                ORDER BY id
+            """
+            return self._sql.execute(query)
 
     def unregister_license(self, account_id):
         query = """
             UPDATE licenses
-            JOIN (
-                SELECT l.id
-                FROM licenses l
-                LEFT JOIN billing b ON b.license_id = l.id
-                WHERE l.account_id = %s
-                AND (b.status = 'success' OR b.license_id IS NULL)
-                ORDER BY l.id DESC
-                LIMIT 1
-            ) t USING (id)
             SET in_use = 0
+            WHERE account_id = %s
         """
         self._sql.execute(query, (account_id))
 
@@ -145,3 +153,21 @@ class Account:
             WHERE account_id = %s
         """
         self._sql.execute(query, (resources, account_id))
+
+    def create_customer(self, account_id, customer_id):
+        query = """
+            UPDATE accounts
+            SET stripe_id = %s
+            WHERE id = %s
+        """
+        self._sql.execute(query, (customer_id, account_id))
+
+    ###########
+    # BILLING #
+    ###########
+    def new_purchase(self, account_id, date, resources, price, status, error, stripe_id):
+        query = """
+            INSERT INTO billing (account_id, date, resources, price, status, error, stripe_id)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+        self._sql.execute(query, (account_id, date, resources, price, status, error, stripe_id))

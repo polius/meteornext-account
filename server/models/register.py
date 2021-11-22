@@ -14,19 +14,20 @@ class Register:
         return self._sql.execute(query, (email))
 
     def post(self, data):
+        now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         # Create account
         query = """
             INSERT INTO accounts (email, password, ip, created_at)
             VALUES (%s, %s, %s, %s)
         """
-        account_id = self._sql.execute(query, (data['email'], data['password'], data['ip'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
+        account_id = self._sql.execute(query, (data['email'], data['password'], data['ip'], now))
 
         # Create email code
         query = """
             INSERT INTO accounts_email (account_id, action, code, created)
             VALUES (%s, 'verify_email', %s, %s)
         """
-        self._sql.execute(query, (account_id, data['code'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
+        self._sql.execute(query, (account_id, data['code'], now))
 
         # Create license
         query = """

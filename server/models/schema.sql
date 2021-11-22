@@ -2,6 +2,7 @@ CREATE TABLE `accounts` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(191) NOT NULL,
   `password` VARCHAR(191) NOT NULL,
+  `stripe_id` VARCHAR(191) NOT NULL COMMENT 'customer_id',
   `last_login` DATETIME NULL,
   `ip` VARCHAR(191) NULL,
   `disabled` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
@@ -37,57 +38,62 @@ CREATE TABLE `accounts_mfa` (
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
+CREATE TABLE `products` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `resources` INT NOT NULL,
+  `price` DOUBLE NOT NULL,
+  `stripe_id` VARCHAR(191) NULL COMMENT 'product_id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+
+INSERT INTO `products` (`resources`, `price`, `stripe_id`) VALUES
+(1, 0, NULL),
+(5, 12.5, 'price_1JxaCAC4ZmM6nJCB'),
+(10, 24, NULL),
+(25, 57.5, NULL),
+(50, 110, NULL),
+(100, 210, NULL),
+(200, 400, NULL),
+(300, 570, NULL),
+(400, 720, NULL),
+(500, 850, NULL),
+(750, 1200, NULL),
+(1000, 1500, NULL),
+(2000, 2800, NULL),
+(3000, 3900, NULL),
+(4000, 4800, NULL),
+(5000, 5500, NULL),
+(-1, 8200, NULL);
+
 CREATE TABLE `licenses` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `account_id` INT UNSIGNED NOT NULL,
+  `product_id` INT UNSIGNED NOT NULL,
   `key` VARCHAR(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `expiration` DATETIME NULL,
-  `resources` INT NOT NULL DEFAULT '1',
+  -- `resources` INT NOT NULL DEFAULT '1',
   `in_use` TINYINT(1) NOT NULL DEFAULT '0',
   `uuid` VARCHAR(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_used` DATETIME DEFAULT NULL,
   PRIMARY KEY (`id`),
-  INDEX `account_id` (`account_id`),
+  UNIQUE `account_id` (`account_id`),
+  UNIQUE `product_id` (`product_id`),
   INDEX `expiration` (`expiration`),
   INDEX `in_use` (`in_use`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
+  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
-
-CREATE TABLE `pricing` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `units` INT NOT NULL,
-  `price` DOUBLE NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
-
-INSERT INTO `pricing` (`units`, `price`) VALUES
-(1, 0),
-(5, 12.5),
-(10, 24),
-(25, 57.5),
-(50, 110),
-(100, 210),
-(200, 400),
-(300, 570),
-(400, 720),
-(500, 850),
-(750, 1200),
-(1000, 1500),
-(2000, 2800),
-(3000, 3900),
-(4000, 4800),
-(5000, 5500),
-(-1, 8200);
 
 CREATE TABLE `billing` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `license_id` INT UNSIGNED NOT NULL,
+  `account_id` INT UNSIGNED NOT NULL,
+  `date` DATETIME NOT NULL,
+  `resources` INT NOT NULL,
   `price` DOUBLE NOT NULL,
-  `purchase_date` DATETIME NOT NULL,
-  `payment_received` DATETIME NULL,
   `status` ENUM('pending','success','error') NOT NULL,
   `error` TEXT NULL,
+  `stripe_id` VARCHAR(191) NOT NULL COMMENT 'payment_id',
   PRIMARY KEY (`id`),
-  INDEX `license_id` (`license_id`),
-  FOREIGN KEY (`license_id`) REFERENCES `licenses` (`id`) ON DELETE CASCADE
+  INDEX `account_id` (`account_id`),
+  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;

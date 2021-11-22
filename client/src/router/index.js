@@ -44,6 +44,12 @@ const routes = [
     component: () => import('../components/license/Change'),
     meta: { requiresAuth: true }
   },
+  {
+    path: '/license/:id',
+    name: 'changeLicenseResponse',
+    component: () => import('../components/license/Change'),
+    meta: { requiresAuth: true }
+  },
 ]
 
 const router = new VueRouter({
