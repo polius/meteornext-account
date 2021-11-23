@@ -42,7 +42,7 @@ class Login:
                 return jsonify({"message": "Account disabled"}), 401
 
             # Check verified
-            if not account['verified']:
+            if not account['verified'] and not account['stripe_id']:
                 return jsonify({"message": "Please verify your email address"}), 400
 
             # Check MFA
