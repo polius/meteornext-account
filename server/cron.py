@@ -36,20 +36,20 @@ class Cron:
             query = """
                 SELECT a.*
                 FROM accounts a 
-                JOIN accounts_email ae ON a.id = ae.account_id AND ae.action = 'verify_email'
-                WHERE DATE_ADD(a.created_at, INTERVAL 1 DAY) <= CURRENT_DATE
+                JOIN mail m ON a.id = m.account_id AND m.action = 'verify_email'
+                WHERE DATE_ADD(a.created, INTERVAL 1 DAY) <= CURRENT_DATE
             """
             print(self._sql.execute(query))
             # query = """
             #     DELETE a
             #     FROM accounts a 
-            #     JOIN accounts_email ae ON a.id = ae.account_id AND ae.action = 'verify_email'
-            #     WHERE DATE_ADD(a.created_at, INTERVAL 1 DAY) <= CURRENT_DATE
+            #     JOIN mail m ON a.id = m.account_id AND m.action = 'verify_email'
+            #     WHERE DATE_ADD(a.created, INTERVAL 1 DAY) <= CURRENT_DATE
             # """
             # self._sql.execute(query)
 
             query = """
-                DELETE FROM accounts_email
+                DELETE FROM mail
                 WHERE action = 'reset_password'
                 AND DATE_ADD(created, INTERVAL 1 DAY) <= CURRENT_DATE
             """

@@ -11,7 +11,6 @@ class Account:
                 a.email,
                 a.password,
                 a.disabled,
-                a.deleted,
                 a.stripe_id,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
@@ -28,7 +27,7 @@ class Account:
         query = """
             SELECT
                 a.email,
-                a.created_at,
+                a.created,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
                     WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
@@ -64,17 +63,31 @@ class Account:
     # PROFILE #
     ###########
     def change_password(self, account):
-        self._sql.execute("UPDATE accounts SET password = %s WHERE id = %s", (account['password'], account['id']))
+        query = """
+            UPDATE accounts
+            SET password = %s
+            WHERE id = %s
+        """
+        self._sql.execute(query, (account['password'], account['id']))
 
     def change_email(self, account, email):
-        self._sql.execute("UPDATE accounts SET email = %s WHERE id = %s", (email, account['id']))
+        query = """
+            UPDATE accounts
+            SET email = %s
+            WHERE id = %s
+        """
+        self._sql.execute(query, (email, account['id']))
     
     def delete(self, account_id):
-        self._sql.execute("UPDATE accounts SET deleted = 1, deleted_at = %s WHERE id = %s", (datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), account_id))
+        query = """
+            DELETE FROM accounts
+            WHERE id = %s
+        """
+        self._sql.execute(query, (account_id))
 
     def get_mfa(self, account_id):
         query = """
-            SELECT 2fa_hash, webauthn_ukey, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created_at
+            SELECT 2fa_hash, webauthn_ukey, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created
             FROM accounts_mfa
             WHERE account_id = %s
         """
@@ -90,7 +103,7 @@ class Account:
     def enable_2fa(self, data):
         self.disable_mfa(data['account_id'])
         query = """
-            INSERT INTO accounts_mfa (account_id, 2fa_hash, created_at)
+            INSERT INTO accounts_mfa (account_id, 2fa_hash, created)
             VALUES (%s, %s, %s)
         """
         self._sql.execute(query, (data['account_id'], data['2fa_hash'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
@@ -98,7 +111,7 @@ class Account:
     def enable_webauthn(self, data):
         self.disable_mfa(data['account_id'])
         query = """
-            INSERT INTO accounts_mfa (account_id, webauthn_ukey, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created_at)
+            INSERT INTO accounts_mfa (account_id, webauthn_ukey, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
         self._sql.execute(query, (data['account_id'], data['webauthn_ukey'], data['webauthn_pub_key'], data['webauthn_credential_id'], data['webauthn_sign_count'], data['webauthn_rp_id'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
@@ -115,7 +128,7 @@ class Account:
         query = """
             UPDATE accounts
             SET stripe_id = %s
-            WHERE account_id = %s
+            WHERE id = %s
         """
         self._sql.execute(query, (data['stripe_id'], data['account_id']))
 
@@ -171,3 +184,43 @@ class Account:
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
         self._sql.execute(query, (account_id, date, resources, price, status, error, stripe_id))
+
+    ########
+    # MAIL #
+    ########
+    def get_mail(self, action, code):
+        query = """
+            SELECT account_id, action, code
+            FROM mail
+            WHERE action = %s
+            AND code = %s
+        """
+        return self._sql.execute(query, (action, code))
+
+    def reset_password(self, email, code):
+        query = """
+            DELETE m
+            FROM mail m
+            JOIN accounts a ON a.id = m.account_id AND a.email = %s
+        """
+        self._sql.execute(query, (email))
+
+        query = """
+            INSERT INTO mail (account_id, action, code, created)
+            SELECT
+                id AS 'account_id',
+                'reset_password' AS 'action',
+                %s AS 'code',
+                %s AS 'created'
+            FROM accounts
+            WHERE email = %s
+        """
+        self._sql.execute(query, (code, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), email))
+
+    def clean_mail(self, account_id, action):
+        query = """
+            DELETE FROM mail
+            WHERE account_id = %s 
+            AND action = %s
+        """
+        self._sql.execute(query, (account_id, action))

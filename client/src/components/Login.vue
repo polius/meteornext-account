@@ -82,8 +82,8 @@ export default {
     })
   },
   mounted() {
-    if (this.prevRoute.name == 'verifyEmail') EventBus.$emit('send-notification', 'Account Verified', '#20bf6b')
-    else if (this.prevRoute.name == 'resetPasswordCode') EventBus.$emit('send-notification', 'Password Updated', '#20bf6b')
+    if (this.prevRoute.name == 'verifyEmail') EventBus.$emit('send-notification', 'Account verified', '#20bf6b')
+    else if (this.prevRoute.name == 'resetPasswordCode') EventBus.$emit('send-notification', 'Password updated', '#20bf6b')
   },
   watch: {
     mfa: function (val) {

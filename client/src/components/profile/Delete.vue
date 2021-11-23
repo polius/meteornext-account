@@ -17,7 +17,17 @@
           <v-toolbar-title class="white--text text-body-1 font-weight-medium">Delete account</v-toolbar-title>
         </v-toolbar>
         <v-card-text style="padding:15px">
-          <div class="text-body-1" style="color:black">Are you sure you want to delete your account?</div>
+          <v-card>
+            <v-row no-gutters align="center" justify="center">
+              <v-col cols="auto" style="display:flex; margin:15px">
+                <v-icon color="warning">fas fa-exclamation-triangle</v-icon>
+              </v-col>
+              <v-col>
+                <div class="text-body-1">This action cannot be undone.</div>
+              </v-col>
+            </v-row>
+          </v-card>
+          <div class="text-body-1" style="color:black; margin-top:15px">Are you sure you want to delete your account?</div>
           <v-divider style="margin-top:15px"></v-divider>
           <v-row no-gutters style="margin-top:15px;">
             <v-btn :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitDelete">Confirm</v-btn>

@@ -2,21 +2,18 @@ CREATE TABLE `accounts` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(191) NOT NULL,
   `password` VARCHAR(191) NOT NULL,
-  `stripe_id` VARCHAR(191) NOT NULL COMMENT 'customer_id',
+  `stripe_id` VARCHAR(191) NULL COMMENT 'customer_id',
   `last_login` DATETIME NULL,
   `ip` VARCHAR(191) NULL,
   `disabled` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-  `deleted` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
-  `created_at` DATETIME NOT NULL,
-  `deleted_at` DATETIME NULL,
+  `created` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `email` (`email`),
   INDEX `last_login` (`last_login`),
   INDEX `disabled` (`disabled`),
-  INDEX `deleted` (`deleted`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
-CREATE TABLE `accounts_email` (
+CREATE TABLE `mail` (
   `account_id` INT UNSIGNED NOT NULL,
   `action` ENUM ('reset_password','verify_email') NOT NULL,
   `code` VARCHAR(191) NOT NULL,
@@ -33,7 +30,7 @@ CREATE TABLE `accounts_mfa` (
   `webauthn_credential_id` TEXT NULL,
   `webauthn_sign_count` INT UNSIGNED NULL,
   `webauthn_rp_id` TEXT NULL,
-  `created_at` DATETIME NOT NULL,
+  `created` DATETIME NOT NULL,
   PRIMARY KEY (`account_id`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;

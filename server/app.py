@@ -10,7 +10,6 @@ from cron import Cron
 import connectors
 import routes.login
 import routes.register
-import routes.mail
 import routes.account
 import routes.license
 import routes.mfa
@@ -43,14 +42,12 @@ Cron(app, sql)
 # Register blueprints
 URL_PREFIX = "/api"
 login = routes.login.Login(sql)
-register = routes.register.Register(sql)
-mail = routes.mail.Mail(sql, conf['stripe']['api_key'])
-account = routes.account.Account(sql)
-license = routes.license.License(sql, conf['stripe']['api_key'])
+register = routes.register.Register(sql, conf)
+account = routes.account.Account(sql, conf)
+license = routes.license.License(sql, conf)
 mfa = routes.mfa.MFA(sql)
 app.register_blueprint(login.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(register.blueprint(), url_prefix=URL_PREFIX)
-app.register_blueprint(mail.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(account.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(license.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(mfa.blueprint(), url_prefix=URL_PREFIX)

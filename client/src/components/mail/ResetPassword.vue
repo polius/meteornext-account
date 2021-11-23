@@ -85,7 +85,7 @@ export default {
       }
       this.loading = true
       const payload = { email: this.item.email }
-        axios.post('/reset_password', payload)
+        axios.post('/account/password/reset', payload)
         .then(() => this.completed = true)
         .catch((error) => {
           EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
@@ -94,7 +94,7 @@ export default {
     },
     checkCode() {
       const payload = { code: this.$route.params.code }
-      axios.get('/reset_password', { params: payload })
+      axios.get('/account/password/reset', { params: payload })
         .then(() => this.valid = true)
         .catch(() => this.valid = false)
     },
@@ -106,7 +106,7 @@ export default {
       }
       this.loading = true
       const payload = { code: this.$route.params.code, password: this.item.password, password2: this.item.password2 }
-        axios.post('/reset_password', payload)
+        axios.post('/account/password/reset', payload)
         .then(() => this.$router.push('/login'))
         .catch((error) => {
           EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')

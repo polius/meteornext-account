@@ -10,9 +10,8 @@ class Login:
                 a.id,
                 a.email,
                 a.password,
-                ae.account_id IS NULL AS 'verified',
+                m.account_id IS NULL AS 'verified',
                 a.disabled,
-                a.deleted,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
                     WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
@@ -20,9 +19,8 @@ class Login:
                 END AS 'mfa'
             FROM accounts a
             LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id
-            LEFT JOIN accounts_email ae ON ae.account_id = a.id AND ae.action = 'verify_email'
+            LEFT JOIN mail m ON m.account_id = a.id AND m.action = 'verify_email'
             WHERE a.email = %s
-            AND a.deleted = 0
         """
         return self._sql.execute(query, (email))
 

@@ -37,7 +37,7 @@ export default {
     if (this.$route.params.code === undefined) EventBus.$emit('send-notification', 'Invalid Code', '#EF5354')
     else {
       const payload = { code: this.$route.params.code }
-      axios.post('/verify_email', payload)
+      axios.post('/account/email/verify', payload)
       .then(() => this.$router.push('/login'))
       .catch(() => this.valid = false)
     }

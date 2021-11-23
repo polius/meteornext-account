@@ -8,8 +8,7 @@ class Register:
         query = """
             SELECT id
             FROM accounts
-            WHERE deleted = 0
-            AND email = %s
+            WHERE email = %s
         """
         return self._sql.execute(query, (email))
 
@@ -17,21 +16,21 @@ class Register:
         now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         # Create account
         query = """
-            INSERT INTO accounts (email, password, ip, created_at)
+            INSERT INTO accounts (email, password, ip, created)
             VALUES (%s, %s, %s, %s)
         """
         account_id = self._sql.execute(query, (data['email'], data['password'], data['ip'], now))
 
         # Create email code
         query = """
-            INSERT INTO accounts_email (account_id, action, code, created)
+            INSERT INTO mail (account_id, action, code, created)
             VALUES (%s, 'verify_email', %s, %s)
         """
         self._sql.execute(query, (account_id, data['code'], now))
 
         # Create license
         query = """
-            INSERT INTO `licenses` (`account_id`, `key`)
-            VALUES (%s, %s)
+            INSERT INTO `licenses` (`account_id`, `product_id`, `key`)
+            VALUES (%s, 1, %s)
         """
         self._sql.execute(query, (account_id, data['key']))

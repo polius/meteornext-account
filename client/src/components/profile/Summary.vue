@@ -5,7 +5,7 @@
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Email</div>
     <v-text-field flat readonly solo v-model="email" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Creation Date</div>
-    <v-text-field flat readonly solo v-model="created_at" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field flat readonly solo v-model="created" style="padding-top:5px" hide-details></v-text-field>
   </div>
 </template>
 
@@ -28,8 +28,8 @@ export default {
     email() {
       return (this.account.profile === undefined) ? '' : this.account.profile.email
     },
-    created_at() {
-      return (this.account.profile === undefined) ? '' : this.dateFormat(this.account.profile.created_at)
+    created() {
+      return (this.account.profile === undefined) ? '' : this.account.profile.created // this.dateFormat(this.account.profile.created)
     },
   },
   methods: {
