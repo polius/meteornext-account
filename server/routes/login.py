@@ -47,7 +47,7 @@ class Login:
 
             # Check MFA
             if account['mfa']:
-                account_mfa = self._login.get_mfa(account['id'])[0]
+                account_mfa = self._account.get_mfa(account['id'])[0]
                 if account['mfa'] == '2fa' and len(account_mfa) > 0:
                     if 'mfa' not in login_json:
                         return jsonify({"code": "2fa", "message": "Requesting 2FA credentials"}), 202

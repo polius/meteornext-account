@@ -13,9 +13,7 @@
                   <v-divider></v-divider>
                   <v-form ref="form" @submit.prevent style="margin-top:20px">
                     <div v-if="mfa == '2fa'">
-                      <v-text-field ref="2fa" filled v-model="twoFactor['value']" label="2FA Code" maxlength="6" :rules="[v => !!v || '']" v-on:keyup.enter="login()" style="margin-bottom:20px;" hide-details>
-                        <template v-slot:append><v-icon small style="margin-top:3px; margin-right:4px">fas fa-key</v-icon></template>
-                      </v-text-field>
+                      <v-text-field ref="2fa" filled v-model="twoFactor['value']" label="2FA Code" maxlength="6" :rules="[v => !!v || '']" v-on:keyup.enter="login()" style="margin-bottom:20px;" hide-details></v-text-field>
                     </div>
                     <div v-else-if="mfa == 'webauthn'">
                       <v-card>
