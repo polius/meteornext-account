@@ -1,18 +1,22 @@
 import pyotp
 import bcrypt
+import secrets
 from datetime import timedelta
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import (create_access_token, set_access_cookies, unset_access_cookies)
 
-import models.login
+import models.account
 import routes.mfa
+import mail.mail
 
 class Login:
-    def __init__(self, sql):
+    def __init__(self, sql, conf):
         # Init models
-        self._login = models.login.Login(sql)
+        self._account = models.account.Account(sql)
         # Init routes
         self._mfa = routes.mfa.MFA(sql)
+        # Init mail class
+        self._mail = mail.mail.Mail(conf)
 
     def blueprint(self):
         # Init blueprint
@@ -26,7 +30,7 @@ class Login:
             login_json = request.get_json()
 
             # Get account
-            account = self._login.get(login_json['email'])
+            account = self._account.get_by_email(login_json['email'])
 
             # Check email & password
             if len(account) == 0 or not bcrypt.checkpw(login_json['password'].encode('utf-8'), account[0]['password'].encode('utf-8')):
@@ -63,7 +67,7 @@ class Login:
 
             # Update user data
             ip = request.headers.getlist("X-Forwarded-For")[0].split(',')[0] if request.headers.getlist("X-Forwarded-For") else request.remote_addr
-            self._login.put_last_login({"id": account['id'], "ip": ip})
+            self._account.login({"id": account['id'], "ip": ip})
 
             # Build return data
             resp = jsonify({'data': { 'email': account['email'] }})

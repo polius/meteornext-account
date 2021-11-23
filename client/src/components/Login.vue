@@ -42,6 +42,12 @@
         </v-layout>
       </v-container>
     </v-main>
+    <v-snackbar v-model="snackbar" :multi-line="false" :timeout="Number(3000)" color="#EF5354" top style="padding-top:0px;">
+      Please verify your email address
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="sendVerifyMail">Resend email</v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -53,6 +59,7 @@
 </style>
 
 <script>
+import axios from 'axios'
 import EventBus from '../js/event-bus'
 import { webauthnLogin } from '../plugins/webauthn.js'
 
@@ -73,7 +80,9 @@ export default {
       status: 'init'
     },
     // Previous route
-    prevRoute: null
+    prevRoute: null,
+    // Snackbar
+    snackbar: false,
   }),
   props: ['url'],
   beforeRouteEnter(to, from, next) {
@@ -82,7 +91,7 @@ export default {
     })
   },
   mounted() {
-    if (this.prevRoute.name == 'verifyEmail') EventBus.$emit('send-notification', 'Account verified', '#20bf6b')
+    if (this.prevRoute.name == 'verifyEmail') EventBus.$emit('send-notification', 'Email verified', '#20bf6b')
     else if (this.prevRoute.name == 'resetPasswordCode') EventBus.$emit('send-notification', 'Password updated', '#20bf6b')
   },
   watch: {
@@ -141,11 +150,26 @@ export default {
       catch (error) {
         this.loading = false
         if (error.response === undefined)  EventBus.$emit('send-notification', "Can't establish a connection to the server", '#EF5354')
-        else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
+        else if (error.response.data.message !== undefined) {
+          if (error.response.data.message == 'Please verify your email address') this.snackbar = true
+          else EventBus.$emit('send-notification', error.response.data.message, '#EF5354')
+        }
+        else EventBus.$emit('send-notification', 'Internal Server Error', '#EF5354')
       }
     },
     resetPassword() {
       this.$router.push('/reset_password')
+    },
+    sendVerifyMail() {
+      this.snackbar = false
+      const payload = { 'email': this.email }
+      axios.post('/account/email/resend', payload)
+        .then((response) => {
+          EventBus.$emit('send-notification', response.data.message, '#20bf6b')
+        })
+        .catch((error) => {
+          EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
+        })
     },
   }
 }

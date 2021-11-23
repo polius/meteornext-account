@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     getLicense() {
-      axios.get('/account/license')
+      axios.get('/license')
         .then((response) => {
           this.license = response.data.license
           this.products = response.data.products
@@ -101,7 +101,7 @@ export default {
     submitChange() {
       this.loading = true
       const payload = { 'resources': this.newLicense }
-      axios.post('/account/license', payload)
+      axios.post('/license', payload)
         .then((response) => {
           window.location.href = response.data.url
         })

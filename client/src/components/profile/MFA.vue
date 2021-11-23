@@ -193,7 +193,7 @@ export default {
   methods: {
     getMFA() {
       this.loading = true
-      axios.get('/mfa')
+      axios.get('/profile/mfa')
         .then((response) => {
           this.mfa = response.data.data
         })
@@ -205,7 +205,7 @@ export default {
     },
     get2FA() {
       this.twoFactor = { hash: null, uri: null, value: '' }
-      axios.get('/mfa/2fa')
+      axios.get('/profile/2fa')
         .then((response) => {
           this.twoFactor['hash'] = response.data['mfa_hash']
           this.twoFactor['uri'] = response.data['mfa_uri']
@@ -254,7 +254,7 @@ export default {
     },
     disableMFA() {
       this.loading = true
-      axios.delete('/mfa')
+      axios.delete('/profile/mfa')
         .then((response) => {
           this.mfaDialog = false
           this.getMFA()
@@ -274,7 +274,7 @@ export default {
       }
       this.loading = true
       let payload = {'hash': this.twoFactor.hash, 'value': this.twoFactor.value}
-      axios.post('/mfa/2fa', payload)
+      axios.post('/profile/mfa/2fa', payload)
         .then((response) => {
           this.mfaDialog = false
           this.getMFA()

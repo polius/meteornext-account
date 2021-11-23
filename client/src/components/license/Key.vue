@@ -66,7 +66,7 @@ export default {
   methods: {
     submitUnregister() {
       this.loading = true
-      axios.post('/account/unregister')
+      axios.post('/license/unregister')
         .then((response) => {
           EventBus.$emit('send-notification', response.data.message, '#20bf6b')
           EventBus.$emit('get-account')

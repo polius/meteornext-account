@@ -47,30 +47,6 @@ class Account:
                 self._account.delete(get_jwt_identity())
                 return jsonify({'message': 'Account successfully deleted'}), 200
 
-        @account_blueprint.route('/account/password', methods=['PUT'])
-        @jwt_required()
-        def account_password_method():
-            # Get account
-            account = self._account.get(get_jwt_identity())[0]
-
-            # Check disabled
-            if account['disabled']:
-                return jsonify({"message": "Account disabled"}), 401
-
-            # Get Request Json
-            data = request.get_json()
-
-            # Check parameters
-            if 'current' not in data or 'new' not in data or 'repeat' not in data:
-                return jsonify({'message': 'Insufficient parameters'}), 400
-
-            # Change password
-            try:
-                self.change_password(account, data['new'], data['repeat'], data['current'])
-                return jsonify({'message': 'Password successfully changed'}), 200
-            except Exception as e:
-                return jsonify({'message': str(e)}), 400
-
         @account_blueprint.route('/account/password/reset', methods=['GET','POST'])
         def account_password_reset_method():
             if request.method == 'GET':
@@ -129,35 +105,13 @@ class Account:
 
                     # Change password
                     try:
-                        account = {'id': mail[0]['account_id']}
-                        self.change_password(account, data['password'], data['password2'])
+                        self.change_password(mail[0]['account_id'], data['password'], data['password2'])
                     except Exception as e:
                         return jsonify({'message': str(e)}), 400
 
                     # Remove entry from 'mail'
                     self._account.clean_mail(mail[0]['account_id'], 'reset_password')
                     return jsonify({'message': 'Password updated'}), 200
-
-        @account_blueprint.route('/account/email', methods=['PUT'])
-        @jwt_required()
-        def account_email_method():
-            # Get account
-            account = self._account.get(get_jwt_identity())[0]
-
-            # Check disabled
-            if account['disabled']:
-                return jsonify({"message": "Account disabled"}), 401
-
-            # Get Request Json
-            data = request.get_json()
-
-            # Check parameters
-            if 'email' not in data:
-                return jsonify({'message': 'Insufficient parameters'}), 400
-
-            # Change email
-            self._account.change_email(account, data['email'])
-            return jsonify({'message': 'Email successfully changed'}), 200
 
         @account_blueprint.route('/account/email/verify', methods=['POST'])
         def account_email_verify_method():
@@ -175,47 +129,55 @@ class Account:
             if len(mail) == 0:
                 return jsonify({'message': 'This code is not valid'}), 400
 
-            # Verify email
-            self._account.clean_mail(mail[0]['account_id'], 'verify_email')
-
-            # Create stripe customer
+            # Get account
             account = self._account.get(mail[0]['account_id'])[0]
-            customer = stripe.Customer.create(email=account['email'])
-            data = {'account_id': mail[0]['account_id'], 'stripe_id': customer['id']}
-            self._account.put_customer(data)
+            
+            # Check if account was already verified and user is performing a change email.
+            if account['stripe_id']:
+                # Change stripe customer email
+                stripe.Customer.modify(account['stripe_id'], email=mail[0]['data'])
+                # Change email
+                self._account.change_email(account['id'], mail[0]['data'])
+            else:
+                # Create stripe customer
+                account = self._account.get(mail[0]['account_id'])[0]
+                customer = stripe.Customer.create(email=account['email'])
+                data = {'account_id': mail[0]['account_id'], 'stripe_id': customer['id']}
+                self._account.put_customer(data)
+
+            # Expire mail code
+            self._account.clean_mail(mail[0]['account_id'], 'verify_email')
 
             # Return response
             return jsonify({'message': 'Email verified'}), 200
 
-        @account_blueprint.route('/account/unregister', methods=['POST'])
-        @jwt_required()
-        def account_unregister_method():
+        @account_blueprint.route('/account/email/resend', methods=['POST'])
+        def account_email_resend_method():
+            # Check parameters
+            if not request.is_json:
+                return jsonify({"message": "Missing JSON in request"}), 400
+            data = request.get_json()
+
             # Get account
-            account = self._account.get(get_jwt_identity())[0]
+            account = self._account.get_by_email(data['email'])[0]
 
-            # Check disabled
-            if account['disabled']:
-                return jsonify({"message": "Account disabled"}), 401
+            # Resend email
+            code = secrets.token_urlsafe(64)
+            self._account.create_mail(account['id'], 'verify_email', code, data['email'])
+            self._mail.send_verify_email(data['email'], code)
 
-            # Unregister license
-            self._account.unregister_license(get_jwt_identity())
-            return jsonify({'message': 'License successfully unregistered'}), 200
+            # Return response
+            return jsonify({'message': 'Please verify your email address'}), 200
 
         return account_blueprint
 
     ####################
     # Internal Methods #
     ####################
-    def change_password(self, account, new, repeat, current=None):
-        # Check current password
-        if current and not bcrypt.checkpw(current.encode('utf-8'), account['password'].encode('utf-8')):
-            raise Exception("The current password is not valid.")
-
+    def change_password(self, account_id, new, repeat):
         # Check password requirements
         if new != repeat:
             raise Exception('Passwords do not match')
-        if current == new:
-            raise Exception("The new password can't be the same as the current")
         if len(new) < 8:
             raise Exception('The password must be at least 8 characters long')
         if not any(c.islower() for c in new):
@@ -225,4 +187,4 @@ class Account:
 
         # Change password
         encrypted_passw = bcrypt.hashpw(new.encode('utf8'), bcrypt.gensalt())
-        self._account.change_password({'id': account['id'], 'password': encrypted_passw})
+        self._account.change_password({'id': account_id, 'password': encrypted_passw})

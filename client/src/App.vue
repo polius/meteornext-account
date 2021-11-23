@@ -16,52 +16,10 @@
 body {
   background-color:#fffcfa;
 }
-/* Dark Scrollbar */
-/* .dark_scrollbar::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 15px;
-  background-color: #424242;
-}
-.dark_scrollbar::-webkit-scrollbar-track {
-  background: #424242;
-}
-.dark_scrollbar::-webkit-scrollbar-thumb {
-  min-height: 25px;
-  background: #303030;
-  border: 3px solid transparent;
-  border-radius: 10px;
-  background-clip: content-box;
-}
-.dark_scrollbar::-webkit-scrollbar-corner {
-  background: #303030;
-}
-::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 15px;
-  background-color: #424242;
-}
-::-webkit-scrollbar-track {
-  background: #424242;
-}
-::-webkit-scrollbar-thumb {
-  min-height: 25px;
-  background:  #303030;
-  border: 3px solid transparent;
-  border-radius: 10px;
-  background-clip: content-box;
-}
-::-webkit-scrollbar-corner {
-  background: #303030 ;
-} */
 </style>
 
 <script>
 import EventBus from './js/event-bus'
-
-// Scrollbar - Firefox
-// document.documentElement.style.setProperty('scrollbar-color', '#303030 #424242');
-// Scrollbar - Chrome
-// document.documentElement.classList.add("dark_scrollbar");
 
 export default {
   data: () => ({
@@ -69,7 +27,7 @@ export default {
     snackbar: false,
     snackbarTimeout: Number(3000),
     snackbarText: '',
-    snackbarColor: ''
+    snackbarColor: '',
   }),
   mounted() {
     EventBus.$on('send-notification', this.notification)
@@ -77,7 +35,7 @@ export default {
   methods: {
     notification(message, color) {
       this.snackbarText = message
-      this.snackbarColor = color 
+      this.snackbarColor = color
       this.snackbar = true
     },
   }

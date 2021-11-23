@@ -10,6 +10,7 @@ class Account:
                 a.id,
                 a.email,
                 a.password,
+                m.account_id IS NULL AS 'verified',
                 a.disabled,
                 a.stripe_id,
                 CASE
@@ -18,10 +19,32 @@ class Account:
                     ELSE NULL
                 END AS 'mfa'
             FROM accounts a
-            LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id 
+            LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id
+            LEFT JOIN mail m ON m.account_id = a.id AND m.action = 'verify_email'
             WHERE a.id = %s
         """
         return self._sql.execute(query, (account_id))
+    
+    def get_by_email(self, email):
+        query = """
+            SELECT 
+                a.id,
+                a.email,
+                a.password,
+                m.account_id IS NULL AS 'verified',
+                a.disabled,
+                a.stripe_id,
+                CASE
+                    WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
+                    WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
+                    ELSE NULL
+                END AS 'mfa'
+            FROM accounts a
+            LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id
+            LEFT JOIN mail m ON m.account_id = a.id AND m.action = 'verify_email'
+            WHERE a.email = %s
+        """
+        return self._sql.execute(query, (email))
 
     def get_profile(self, account_id):
         query = """
@@ -59,6 +82,45 @@ class Account:
         """
         return self._sql.execute(query, (account_id))
 
+    ############
+    # REGISTER #
+    ############
+    def register(self, data):
+        now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        # Create account
+        query = """
+            INSERT INTO accounts (email, password, ip, created)
+            VALUES (%s, %s, %s, %s)
+        """
+        account_id = self._sql.execute(query, (data['email'], data['password'], data['ip'], now))
+
+        # Create email code
+        query = """
+            INSERT INTO mail (account_id, action, code, created)
+            VALUES (%s, 'verify_email', %s, %s)
+        """
+        self._sql.execute(query, (account_id, data['code'], now))
+
+        # Create license
+        query = """
+            INSERT INTO `licenses` (`account_id`, `product_id`, `key`)
+            VALUES (%s, 1, %s)
+        """
+        self._sql.execute(query, (account_id, data['key']))
+
+    #########
+    # LOGIN #
+    #########
+    def login(self, data):
+        query = """
+            UPDATE accounts
+            SET
+                ip = %s,
+                last_login = %s
+            WHERE id = %s
+        """
+        self._sql.execute(query, (data['ip'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), data['id']))
+
     ###########
     # PROFILE #
     ###########
@@ -70,13 +132,13 @@ class Account:
         """
         self._sql.execute(query, (account['password'], account['id']))
 
-    def change_email(self, account, email):
+    def change_email(self, account_id, email):
         query = """
             UPDATE accounts
             SET email = %s
             WHERE id = %s
         """
-        self._sql.execute(query, (email, account['id']))
+        self._sql.execute(query, (email, account_id))
     
     def delete(self, account_id):
         query = """
@@ -190,32 +252,23 @@ class Account:
     ########
     def get_mail(self, action, code):
         query = """
-            SELECT account_id, action, code
+            SELECT account_id, action, code, data
             FROM mail
             WHERE action = %s
             AND code = %s
         """
         return self._sql.execute(query, (action, code))
 
-    def reset_password(self, email, code):
+    def create_mail(self, account_id, action, code, data=None):
         query = """
-            DELETE m
-            FROM mail m
-            JOIN accounts a ON a.id = m.account_id AND a.email = %s
+            INSERT INTO mail (account_id, action, code, data, created)
+            VALUES (%s, %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                code = VALUES(code),
+                data = VALUES(data),
+                created = VALUES(created);
         """
-        self._sql.execute(query, (email))
-
-        query = """
-            INSERT INTO mail (account_id, action, code, created)
-            SELECT
-                id AS 'account_id',
-                'reset_password' AS 'action',
-                %s AS 'code',
-                %s AS 'created'
-            FROM accounts
-            WHERE email = %s
-        """
-        self._sql.execute(query, (code, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"), email))
+        self._sql.execute(query, (account_id, action, code, data, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
 
     def clean_mail(self, account_id, action):
         query = """

@@ -15,7 +15,7 @@ class MFA:
         # Init blueprint
         mfa_blueprint = Blueprint('mfa', __name__, template_folder='mfa')
 
-        @mfa_blueprint.route('/mfa', methods=['GET','DELETE'])
+        @mfa_blueprint.route('/profile/mfa', methods=['GET','DELETE'])
         @jwt_required()
         def mfa_method():
             # Get Account
@@ -38,7 +38,7 @@ class MFA:
                 self._account.disable_mfa(get_jwt_identity())
                 return jsonify({'message': 'MFA successfully disabled'}), 200
 
-        @mfa_blueprint.route('/mfa/2fa', methods=['GET','POST'])
+        @mfa_blueprint.route('/profile/mfa/2fa', methods=['GET','POST'])
         @jwt_required()
         def mfa_2fa_method():
             # Get Account
@@ -63,7 +63,7 @@ class MFA:
                 self._account.enable_2fa({'account_id': get_jwt_identity(), '2fa_hash': data['hash']})
                 return jsonify({'message': 'MFA successfully enabled'}), 200
 
-        @mfa_blueprint.route('/mfa/webauthn/register', methods=['GET','POST'])
+        @mfa_blueprint.route('/profile/mfa/webauthn/register', methods=['GET','POST'])
         @jwt_required()
         def mfa_webauthn_register_method():
             # Get request data

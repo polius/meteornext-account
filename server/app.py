@@ -12,6 +12,7 @@ import routes.login
 import routes.register
 import routes.account
 import routes.license
+import routes.profile
 import routes.mfa
 
 # Instantiate Flask App
@@ -41,15 +42,17 @@ Cron(app, sql)
 
 # Register blueprints
 URL_PREFIX = "/api"
-login = routes.login.Login(sql)
+login = routes.login.Login(sql, conf)
 register = routes.register.Register(sql, conf)
 account = routes.account.Account(sql, conf)
 license = routes.license.License(sql, conf)
+profile = routes.profile.Profile(sql, conf)
 mfa = routes.mfa.MFA(sql)
 app.register_blueprint(login.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(register.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(account.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(license.blueprint(), url_prefix=URL_PREFIX)
+app.register_blueprint(profile.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(mfa.blueprint(), url_prefix=URL_PREFIX)
 
 # Enable CORS

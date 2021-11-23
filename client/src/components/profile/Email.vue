@@ -44,7 +44,7 @@ export default {
       // Check new email is different as current one
       this.loading = true
       const payload = { 'email': this.item }
-      axios.put('/account/email', payload)
+      axios.post('/profile/email', payload)
         .then((response) => {
           this.item = ''
           EventBus.$emit('send-notification', response.data.message, '#20bf6b')

@@ -41,7 +41,7 @@ export default {
       }
       this.loading = true
       const payload = this.item
-      axios.put('/account/password', payload)
+      axios.post('/profile/password', payload)
         .then((response) => {
           this.item = { current: '', new: '', repeat: '' }
           EventBus.$emit('send-notification', response.data.message, '#20bf6b')
