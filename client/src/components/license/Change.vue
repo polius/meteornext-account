@@ -12,7 +12,10 @@
                   <div class="headline" style="font-size:1.3rem!important; color:black; margin-top:10px; margin-bottom:20px">ACCOUNT | CHANGE LICENSE</div>
                   <v-divider></v-divider>
                   <div v-if="$route.params.id !== undefined && $route.params.id == 'success'" style="margin-top:20px">
-                    SUCCESS
+                    <div class="text-h6" style="color:black">License successfully changed</div>
+                    <v-icon size="50" color="#20bf6b" style="margin:15px">fas fa-check-circle</v-icon>
+                    <div class="text-body-1" style="color:black">Thanks for your purchase :)</div>
+                    <v-btn @click="goBack" color="info" style="margin-top:15px">Go back</v-btn>
                   </div>
                   <div v-else style="margin-top:20px">
                     <div v-if="license == null" class="text-center" style="margin-bottom:10px">
@@ -108,6 +111,9 @@ export default {
           else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
         })
         .finally(() => this.loading = false)
+    },
+    goBack() {
+      this.$router.push('/')
     },
   },
 }

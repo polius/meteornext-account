@@ -6,6 +6,8 @@
     <v-text-field flat readonly solo v-model="resources" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Pricing</div>
     <v-text-field flat readonly solo v-model="pricing" style="padding-top:5px" hide-details></v-text-field>
+    <div class="text-body-2 font-weight-medium" style="margin-top:15px">Next payment</div>
+    <v-text-field flat readonly solo v-model="next" style="padding-top:5px" hide-details></v-text-field>
   </div>
 </template>
 
@@ -16,6 +18,8 @@
 </style>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'Summary',
   data: () => ({
@@ -33,6 +37,11 @@ export default {
       if (this.account.license === undefined) return ''
       if (this.account.license.resources == 1) return 'Free'
       return '$' + this.account.products.filter(x => x.resources == this.account.license.resources)[0]['price'] + ' / Month'
+    },
+    next() {
+      if (this.account.license === undefined) return ''
+      if (this.account.license.next === undefined) return '-'
+      return this.account.license.next + ' (' + moment(this.account.license.next).diff(moment(), 'days') + ' days)'
     },
   },
 }

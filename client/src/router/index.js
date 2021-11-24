@@ -25,7 +25,7 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/license/change/:code?',
+    path: '/license/change/:id?',
     name: 'changeLicense',
     component: () => import('../components/license/Change'),
     meta: { requiresAuth: true }

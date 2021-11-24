@@ -51,7 +51,7 @@ class Account:
                     }
                     try:
                         upcoming_invoice = stripe.Invoice.upcoming(customer=account['stripe_id'])
-                        billing['details']['next'] = datetime.datetime.fromtimestamp(upcoming_invoice['lines']['data'][0]['period']['start'])
+                        license['next'] = datetime.datetime.fromtimestamp(upcoming_invoice['lines']['data'][0]['period']['start'])
                     except stripe.error.InvalidRequestError:
                         pass
 

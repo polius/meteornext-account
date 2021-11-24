@@ -8,8 +8,6 @@
     <v-text-field flat readonly solo v-model="last4" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Expiration date</div>
     <v-text-field flat readonly solo v-model="expiration" style="padding-top:5px" hide-details></v-text-field>
-    <div class="text-body-2 font-weight-medium" style="margin-top:15px">Next payment</div>
-    <v-text-field flat readonly solo v-model="next" style="padding-top:5px" hide-details></v-text-field>
     <v-btn :disabled="account.billing === undefined" :loading="loading" color="#2196f3" @click="submitPaymentMethodChange" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px; margin-right:10px">{{ card == '-' ? 'Add payment method' : 'Change payment method' }}</v-btn>
     <v-btn :disabled="account.billing === undefined || account.billing.card === undefined" :loading="loading" color="warning" @click="dialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Remove payment method</v-btn>
     <v-dialog v-model="dialog" max-width="672px">
@@ -61,7 +59,6 @@
 
 <script>
 import axios from 'axios'
-import moment from 'moment'
 import EventBus from '../../js/event-bus'
 
 export default {
@@ -75,19 +72,15 @@ export default {
   computed: {
     card() {
       if (this.account.billing === undefined || this.account.billing.details.card === undefined) return '-'
-      else return this.account.billing.details.card
+      return this.account.billing.details.card
     },
     last4() {
       if (this.account.billing === undefined ||  this.account.billing.details.last4 === undefined) return '-'
-      else return this.account.billing.details.last4
+      return this.account.billing.details.last4
     },
     expiration() {
       if (this.account.billing === undefined ||  this.account.billing.details.expiration === undefined) return '-'
-      else return this.account.billing.details.expiration
-    },
-    next() {
-      if (this.account.billing === undefined ||  this.account.billing.details.next === undefined || this.account.billing.details.next == null) return '-'
-      else return this.account.billing.details.next + ' (' + moment(this.account.billing.details.next).diff(moment(), 'days') + ' days)'
+      return this.account.billing.details.expiration
     },
   },
   methods: {
