@@ -100,10 +100,14 @@ class Account:
                     return jsonify({"message": "Invalid parameters"}), 400
 
                 if 'email' in data:
+                    # Get account
+                    account = self._account.get_by_email(data['email'])
+                    if len(account) == 0:
+                        return jsonify({'message': 'Email sent'}), 200
                     # Generate email code
                     code = secrets.token_urlsafe(64)
                     # Create an entry to the "mail" table
-                    self._account.reset_password(data['email'], code)
+                    self._account.create_mail(account[0]['id'], 'reset_password', code)
                     # Send email to reset password
                     try:
                         self._mail.send_reset_password(data['email'], code)

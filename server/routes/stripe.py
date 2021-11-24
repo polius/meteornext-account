@@ -65,9 +65,13 @@ class Stripe:
 
     def invoice_payment_failed(self, data):
         print(data)
+        # check if it happened creating a subscription or is an automated payment.
+        # automated payment --> send email.
+        # "billing_reason": "subscription_create"
 
     def customer_source_expiring(self, data):
         print(data)
+        # send notification mail.
 
     def payment_method_attached(self, data):
         # Get all customer payment methods

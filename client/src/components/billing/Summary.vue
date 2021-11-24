@@ -9,7 +9,7 @@
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Expiration date</div>
     <v-text-field flat readonly solo v-model="expiration" style="padding-top:5px" hide-details></v-text-field>
     <v-btn :disabled="account.billing === undefined" :loading="loading" color="#2196f3" @click="submitPaymentMethodChange" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px; margin-right:10px">{{ card == '-' ? 'Add payment method' : 'Change payment method' }}</v-btn>
-    <v-btn :disabled="account.billing === undefined || account.billing.card === undefined" :loading="loading" color="warning" @click="dialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Remove payment method</v-btn>
+    <v-btn :disabled="account.billing === undefined || account.billing.details.card === undefined" :loading="loading" color="warning" @click="dialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Remove payment method</v-btn>
     <v-dialog v-model="dialog" max-width="672px">
       <v-card style="background-color:#fffcfa">
         <v-toolbar dense flat color="#f5983b">

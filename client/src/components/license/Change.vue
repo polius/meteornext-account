@@ -100,6 +100,7 @@ export default {
         })
     },
     submitChange() {
+      // Check if user selected 1 Resource. Open dialog for confirmation. 1 resource does not need Stripe checkout.
       this.loading = true
       const payload = { 'resources': this.newLicense }
       axios.post('/license', payload)

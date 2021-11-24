@@ -156,7 +156,7 @@ export default {
       }
     },
     resetPassword() {
-      this.$router.push('/reset_password')
+      this.$router.push({ name: 'resetPassword' })
     },
     sendVerifyMail() {
       this.snackbar = false
