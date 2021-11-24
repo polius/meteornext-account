@@ -90,8 +90,6 @@ export default {
           this.license = response.data.license
           this.products = response.data.products
           this.newLicense = this.license.resources
-          console.log("LICENSE")
-          console.log(this.license)
         })
         .catch((error) => {
           if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))

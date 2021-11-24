@@ -15,12 +15,19 @@ const routes = [
     path: '/login',
     name: 'login',
     props: true,
-    component: () => import('../components/Login')
+    component: () => import('../components/Login'),
   },
   {
-    path: '/',
-    name: 'account',
+    path: '/:path?',
+    name: 'accountPath',
     component: () => import('../components/Account'),
+    alias: ["/license", "/billing", "/profile"],
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/license/change/:code?',
+    name: 'changeLicense',
+    component: () => import('../components/license/Change'),
     meta: { requiresAuth: true }
   },
   {
@@ -29,26 +36,9 @@ const routes = [
     component: () => import('../components/mail/VerifyEmail'),
   },
   {
-    path: '/reset_password',
+    path: '/reset_password/:code?',
     name: 'resetPassword',
     component: () => import('../components/mail/ResetPassword'),
-  },
-  {
-    path: '/reset_password/:code',
-    name: 'resetPasswordCode',
-    component: () => import('../components/mail/ResetPassword'),
-  },
-  {
-    path: '/license',
-    name: 'changeLicense',
-    component: () => import('../components/license/Change'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/license/:id',
-    name: 'changeLicenseResponse',
-    component: () => import('../components/license/Change'),
-    meta: { requiresAuth: true }
   },
 ]
 

@@ -34,8 +34,21 @@ class Account:
             if request.method == 'GET':
                 profile = self._account.get_profile(get_jwt_identity())[0]
                 license = self._account.get_license(get_jwt_identity())
-                billing = self._account.get_billing(get_jwt_identity())
+                billing = {
+                    "details": {},
+                    "payments": self._account.get_payments(get_jwt_identity())
+                }
                 products = self._account.get_products()
+
+                # Get billing card details
+                payment_methods = stripe.Customer.list_payment_methods(account['stripe_id'], type="card")['data']
+                if len(payment_methods) > 0:
+                    billing['details'] = {
+                        'card': payment_methods[0]['card']['brand'].upper(),
+                        'last4': payment_methods[0]['card']['last4'],
+                        'expiration': f"{payment_methods[0]['card']['exp_month']}/{payment_methods[0]['card']['exp_year']}"
+                    }
+
                 return jsonify({'profile': profile, 'license': license, 'billing': billing, 'products': products}), 200
 
             # Delete account

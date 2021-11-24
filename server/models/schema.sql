@@ -40,9 +40,10 @@ CREATE TABLE `accounts_mfa` (
 CREATE TABLE `products` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `resources` INT NOT NULL,
-  `price` DOUBLE NOT NULL,
+  `price` DOUBLE NOT NULL COMMENT 'Reference value',
   `stripe_id` VARCHAR(191) NULL COMMENT 'product_id',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE `stripe_id` (`stripe_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 INSERT INTO `products` (`resources`, `price`, `stripe_id`) VALUES
@@ -69,30 +70,42 @@ CREATE TABLE `licenses` (
   `account_id` INT UNSIGNED NOT NULL,
   `product_id` INT UNSIGNED NOT NULL,
   `key` VARCHAR(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` DATETIME NULL,
+  `expiration` DATETIME NULL, -- Should be a DATE, not a DATETIME.
   -- `resources` INT NOT NULL DEFAULT '1',
   `in_use` TINYINT(1) NOT NULL DEFAULT '0',
   `uuid` VARCHAR(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_used` DATETIME DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE `account_id` (`account_id`),
-  UNIQUE `product_id` (`product_id`),
+  INDEX `product_id` (`product_id`),
   INDEX `expiration` (`expiration`),
   INDEX `in_use` (`in_use`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
   FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
-CREATE TABLE `billing` (
+CREATE TABLE `subscriptions` (
+  `account_id` INT UNSIGNED NOT NULL,
+  `product_id` INT UNSIGNED NOT NULL,
+  `stripe_id` VARCHAR(191) NOT NULL COMMENT 'subscription_id',
+  PRIMARY KEY (`account_id`, `product_id`),
+  UNIQUE `account_id` (`account_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE `payments` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `account_id` INT UNSIGNED NOT NULL,
+  `product_id` INT UNSIGNED NOT NULL,
   `date` DATETIME NOT NULL,
-  `resources` INT NOT NULL,
-  `price` DOUBLE NOT NULL,
+  `price` INT UNSIGNED NOT NULL,
   `status` ENUM('pending','success','error') NOT NULL,
   `error` TEXT NULL,
   `stripe_id` VARCHAR(191) NOT NULL COMMENT 'payment_id',
+  `invoice` TEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `account_id` (`account_id`),
-  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
+  INDEX `product_id` (`product_id`),
+  UNIQUE `stripe_id` (`stripe_id`),
+  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;

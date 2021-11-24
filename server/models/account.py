@@ -64,7 +64,7 @@ class Account:
 
     def get_license(self, account_id):
         query = """
-            SELECT l.resources, p.price, l.expiration, l.key, l.in_use
+            SELECT p.resources, p.price, l.expiration, l.key, l.in_use
             FROM licenses l
             JOIN products p ON p.id = l.product_id
             WHERE l.account_id = %s
@@ -73,12 +73,13 @@ class Account:
         """
         return self._sql.execute(query, (account_id))[0]
 
-    def get_billing(self, account_id):
+    def get_payments(self, account_id):
         query = """
-            SELECT id, date, resources, price, status, error
-            FROM billing
-            WHERE account_id = %s
-            ORDER BY id DESC
+            SELECT pa.date, pr.resources, pa.price, pa.status, pa.error, pa.invoice
+            FROM payments pa
+            JOIN products pr ON pr.id = pa.product_id
+            WHERE pa.account_id = %s
+            ORDER BY pa.id DESC
         """
         return self._sql.execute(query, (account_id))
 
@@ -197,21 +198,29 @@ class Account:
     ###########
     # LICENSE #
     ###########
-    def get_products(self, resources=None):
-        if resources:
-            query = """
-                SELECT price, stripe_id
-                FROM products
-                WHERE resources = %s
-            """
-            return self._sql.execute(query, (resources))
-        else:
-            query = """
-                SELECT resources, price
-                FROM products
-                ORDER BY id
-            """
-            return self._sql.execute(query)
+    def get_products(self):
+        query = """
+            SELECT resources, price
+            FROM products
+            ORDER BY id
+        """
+        return self._sql.execute(query)
+    
+    def get_products_by_resources(self, resources):
+        query = """
+            SELECT price, stripe_id
+            FROM products
+            WHERE resources = %s
+        """
+        return self._sql.execute(query, (resources))
+
+    def get_products_by_stripe(self, stripe_id):
+        query = """
+            SELECT *
+            FROM products
+            WHERE stripe_id = %s
+        """
+        return self._sql.execute(query, (stripe_id))
 
     def unregister_license(self, account_id):
         query = """
@@ -221,31 +230,25 @@ class Account:
         """
         self._sql.execute(query, (account_id))
 
-    def change_license(self, account_id, resources):
+    def change_license(self, account_id, product_id, expiration):
         query = """
             UPDATE licenses
-            SET resources = %s
+            SET
+                product_id = %s,
+                expiration = %s
             WHERE account_id = %s
         """
-        self._sql.execute(query, (resources, account_id))
-
-    def create_customer(self, account_id, customer_id):
-        query = """
-            UPDATE accounts
-            SET stripe_id = %s
-            WHERE id = %s
-        """
-        self._sql.execute(query, (customer_id, account_id))
+        self._sql.execute(query, (product_id, expiration, account_id))
 
     ###########
     # BILLING #
     ###########
-    def new_purchase(self, account_id, date, resources, price, status, error, stripe_id):
+    def new_purchase(self, account_id, product_id, date, price, status, error, stripe_id, invoice):
         query = """
-            INSERT INTO billing (account_id, date, resources, price, status, error, stripe_id)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO payments (account_id, product_id, date, price, status, error, stripe_id, invoice)
+            VALUES (%s, %s, FROM_UNIXTIME(%s), %s, %s, %s, %s, %s)
         """
-        self._sql.execute(query, (account_id, date, resources, price, status, error, stripe_id))
+        self._sql.execute(query, (account_id, product_id, date, price, status, error, stripe_id, invoice))
 
     ########
     # MAIL #

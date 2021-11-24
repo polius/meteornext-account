@@ -12,7 +12,9 @@ import routes.login
 import routes.register
 import routes.account
 import routes.license
+import routes.billing
 import routes.profile
+import routes.stripe
 import routes.mfa
 
 # Instantiate Flask App
@@ -46,13 +48,17 @@ login = routes.login.Login(sql, conf)
 register = routes.register.Register(sql, conf)
 account = routes.account.Account(sql, conf)
 license = routes.license.License(sql, conf)
+billing = routes.billing.Billing(sql, conf)
 profile = routes.profile.Profile(sql, conf)
+stripe = routes.stripe.Stripe(sql, conf)
 mfa = routes.mfa.MFA(sql)
 app.register_blueprint(login.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(register.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(account.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(license.blueprint(), url_prefix=URL_PREFIX)
+app.register_blueprint(billing.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(profile.blueprint(), url_prefix=URL_PREFIX)
+app.register_blueprint(stripe.blueprint(), url_prefix=URL_PREFIX)
 app.register_blueprint(mfa.blueprint(), url_prefix=URL_PREFIX)
 
 # Enable CORS

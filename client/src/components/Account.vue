@@ -44,9 +44,20 @@ export default {
   components: { Profile, License, Billing },
   created() {
     this.getAccount()
+    if (this.$route.params.path !== undefined) {
+      if (this.$route.params.path == 'billing') this.tab = 1
+      else if (this.$route.params.path == 'profile') this.tab = 2
+    }
   },
   mounted() {
     EventBus.$on('get-account', this.getAccount)
+  },
+  watch: {
+    tab(value) {
+      if (value == 0 && this.$route.path != '/license') this.$router.push('/license')
+      else if (value == 1 && this.$route.path != '/billing') this.$router.push('/billing')
+      else if (value == 2 && this.$route.path != '/profile') this.$router.push('/profile')
+    }
   },
   methods: {
     getAccount() {

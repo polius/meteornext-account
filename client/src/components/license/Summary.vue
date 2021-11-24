@@ -38,8 +38,8 @@ export default {
     },
     expiration() {
       if (this.account.license === undefined) return ''
-      if (this.account.license.expiration) return this.account.license.expiration_date
-      return 'Lifetime'
+      if (this.account.license.expiration == 1) return 'Lifetime'
+      return this.account.license.expiration
     },
   },
 }

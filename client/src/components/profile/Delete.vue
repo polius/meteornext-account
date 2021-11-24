@@ -6,7 +6,7 @@
       <template v-slot:label>
         <div style="margin-left:5px">
           <div style="color:black">I confirm I want to delete my Meteor Next account.</div>
-          <div class="font-weight-regular caption" style="color:black; font-size:0.85rem !important">Existing active licenses will be canceled.</div>
+          <div class="font-weight-regular caption" style="color:black; font-size:0.85rem !important">Existing active licenses will be canceled. The data stored in your database won't be deleted.</div>
         </div>
       </template>
     </v-checkbox>

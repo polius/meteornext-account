@@ -8,7 +8,7 @@
     <v-text-field flat readonly solo v-model="last4" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Expiration Date</div>
     <v-text-field flat readonly solo v-model="expiration" style="padding-top:5px" hide-details></v-text-field>
-    <v-btn :loading="loading" color="#2196f3" @click="submitChange" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Change payment method</v-btn>
+    <v-btn :loading="loading" color="#2196f3" @click="submitPaymentMethod" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">{{ card == '-' ? 'Add payment method' : 'Change payment method' }}</v-btn>
   </div>
 </template>
 
@@ -22,19 +22,42 @@
 </style>
 
 <script>
+import axios from 'axios'
+import EventBus from '../../js/event-bus'
+
 export default {
   data: () => ({
-    card: 'VISA',
-    last4: '4242',
-    expiration: '08/2022',
     loading: false,
   }),
   props: {
     account: Object
   },
+  computed: {
+    card() {
+      if (this.account.billing === undefined || this.account.billing.details.card === undefined) return '-'
+      else return this.account.billing.details.card
+    },
+    last4() {
+      if (this.account.billing === undefined ||  this.account.billing.details.last4 === undefined) return '-'
+      else return this.account.billing.details.last4
+    },
+    expiration() {
+      if (this.account.billing === undefined ||  this.account.billing.details.expiration === undefined) return '-'
+      else return this.account.billing.details.expiration
+    },
+  },
   methods: {
-    submitChange() {
-      
+    submitPaymentMethod() {
+      this.loading = true
+      axios.post('/billing/method')
+        .then((response) => {
+          window.location.href = response.data.url
+        })
+        .catch((error) => {
+          if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
+          else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
+        })
+        .finally(() => this.loading = false)
     }
   }
 }
