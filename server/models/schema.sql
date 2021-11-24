@@ -70,7 +70,7 @@ CREATE TABLE `licenses` (
   `account_id` INT UNSIGNED NOT NULL,
   `product_id` INT UNSIGNED NOT NULL,
   `key` VARCHAR(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` DATETIME NULL, -- Should be a DATE, not a DATETIME.
+  -- `expiration` DATETIME NULL,
   -- `resources` INT NOT NULL DEFAULT '1',
   `in_use` TINYINT(1) NOT NULL DEFAULT '0',
   `uuid` VARCHAR(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,

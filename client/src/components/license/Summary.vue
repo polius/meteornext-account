@@ -6,8 +6,6 @@
     <v-text-field flat readonly solo v-model="resources" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Pricing</div>
     <v-text-field flat readonly solo v-model="pricing" style="padding-top:5px" hide-details></v-text-field>
-    <div class="text-body-2 font-weight-medium" style="margin-top:15px">Expiration Date</div>
-    <v-text-field flat readonly solo v-model="expiration" style="padding-top:5px" hide-details></v-text-field>
   </div>
 </template>
 
@@ -35,11 +33,6 @@ export default {
       if (this.account.license === undefined) return ''
       if (this.account.license.resources == 1) return 'Free'
       return '$' + this.account.products.filter(x => x.resources == this.account.license.resources)[0]['price'] + ' / Month'
-    },
-    expiration() {
-      if (this.account.license === undefined) return ''
-      if (this.account.license.expiration == 1) return 'Lifetime'
-      return this.account.license.expiration
     },
   },
 }

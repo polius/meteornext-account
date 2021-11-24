@@ -64,7 +64,7 @@ class Account:
 
     def get_license(self, account_id):
         query = """
-            SELECT p.resources, p.price, l.expiration, l.key, l.in_use
+            SELECT p.resources, p.price, l.key, l.in_use
             FROM licenses l
             JOIN products p ON p.id = l.product_id
             WHERE l.account_id = %s
@@ -230,15 +230,13 @@ class Account:
         """
         self._sql.execute(query, (account_id))
 
-    def change_license(self, account_id, product_id, expiration):
+    def change_license(self, account_id, product_id):
         query = """
             UPDATE licenses
-            SET
-                product_id = %s,
-                expiration = %s
+            SET product_id = %s
             WHERE account_id = %s
         """
-        self._sql.execute(query, (product_id, expiration, account_id))
+        self._sql.execute(query, (product_id, account_id))
 
     ###########
     # BILLING #

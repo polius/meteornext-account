@@ -1,6 +1,7 @@
 import bcrypt
 import stripe
 import secrets
+import datetime
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 
@@ -46,9 +47,15 @@ class Account:
                     billing['details'] = {
                         'card': payment_methods[0]['card']['brand'].upper(),
                         'last4': payment_methods[0]['card']['last4'],
-                        'expiration': f"{payment_methods[0]['card']['exp_month']}/{payment_methods[0]['card']['exp_year']}"
+                        'expiration': f"{payment_methods[0]['card']['exp_month']}/{payment_methods[0]['card']['exp_year']}",
                     }
+                    try:
+                        upcoming_invoice = stripe.Invoice.upcoming(customer=account['stripe_id'])
+                        billing['details']['next'] = datetime.datetime.fromtimestamp(upcoming_invoice['lines']['data'][0]['period']['start'])
+                    except stripe.error.InvalidRequestError:
+                        pass
 
+                # Return data
                 return jsonify({'profile': profile, 'license': license, 'billing': billing, 'products': products}), 200
 
             # Delete account

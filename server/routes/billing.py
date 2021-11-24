@@ -16,7 +16,7 @@ class Billing:
         # Init blueprint
         billing_bluepring = Blueprint('billing', __name__, template_folder='billing')
 
-        @billing_bluepring.route('/billing/method', methods=['POST'])
+        @billing_bluepring.route('/billing/method', methods=['POST','DELETE'])
         @jwt_required()
         def billing_method_method():
             # Get account
@@ -26,18 +26,29 @@ class Billing:
             if account['disabled']:
                 return jsonify({"message": "Account disabled"}), 401
 
-            # Create checkout
-            try:
-                checkout_session = stripe.checkout.Session.create(
-                    mode='setup',
-                    payment_method_types=['card'],
-                    customer=account['stripe_id'],
-                    success_url='https://account.meteor2.io/billing',
-                    cancel_url='https://account.meteor2.io/billing',
-                )
-                return jsonify({'url': checkout_session.url}), 200
-            except Exception as e:
-                return jsonify({'message': str(e)}), 400
+            if request.method == 'POST':
+                # Create checkout
+                try:
+                    checkout_session = stripe.checkout.Session.create(
+                        mode='setup',
+                        payment_method_types=['card'],
+                        customer=account['stripe_id'],
+                        success_url='https://account.meteor2.io/billing',
+                        cancel_url='https://account.meteor2.io/billing',
+                    )
+                    return jsonify({'url': checkout_session.url}), 200
+                except Exception as e:
+                    return jsonify({'message': str(e)}), 400
+
+            elif request.method == 'DELETE':
+                # Get customer subscription
+                subscription = stripe.Subscription.list(customer=account['stripe_id'])['data'][0]
+                # Cancel subscription
+                stripe.Subscription.delete(subscription['id'])
+                # Remove payment method
+                stripe.PaymentMethod.detach(subscription['default_payment_method'])
+                # Return response
+                return jsonify({'message': "Payment method removed"}), 200
 
             @billing_bluepring.route('/billing/invoice', methods=['GET'])
             @jwt_required()

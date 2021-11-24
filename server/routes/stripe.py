@@ -1,5 +1,4 @@
 import stripe
-import datetime
 from flask import Blueprint, jsonify, request
 
 import models.account
@@ -42,15 +41,18 @@ class Stripe:
     # Internal Methods #
     ####################
     def invoice_paid(self, data):
-        print(data)
         # Get common information
         account = self._account.get_by_email(data['object']['customer_email'])[0]
         account_id = account['id']
         product_id = self._account.get_products_by_stripe(data['object']['lines']['data'][0]['plan']['id'])[0]['id']
 
+        # Remove last subscriptions
+        subscriptions = stripe.Subscription.list(customer=account['stripe_id'])
+        for subscription in subscriptions['data'][1:]:
+            stripe.Subscription.delete(subscription['id'])
+
         # Update licence entry
-        expiration = datetime.datetime.fromtimestamp(data['object']['created']).replace(hour=0, minute=0, second=0) + datetime.timedelta(days=31)
-        self._account.change_license(account_id, product_id, expiration)
+        self._account.change_license(account_id, product_id)
 
         # Create entry to the payments table
         created = data['object']['created'],
