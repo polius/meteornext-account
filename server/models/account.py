@@ -46,6 +46,27 @@ class Account:
         """
         return self._sql.execute(query, (email))
 
+    def get_by_customer(self, customer_id):
+        query = """
+            SELECT 
+                a.id,
+                a.email,
+                a.password,
+                m.account_id IS NULL AS 'verified',
+                a.disabled,
+                a.stripe_id,
+                CASE
+                    WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
+                    WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
+                    ELSE NULL
+                END AS 'mfa'
+            FROM accounts a
+            LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id
+            LEFT JOIN mail m ON m.account_id = a.id AND m.action = 'verify_email'
+            WHERE a.stripe_id = %s
+        """
+        return self._sql.execute(query, (customer_id))
+
     def get_profile(self, account_id):
         query = """
             SELECT
@@ -247,6 +268,19 @@ class Account:
             VALUES (%s, %s, FROM_UNIXTIME(%s), %s, %s, %s, %s, %s)
         """
         self._sql.execute(query, (account_id, product_id, date, price, status, error, stripe_id, invoice))
+
+    def new_subscription(self, account_id, product_id, stripe_id, date):
+        query = """
+            DELETE FROM subscriptions
+            WHERE account_id = %s
+        """
+        self._sql.execute(query, (account_id))
+
+        query = """
+            INSERT INTO subscriptions (account_id, product_id, stripe_id, date)
+            VALUES (%s, %s, %s, FROM_UNIXTIME(%s))
+        """
+        self._sql.execute(query, (account_id, product_id, stripe_id, date))
 
     ########
     # MAIL #

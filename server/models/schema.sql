@@ -88,8 +88,12 @@ CREATE TABLE `subscriptions` (
   `account_id` INT UNSIGNED NOT NULL,
   `product_id` INT UNSIGNED NOT NULL,
   `stripe_id` VARCHAR(191) NOT NULL COMMENT 'subscription_id',
+  `date` DATETIME NOT NULL,
   PRIMARY KEY (`account_id`, `product_id`),
-  UNIQUE `account_id` (`account_id`)
+  UNIQUE `account_id` (`account_id`),
+  INDEX `product_id` (`product_id`),
+  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `payments` (

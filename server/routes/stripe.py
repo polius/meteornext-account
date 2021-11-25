@@ -27,7 +27,9 @@ class Stripe:
             except Exception as e:
                 return e
 
-            if event['type'] == 'invoice.paid':
+            if event['type'] == 'customer.subscription.created':
+                self.subscription_created(event['data'])
+            elif event['type'] == 'invoice.paid':
                 self.invoice_paid(event['data'])
             elif event['type'] == 'invoice.payment_failed':
                 self.invoice_payment_failed(event['data'])
@@ -44,6 +46,19 @@ class Stripe:
     ####################
     # Internal Methods #
     ####################
+    def subscription_created(self, data):
+        # Remove last subscriptions
+        subscriptions = stripe.Subscription.list(customer=data['object']['customer'])
+        for subscription in subscriptions['data'][1:]:
+            stripe.Subscription.delete(subscription['id'])
+
+        # Create entry to the subscriptions table
+        account = self._account.get_by_customer(data['object']['customer'])[0]
+        product = self._account.get_products_by_stripe(data['object']['items']['data'][0]['plan']['id'])[0]
+        stripe_id = data['object']['id']
+        created = data['object']['created'],
+        self._account.new_subscription(account['id'], product['id'], stripe_id, created)
+
     def invoice_paid(self, data):
         # Get common information
         account = self._account.get_by_email(data['object']['customer_email'])[0]
@@ -51,16 +66,11 @@ class Stripe:
         account_id = account['id']
         product_id = product['id']
 
-        # Remove last subscriptions
-        subscriptions = stripe.Subscription.list(customer=account['stripe_id'])
-        for subscription in subscriptions['data'][1:]:
-            stripe.Subscription.delete(subscription['id'])
-
         # Update licence entry
         self._account.change_license(account_id, product_id)
 
         # Create entry to the payments table
-        created = data['object']['created'],
+        created = data['object']['created']
         price = data['object']['amount_paid']
         status = 'success'
         error = None
