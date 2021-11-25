@@ -28,7 +28,8 @@ export default {
   data: () => ({
     loading: false,
     headers: [
-      { text: 'Date', value: 'date' },
+      { text: 'ID', value: 'invoice_id' },
+      { text: 'Purchase date', value: 'date' },
       { text: 'Resources', value: 'resources' },
       { text: 'Price', value: 'price' },
       { text: 'Status', value: 'status' },

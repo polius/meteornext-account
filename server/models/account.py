@@ -96,7 +96,7 @@ class Account:
 
     def get_payments(self, account_id):
         query = """
-            SELECT pa.date, pr.resources, pa.price, pa.status, pa.error, pa.invoice
+            SELECT pa.stripe_id AS 'invoice_id', pa.date, pr.resources, pa.price, pa.status, pa.error, pa.invoice
             FROM payments pa
             JOIN products pr ON pr.id = pa.product_id
             WHERE pa.account_id = %s
