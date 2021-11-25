@@ -58,7 +58,7 @@ class Mail:
         if request['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise Exception()
 
-    def send_payment_success_email(self, email, price, name, date, resources):
+    def send_payment_success_email(self, email, price, name, date, resources, stripe_id):
         # Get email template
         with open(os.path.dirname(__file__) + "/payment_success.html", "r") as fopen:
             HTML_EMAIL_CONTENT = fopen.read()
@@ -67,6 +67,7 @@ class Mail:
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NAME}', name)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{DATE}', date)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{RESOURCES}', str(resources))
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{INVOICE_ID}', stripe_id)
         # Send mail
         request = self._ses.send_email(
             Source="Meteor Next <no-reply@meteor2.io>",

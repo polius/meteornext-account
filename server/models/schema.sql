@@ -100,7 +100,7 @@ CREATE TABLE `payments` (
   `price` INT UNSIGNED NOT NULL,
   `status` ENUM('pending','success','error') NOT NULL,
   `error` TEXT NULL,
-  `stripe_id` VARCHAR(191) NOT NULL COMMENT 'payment_id', -- store invoice_id instead of payment_id
+  `stripe_id` VARCHAR(191) NOT NULL COMMENT 'invoice_id',
   `invoice` TEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `account_id` (`account_id`),

@@ -64,7 +64,7 @@ class Stripe:
         price = data['object']['amount_paid']
         status = 'success'
         error = None
-        stripe_id = data['object']['payment_intent']
+        stripe_id = data['object']['id']
         invoice = data['object']['invoice_pdf']
         self._account.new_purchase(account_id,  product_id, created, price, status, error, stripe_id, invoice)
 
@@ -75,7 +75,7 @@ class Stripe:
         date = datetime.datetime.utcfromtimestamp(data['object']['created'])
         date = f"{date.strftime('%B')} {date.strftime('%d')}, {date.strftime('%Y')}"
         resources = product['resources']
-        self._mail.send_payment_success_email(email, price, name, date, resources)
+        self._mail.send_payment_success_email(email, price, name, date, resources, stripe_id)
 
     def invoice_payment_failed(self, data):
         print(data)
