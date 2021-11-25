@@ -25,7 +25,7 @@
     </v-card>
     <v-btn v-if="mfa.mode != null" :loading="loading" color="warning" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Disable MFA</v-btn>
     <v-btn v-else :loading="loading" color="#2196f3" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Enable MFA</v-btn>
-    <v-dialog v-model="mfaDialog" max-width="672px">
+    <v-dialog v-model="mfaDialog" width="672px">
       <v-card style="background-color:#fffcfa">
         <v-toolbar dense flat color="#f5983b">
           <v-toolbar-title class="white--text text-body-1">Multi factor security</v-toolbar-title>
@@ -69,9 +69,7 @@
                               <v-progress-circular v-if="twoFactor['uri'] == null" indeterminate style="margin-left:auto; margin-right:auto; display:table;"></v-progress-circular>
                               <qrcode-vue v-else :value="twoFactor['uri']" size="200" level="H" background="#ffffff" foreground="#000000" style="text-align:center"></qrcode-vue>
                               <v-btn @click="twoFactorCodeDialog = true" text block hide-details>CAN'T SCAN THE QR?</v-btn>
-                              <v-text-field ref="twoFactorCode" outlined v-model="twoFactor['value']" v-on:keyup.enter="submitMFA" label="MFA Code" maxlength="6" :rules="[v => v == parseInt(v) && v >= 0 || '']" required hide-details style="margin-top:10px">
-                                <template v-slot:append><v-icon small style="margin-top:3px; margin-right:4px">fas fa-key</v-icon></template>
-                              </v-text-field>
+                              <v-text-field ref="twoFactorCode" outlined v-model="twoFactor['value']" v-on:keyup.enter="submitMFA" label="MFA Code" maxlength="6" :rules="[v => v == parseInt(v) && v >= 0 || '']" required hide-details style="margin-top:10px"></v-text-field>
                             </v-col>
                             <v-col style="margin:15px">
                               <div class="text-body-1 font-weight-regular" style="color:black; margin-bottom:20px">How to enable app based authentication</div>
@@ -107,7 +105,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="twoFactorCodeDialog" max-width="512px">
+    <v-dialog v-model="twoFactorCodeDialog" width="512px">
       <v-card>
         <v-toolbar dense flat color="#f5983b">
           <v-toolbar-title class="white--text text-body-1">QR CODE</v-toolbar-title>

@@ -11,7 +11,7 @@
       </template>
     </v-checkbox>
     <v-btn :loading="loading" color="#eb4d4b" @click="deleteAccount" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
-    <v-dialog v-model="dialog" max-width="672px">
+    <v-dialog v-model="dialog" width="640px">
       <v-card style="background-color:#fffcfa">
         <v-toolbar dense flat color="#f5983b">
           <v-toolbar-title class="white--text text-body-1 font-weight-medium">Delete account</v-toolbar-title>

@@ -42,11 +42,18 @@ class Billing:
 
             elif request.method == 'DELETE':
                 # Get customer subscription
-                subscription = stripe.Subscription.list(customer=account['stripe_id'])['data'][0]
-                # Cancel subscription
-                stripe.Subscription.delete(subscription['id'])
-                # Remove payment method
-                stripe.PaymentMethod.detach(subscription['default_payment_method'])
+                subscription = stripe.Subscription.list(customer=account['stripe_id'])['data']
+                if len(subscription) > 0:
+                    # Cancel subscription
+                    stripe.Subscription.delete(subscription[0]['id'])
+                    # Remove payment method
+                    stripe.PaymentMethod.detach(subscription[0]['default_payment_method'])
+                else:
+                    payment_methods = stripe.Customer.list_payment_methods(account['stripe_id'], type="card")
+                    for method in payment_methods: 
+                        stripe.PaymentMethod.detach(method['id'])
+                # Change license product to 1 Resource
+                self._account.change_license(account['id'], 1)
                 # Return response
                 return jsonify({'message': "Payment method removed"}), 200
 

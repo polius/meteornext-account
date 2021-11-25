@@ -9,7 +9,7 @@ class Mail:
     def send_verify_email(self, email, code):
         # Get email template
         with open(os.path.dirname(__file__) + "/verify_email.html", "r") as fopen:
-            HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}',code)
+            HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}', code)
         # Send mail
         request = self._ses.send_email(
             Source="Meteor Next <no-reply@meteor2.io>",
@@ -35,7 +35,7 @@ class Mail:
     def send_reset_password(self, email, code):
         # Get email template
         with open(os.path.dirname(__file__) + "/reset_password.html", "r") as fopen:
-            HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}',code)
+            HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}', code)
         # Send mail
         request = self._ses.send_email(
             Source="Meteor Next <no-reply@meteor2.io>",
@@ -45,6 +45,37 @@ class Mail:
             Message={
                 "Subject": {
                     "Data": "Reset password",
+                    "Charset": "UTF-8",
+                },
+                "Body": {
+                    "Html": {
+                        "Data": HTML_EMAIL_CONTENT,
+                        "Charset": "UTF-8",
+                    }
+                },
+            },
+        )
+        if request['ResponseMetadata']['HTTPStatusCode'] != 200:
+            raise Exception()
+
+    def send_payment_success_email(self, email, price, name, date, resources):
+        # Get email template
+        with open(os.path.dirname(__file__) + "/payment_success.html", "r") as fopen:
+            HTML_EMAIL_CONTENT = fopen.read()
+        # Add parameters
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{PRICE}', str(price))
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NAME}', name)
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{DATE}', date)
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{RESOURCES}', str(resources))
+        # Send mail
+        request = self._ses.send_email(
+            Source="Meteor Next <no-reply@meteor2.io>",
+            Destination={
+                "ToAddresses": [ email ],
+            },
+            Message={
+                "Subject": {
+                    "Data": "Your Meteor Next invoice",
                     "Charset": "UTF-8",
                 },
                 "Body": {

@@ -1,7 +1,9 @@
 import stripe
+import datetime
 from flask import Blueprint, jsonify, request
 
 import models.account
+import mail.mail
 
 class Stripe:
     def __init__(self, sql, conf):
@@ -10,6 +12,8 @@ class Stripe:
         stripe.api_key = conf['stripe']['api_key']
         # Init models
         self._account = models.account.Account(sql)
+        # Init mail
+        self._mail = mail.mail.Mail(conf)
 
     def blueprint(self):
         # Init blueprint
@@ -43,8 +47,9 @@ class Stripe:
     def invoice_paid(self, data):
         # Get common information
         account = self._account.get_by_email(data['object']['customer_email'])[0]
+        product = self._account.get_products_by_stripe(data['object']['lines']['data'][0]['plan']['id'])[0]
         account_id = account['id']
-        product_id = self._account.get_products_by_stripe(data['object']['lines']['data'][0]['plan']['id'])[0]['id']
+        product_id = product['id']
 
         # Remove last subscriptions
         subscriptions = stripe.Subscription.list(customer=account['stripe_id'])
@@ -62,6 +67,15 @@ class Stripe:
         stripe_id = data['object']['payment_intent']
         invoice = data['object']['invoice_pdf']
         self._account.new_purchase(account_id,  product_id, created, price, status, error, stripe_id, invoice)
+
+        # Send email
+        email = account['email']
+        price = data['object']['amount_paid'] / 100
+        name = data['object']['customer_name']
+        date = datetime.datetime.utcfromtimestamp(data['object']['created'])
+        date = f"{date.strftime('%B')} {date.strftime('%d')}, {date.strftime('%Y')}"
+        resources = product['resources']
+        self._mail.send_payment_success_email(email, price, name, date, resources)
 
     def invoice_payment_failed(self, data):
         print(data)
