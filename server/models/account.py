@@ -208,7 +208,7 @@ class Account:
     
     def get_products_by_resources(self, resources):
         query = """
-            SELECT price, stripe_id
+            SELECT *
             FROM products
             WHERE resources = %s
         """

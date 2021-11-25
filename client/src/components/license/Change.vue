@@ -13,9 +13,13 @@
                   <v-divider></v-divider>
                   <div v-if="$route.params.id !== undefined && $route.params.id == 'success'" style="margin-top:20px">
                     <div class="text-h6" style="color:black">License successfully changed</div>
-                    <v-icon size="50" color="#20bf6b" style="margin:15px">fas fa-check-circle</v-icon>
-                    <div class="text-body-1" style="color:black">Thanks for your purchase :)</div>
-                    <v-btn @click="goBack" color="info" style="margin-top:15px">Go back</v-btn>
+                    <v-row no-gutters>
+                      <v-col>
+                        <v-icon size="50" color="#20bf6b" style="margin:15px">fas fa-check-circle</v-icon>
+                      </v-col>
+                    </v-row>
+                    <div v-if="license != null && license.resources > 1" class="text-body-1" style="color:black; margin-bottom:10px">Thanks for your purchase :)</div>
+                    <v-btn @click="goBack" color="info" style="margin-top:10px">Go back</v-btn>
                   </div>
                   <div v-else style="margin-top:20px">
                     <div v-if="license == null" class="text-center" style="margin-bottom:10px">
@@ -41,7 +45,7 @@
                         </template>
                       </v-select>
                       <div v-if="newLicense > 1" class="text-body-1 font-weight-regular" style="color:black; margin-top:15px">{{ `Avg. $${average} per resource` }}</div>
-                      <v-btn block x-large :disabled="!validLicense" :loading="loading" color="info" @click="submitChange" style="margin-top:20px">CHANGE LICENSE</v-btn>
+                      <v-btn block x-large :disabled="!validLicense" :loading="loading" color="info" @click="submitChange(false)" style="margin-top:20px">CHANGE LICENSE</v-btn>
                     </v-form>
                   </div>
                 </v-card-text>
@@ -51,6 +55,31 @@
         </v-layout>
       </v-container>
     </v-main>
+    <v-dialog v-model="dialog" width="640px">
+      <v-card style="background-color:#fffcfa">
+        <v-toolbar dense flat color="#f5983b">
+          <v-toolbar-title class="white--text text-body-1 font-weight-medium">Change license</v-toolbar-title>
+        </v-toolbar>
+        <v-card-text style="padding:15px">
+          <v-card>
+            <v-row no-gutters align="center" justify="center">
+              <v-col cols="auto" style="display:flex; margin:15px">
+                <v-icon color="warning">fas fa-exclamation-triangle</v-icon>
+              </v-col>
+              <v-col>
+                <div class="text-body-1">This action cannot be undone.</div>
+              </v-col>
+            </v-row>
+          </v-card>
+          <div class="text-body-1" style="color:black; margin-top:15px">Are you sure you want to change your license to <span class="font-weight-medium">1 Resource</span>?</div>
+          <v-divider style="margin-top:15px"></v-divider>
+          <v-row no-gutters style="margin-top:15px;">
+            <v-btn :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitChange(true)">Confirm</v-btn>
+            <v-btn :disabled="loading" color="#eb4d4b" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -64,9 +93,10 @@ export default {
     products: [],
     newLicense: null,
     loading: false,
+    dialog: false,
   }),
   created() {
-    if (this.$route.params.id === undefined) this.getLicense()
+    this.getLicense()
   },
   computed: {
     resources() {
@@ -99,19 +129,21 @@ export default {
           else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
         })
     },
-    submitChange() {
-      // Check if user selected 1 Resource. Open dialog for confirmation. 1 resource does not need Stripe checkout.
-      this.loading = true
-      const payload = { 'resources': this.newLicense }
-      axios.post('/license', payload)
-        .then((response) => {
-          window.location.href = response.data.url
-        })
-        .catch((error) => {
-          if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
-          else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
-        })
-        .finally(() => this.loading = false)
+    submitChange(confirm) {
+      if (this.newLicense == 1 && !confirm) this.dialog = true
+      else {
+        this.loading = true
+        const payload = { 'resources': this.newLicense }
+        axios.post('/license', payload)
+          .then((response) => {
+            window.location.href = response.data.url
+          })
+          .catch((error) => {
+            if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
+            else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
+          })
+          .finally(() => this.loading = false)
+      }
     },
     goBack() {
       this.$router.push('/')
