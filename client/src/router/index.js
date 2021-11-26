@@ -53,7 +53,7 @@ router.beforeEach((to, from, next) => {
   else if (['/login','/register'].includes(to.path) && store.getters['app/isLoggedIn']) next('/')
   else if (to.matched.some(record => record.meta.requiresAuth)) {
     if (store.getters['app/isLoggedIn']) next()
-    else next({ path: '/login' })
+    else next({ path: '/login', query: { url: to.fullPath.substring(1) } })
   }
   else next()
 })

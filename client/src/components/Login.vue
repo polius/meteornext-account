@@ -119,7 +119,7 @@ export default {
       try {
         let response = await this.$store.dispatch('app/login', payload)
         this.loading = false
-        if (response.status == 200) this.$router.push('/')
+        if (response.status == 200) this.loginSuccess()
         else if (response.status == 202) {
           // MFA Required
           if (['2fa','webauthn'].includes(response.data.code)) {
@@ -133,7 +133,7 @@ export default {
                 this.loading = true
                 this.webauthn = { status: 'validating' }
                 await this.$store.dispatch('app/login', { ...payload, mfa, host: window.location.host })
-                this.$router.push('/')
+                this.loginSuccess()
               }
               catch (error) {
                 this.loading = true
@@ -154,6 +154,11 @@ export default {
         }
         else EventBus.$emit('send-notification', 'Internal Server Error', '#EF5354')
       }
+    },
+    loginSuccess() {
+      if (this.$route.query.url !== undefined) this.$router.push({ path: this.$route.query.url })
+      else if (this.prevRoute == '') this.$router.push('/')
+      else this.$router.push(this.prevRoute)
     },
     resetPassword() {
       this.$router.push({ name: 'resetPassword' })

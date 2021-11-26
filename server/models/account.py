@@ -262,12 +262,12 @@ class Account:
     ###########
     # BILLING #
     ###########
-    def new_purchase(self, account_id, product_id, date, price, status, error, stripe_id, invoice):
+    def new_purchase(self, account_id, product_id, date, price, status, stripe_id, invoice):
         query = """
-            INSERT INTO payments (account_id, product_id, date, price, status, error, stripe_id, invoice)
-            VALUES (%s, %s, FROM_UNIXTIME(%s), %s, %s, %s, %s, %s)
+            INSERT INTO payments (account_id, product_id, date, price, status, stripe_id, invoice)
+            VALUES (%s, %s, FROM_UNIXTIME(%s), %s, %s, %s, %s)
         """
-        self._sql.execute(query, (account_id, product_id, date, price, status, error, stripe_id, invoice))
+        self._sql.execute(query, (account_id, product_id, date, price, status, stripe_id, invoice))
 
     def new_subscription(self, account_id, product_id, stripe_id, date):
         self.remove_subscription(account_id)

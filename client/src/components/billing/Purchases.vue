@@ -16,7 +16,7 @@
         </template>
         <template v-slot:[`item.status`]="{ item }">
           <v-icon :color="item.status == 'success' ? '#20bf6b' : item.status == 'pending' ? '#ff9800' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>
-          {{ item.status.charAt(0).toUpperCase() + item.status.slice(1) }}
+          {{ item.status == 'success' ? 'Payment successful' : 'Payment failed' }}
         </template>
         <template v-slot:[`item.invoice`]="{ item }">
           <v-btn icon title="Download invoice"><v-icon small @click="downloadInvoice(item.invoice)">fas fa-arrow-down</v-icon></v-btn>
@@ -56,7 +56,7 @@ export default {
       window.open(invoice, '_blank')
     },
     dateFormat(date) {
-      if (date) return moment.utc(date).local().format("DD MMMM YYYY HH:mm:ss")
+      if (date) return moment.utc(date).local().format("DD MMMM YYYY, HH:mm:ss")
       return date
     },
   }

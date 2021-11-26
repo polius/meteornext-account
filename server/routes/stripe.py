@@ -79,10 +79,9 @@ class Stripe:
         created = data['object']['created']
         price = data['object']['amount_paid']
         status = 'success'
-        error = None
         stripe_id = data['object']['id']
         invoice = data['object']['invoice_pdf']
-        self._account.new_purchase(account_id,  product_id, created, price, status, error, stripe_id, invoice)
+        self._account.new_purchase(account_id,  product_id, created, price, status, stripe_id, invoice)
 
         # Send email
         email = account['email']
@@ -95,6 +94,22 @@ class Stripe:
 
     def invoice_payment_failed(self, data):
         if data['object']['billing_reason'] == 'subscription_cycle':
+            print(data)
+            print("INVOICE_ID")
+            print(data['object']['id'])
+            # Get common information
+            account = self._account.get_by_customer(data['object']['customer'])[0]
+            product = self._account.get_products_by_stripe(data['object']['lines']['data'][0]['plan']['id'])[0]
+            # Create entry to the payments table
+            account_id = account['id']
+            product_id = product['id']
+            created = data['object']['created']
+            price = data['object']['amount_due'] / 100
+            status = 'error'
+            stripe_id = data['object']['id']
+            invoice = None
+            self._account.new_purchase(account_id,  product_id, created, price, status, stripe_id, invoice)
+            # Send email
             payment_methods = stripe.PaymentMethod.list(customer=data['object']['customer'], type="card")['data']
             email = data['object']['customer_email']
             price = data['object']['amount_due'] / 100
@@ -102,7 +117,7 @@ class Stripe:
             self._mail.send_payment_failed_email(email, price, card)
 
     def customer_source_expiring(self, data):
-        account = self._account.get_by_email('polius_12@hotmail.com')[0] # data['object']['owner']['email']
+        account = self._account.get_by_email(data['object']['owner']['email'])[0]
         # Get customer payment method
         payment_methods = stripe.Customer.list_payment_methods(account['stripe_id'], type="card")['data']
         # Send email
