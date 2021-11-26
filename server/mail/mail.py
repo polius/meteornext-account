@@ -89,3 +89,61 @@ class Mail:
         )
         if request['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise Exception()
+
+    def send_payment_failed_email(self, email, price, card):
+        # Get email template
+        with open(os.path.dirname(__file__) + "/payment_failed.html", "r") as fopen:
+            HTML_EMAIL_CONTENT = fopen.read()
+        # Add parameters
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{PRICE}', str(price))
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD}', str(card))
+        # Send mail
+        request = self._ses.send_email(
+            Source="Meteor Next <no-reply@meteor2.io>",
+            Destination={
+                "ToAddresses": [ email ],
+            },
+            Message={
+                "Subject": {
+                    "Data": "Your Meteor Next payment was unsuccessful",
+                    "Charset": "UTF-8",
+                },
+                "Body": {
+                    "Html": {
+                        "Data": HTML_EMAIL_CONTENT,
+                        "Charset": "UTF-8",
+                    }
+                },
+            },
+        )
+        if request['ResponseMetadata']['HTTPStatusCode'] != 200:
+            raise Exception()
+
+    def send_expiring_card_email(self, email, card, card_number):
+        # Get email template
+        with open(os.path.dirname(__file__) + "/expiring_card.html", "r") as fopen:
+            HTML_EMAIL_CONTENT = fopen.read()
+        # Add parameters
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD}', card)
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD_NUMBER}', str(card_number))
+        # Send mail
+        request = self._ses.send_email(
+            Source="Meteor Next <no-reply@meteor2.io>",
+            Destination={
+                "ToAddresses": [ email ],
+            },
+            Message={
+                "Subject": {
+                    "Data": "Update your card information",
+                    "Charset": "UTF-8",
+                },
+                "Body": {
+                    "Html": {
+                        "Data": HTML_EMAIL_CONTENT,
+                        "Charset": "UTF-8",
+                    }
+                },
+            },
+        )
+        if request['ResponseMetadata']['HTTPStatusCode'] != 200:
+            raise Exception()

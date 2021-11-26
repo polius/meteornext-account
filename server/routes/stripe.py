@@ -88,14 +88,22 @@ class Stripe:
         self._mail.send_payment_success_email(email, price, name, date, resources, stripe_id)
 
     def invoice_payment_failed(self, data):
-        print(data)
-        # check if it happened creating a subscription or is an automated payment.
-        # automated payment --> send email.
-        # "billing_reason": "subscription_create"
+        if data['object']['billing_reason'] == 'subscription_cycle':
+            payment_methods = stripe.PaymentMethod.list(customer=data['object']['customer'], type="card")['data']
+            email = data['object']['customer_email']
+            price = data['object']['amount_due'] / 100
+            card = payment_methods[0]['card']['last4']
+            self._mail.send_payment_failed_email(email, price, card)
 
     def customer_source_expiring(self, data):
-        print(data)
-        # send notification mail.
+        account = self._account.get_by_email('polius_12@hotmail.com')[0] # data['object']['owner']['email']
+        # Get customer payment method
+        payment_methods = stripe.Customer.list_payment_methods(account['stripe_id'], type="card")['data']
+        # Send email
+        email = account['email']
+        card = payment_methods[0]['card']['brand'].capitalize()
+        card_number = payment_methods[0]['card']['last4']
+        self._mail.send_expiring_card_email(email, card, card_number)
 
     def payment_method_attached(self, data):
         # Get all customer payment methods
