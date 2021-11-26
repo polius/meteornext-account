@@ -29,6 +29,8 @@ class Stripe:
 
             if event['type'] == 'customer.subscription.created':
                 self.subscription_created(event['data'])
+            elif event['type'] == 'customer.subscription.deleted':
+                self.subscription_deleted(event['data'])
             elif event['type'] == 'invoice.paid':
                 self.invoice_paid(event['data'])
             elif event['type'] == 'invoice.payment_failed':
@@ -58,6 +60,10 @@ class Stripe:
         stripe_id = data['object']['id']
         created = data['object']['created'],
         self._account.new_subscription(account['id'], product['id'], stripe_id, created)
+
+    def subscription_deleted(self, data):
+        account = self._account.get_by_customer(data['object']['customer'])[0]
+        self._account.remove_subscription(account['id'])
 
     def invoice_paid(self, data):
         # Get common information

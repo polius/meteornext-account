@@ -41,8 +41,21 @@ export default {
     next() {
       if (this.account.license === undefined) return ''
       if (this.account.license.next === undefined) return '-'
-      return this.account.license.next + ' (' + moment(this.account.license.next).diff(moment(), 'days') + ' days)'
+      return this.dateFormat(this.account.license.next) + ' (' + this.diffFormat(this.account.license.next) + ')'
     },
   },
+  methods: {
+    dateFormat(date) {
+      if (date) return moment.utc(date).local().format("dddd, DD MMMM YYYY")
+      return date
+    },
+    diffFormat(date) {
+      if (date) {
+        let days = moment(this.account.license.next).diff(moment(), 'days')
+        if (days == 1) return '1 day'
+        return days + ' days'
+      }
+    }
+  }
 }
 </script>

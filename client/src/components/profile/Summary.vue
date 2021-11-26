@@ -29,12 +29,12 @@ export default {
       return (this.account.profile === undefined) ? '' : this.account.profile.email
     },
     created() {
-      return (this.account.profile === undefined) ? '' : this.account.profile.created // this.dateFormat(this.account.profile.created)
+      return (this.account.profile === undefined) ? '' : this.dateFormat(this.account.profile.created)
     },
   },
   methods: {
     dateFormat(date) {
-      if (date) return moment.utc(date).local().format("YYYY-MM-DD HH:mm:ss")
+      if (date) return moment.utc(date).local().format("DD MMMM, YYYY")
       return date
     },
   }

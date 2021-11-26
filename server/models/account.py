@@ -85,7 +85,7 @@ class Account:
 
     def get_license(self, account_id):
         query = """
-            SELECT p.resources, p.price, l.key, l.in_use
+            SELECT p.resources, p.price, l.access_key, l.secret_key, l.in_use
             FROM licenses l
             JOIN products p ON p.id = l.product_id
             WHERE l.account_id = %s
@@ -125,10 +125,10 @@ class Account:
 
         # Create license
         query = """
-            INSERT INTO `licenses` (`account_id`, `product_id`, `key`)
-            VALUES (%s, 1, %s)
+            INSERT INTO `licenses` (`account_id`, `product_id`, `access_key`, `secret_key`)
+            VALUES (%s, 1, %s, %s)
         """
-        self._sql.execute(query, (account_id, data['key']))
+        self._sql.execute(query, (account_id, data['access_key'], data['secret_key']))
 
     #########
     # LOGIN #
@@ -270,17 +270,19 @@ class Account:
         self._sql.execute(query, (account_id, product_id, date, price, status, error, stripe_id, invoice))
 
     def new_subscription(self, account_id, product_id, stripe_id, date):
-        query = """
-            DELETE FROM subscriptions
-            WHERE account_id = %s
-        """
-        self._sql.execute(query, (account_id))
-
+        self.remove_subscription(account_id)
         query = """
             INSERT INTO subscriptions (account_id, product_id, stripe_id, date)
             VALUES (%s, %s, %s, FROM_UNIXTIME(%s))
         """
         self._sql.execute(query, (account_id, product_id, stripe_id, date))
+
+    def remove_subscription(self, account_id):
+        query = """
+            DELETE FROM subscriptions
+            WHERE account_id = %s
+        """
+        self._sql.execute(query, (account_id))
 
     ########
     # MAIL #

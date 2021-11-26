@@ -2,10 +2,10 @@
   <div>
     <div class="text-h6 font-weight-medium">License key</div>
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:10px">Use the following credentials to register your copy of Meteor Next.</div>
-    <div class="text-body-2 font-weight-medium" style="margin-top:15px">Email</div>
-    <v-text-field flat @click="$event.target.select()" solo v-model="email" readonly label="Email" style="padding-top:5px" hide-details></v-text-field>
-    <div class="text-body-2 font-weight-medium" style="margin-top:15px">Key</div>
-    <v-text-field flat @click="$event.target.select()" solo v-model="key" readonly label="Key" style="padding-top:5px" hide-details></v-text-field>
+    <div class="text-body-2 font-weight-medium" style="margin-top:15px">Access Key</div>
+    <v-text-field flat @click="$event.target.select()" solo v-model="access_key" readonly style="padding-top:5px" hide-details></v-text-field>
+    <div class="text-body-2 font-weight-medium" style="margin-top:15px">Secret Key</div>
+    <v-text-field flat @focus="showSecretKey = true" @blur="showSecretKey = false" @click="$event.target.select()" solo v-model="secret_key" readonly :type="showSecretKey ? 'text' : 'password'" style="padding-top:5px" hide-details></v-text-field>
     <div v-if="in_use != null" class="body-1" style="margin-top:15px; margin-bottom:15px"><v-icon :style="`font-size:16px; margin-right:10px; margin-bottom:3px; color:${in_use ? '#ff944d' : '#20bf6b'}`">fas fa-circle</v-icon>{{ in_use ? 'License in use.' : 'License ready to be registered.' }}</div>
     <div v-if="in_use" class="text-body-1 font-weight-light">A license key can be used only in one device. To be able to use it in another device, first you have to unregister it from the first one.</div>
     <v-btn v-if="in_use" @click="dialog = true" color="#fb8c00" title="Unregister your existing license to use it in another computer" style="font-size:0.9375rem; font-weight:400; text-transform:none; color:white; margin-top:15px" :disabled="!in_use">Unregister license</v-btn>
@@ -44,6 +44,7 @@ export default {
   data: () => ({
     loading: false,
     item: '',
+    showSecretKey: false,
     dialog: false,
   }),
   props: {
@@ -54,9 +55,13 @@ export default {
       if (this.account === undefined || this.account.profile === undefined) return ''
       else return this.account.profile.email
     },
-    key() {
+    access_key() {
       if (this.account === undefined || this.account.license === undefined) return ''
-      else return this.account.license.key
+      else return this.account.license.access_key
+    },
+    secret_key() {
+      if (this.account === undefined || this.account.license === undefined) return ''
+      else return this.account.license.secret_key
     },
     in_use() {
       if (this.account === undefined || this.account.license === undefined) return null

@@ -5,15 +5,18 @@
     <v-text-field v-model="search" placeholder="Search" style="padding-top:0px" hide-details></v-text-field>
     <v-card style="margin-top:15px">
       <v-data-table :headers="headers" :items="items" :search="search" :options="{itemsPerPage: 3}" :footer-props="{'items-per-page-options':[3, 6, 12, -1]}" :hide-default-footer="items.length == 0" no-data-text="No payments done">
-        <template v-slot:[`item.status`]="{ item }">
-          <v-icon :color="item.status == 'success' ? '#20bf6b' : item.status == 'pending' ? '#ff9800' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>
-          {{ item.status.charAt(0).toUpperCase() + item.status.slice(1) }}
+        <template v-slot:[`item.date`]="{ item }">
+          {{ dateFormat(item.date) }}
         </template>
         <template v-slot:[`item.resources`]="{ item }">
           {{ item.resources == -1 ? 'Unlimited' : item.resources }}
         </template>
         <template v-slot:[`item.price`]="{ item }">
           {{ `$ ${item.price / 100}` }}
+        </template>
+        <template v-slot:[`item.status`]="{ item }">
+          <v-icon :color="item.status == 'success' ? '#20bf6b' : item.status == 'pending' ? '#ff9800' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>
+          {{ item.status.charAt(0).toUpperCase() + item.status.slice(1) }}
         </template>
         <template v-slot:[`item.invoice`]="{ item }">
           <v-btn icon title="Download invoice"><v-icon small @click="downloadInvoice(item.invoice)">fas fa-arrow-down</v-icon></v-btn>
@@ -24,6 +27,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   data: () => ({
     loading: false,
@@ -49,7 +54,11 @@ export default {
   methods: {
     downloadInvoice(invoice) {
       window.open(invoice, '_blank')
-    }
+    },
+    dateFormat(date) {
+      if (date) return moment.utc(date).local().format("DD MMMM YYYY HH:mm:ss")
+      return date
+    },
   }
 }
 </script>
