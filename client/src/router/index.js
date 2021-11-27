@@ -18,7 +18,7 @@ const routes = [
     component: () => import('../components/Login'),
   },
   {
-    path: '/:path?',
+    path: '/',
     name: 'accountPath',
     component: () => import('../components/Account'),
     alias: ["/license", "/billing", "/profile"],
@@ -39,6 +39,11 @@ const routes = [
     path: '/reset_password/:code?',
     name: 'resetPassword',
     component: () => import('../components/mail/ResetPassword'),
+  },
+  {
+    path: '/update_payment/:code?',
+    name: 'updatePayment',
+    component: () => import('../components/mail/UpdatePayment'),
   },
 ]
 

@@ -1,4 +1,5 @@
 import stripe
+import secrets
 import datetime
 from flask import Blueprint, jsonify, request
 
@@ -109,22 +110,28 @@ class Stripe:
             stripe_id = data['object']['id']
             invoice = None
             self._account.new_purchase(account_id,  product_id, created, price, status, stripe_id, invoice)
+            # Add entry to mail table
+            code = secrets.token_urlsafe(64)
+            self._account.create_mail(account_id, 'update_payment', code)
             # Send email
             payment_methods = stripe.PaymentMethod.list(customer=data['object']['customer'], type="card")['data']
             email = data['object']['customer_email']
             price = data['object']['amount_due'] / 100
             card = payment_methods[0]['card']['last4']
-            self._mail.send_payment_failed_email(email, price, card)
+            self._mail.send_payment_failed_email(email, price, card, code)
 
     def customer_source_expiring(self, data):
         account = self._account.get_by_email(data['object']['owner']['email'])[0]
         # Get customer payment method
         payment_methods = stripe.Customer.list_payment_methods(account['stripe_id'], type="card")['data']
+        # Add entry to mail table
+        code = secrets.token_urlsafe(64)
+        self._account.create_mail(account['id'], 'update_payment', code)
         # Send email
         email = account['email']
         card = payment_methods[0]['card']['brand'].capitalize()
         card_number = payment_methods[0]['card']['last4']
-        self._mail.send_expiring_card_email(email, card, card_number)
+        self._mail.send_expiring_card_email(email, card, card_number, code)
 
     def payment_method_attached(self, data):
         # Get all customer payment methods
@@ -134,3 +141,6 @@ class Stripe:
             stripe.PaymentMethod.detach(i['id'])
         # Update customer's name to the current payment name
         stripe.Customer.modify(data['object']['customer'], name=data['object']['billing_details']['name'])
+        # Expire mail codes
+        account = self._account.get_by_customer(data['object']['customer'])[0]
+        self._account.clean_mail(account['id'], 'update_payment')

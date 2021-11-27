@@ -36,7 +36,7 @@
                     </div>
                     <div v-else-if="valid != null && !valid" style="margin-top:20px; margin-bottom:10px">
                       <div class="text-body-1 font-weight-medium" style="color:black;">ERROR</div>
-                      <div class="text-body-1" style="color:black;">This link has expired</div>
+                      <div class="text-body-1" style="color:black; margin-top:5px">This link has expired</div>
                     </div>
                   </div>
                 </v-card-text>

@@ -175,6 +175,38 @@ class Account:
             # Return response
             return jsonify({'message': 'Email verified'}), 200
 
+        @account_blueprint.route('/account/billing/update', methods=['POST'])
+        def account_billing_update_method():
+            # Check parameters
+            if not request.is_json:
+                return jsonify({"message": "Missing JSON in request"}), 400
+            data = request.get_json()
+            if 'code' not in data:
+                return jsonify({"message": "Invalid parameters"}), 400
+
+            # Get mail data
+            mail = self._account.get_mail('update_payment', data['code'])
+            
+            # Check if code exists
+            if len(mail) == 0:
+                return jsonify({'message': 'This code is not valid'}), 400
+
+            # Get account
+            account = self._account.get(mail[0]['account_id'])[0]
+            
+            # Create checkout
+            try:
+                checkout_session = stripe.checkout.Session.create(
+                    mode='setup',
+                    payment_method_types=['card'],
+                    customer=account['stripe_id'],
+                    success_url='https://account.meteor2.io/update_payment/ok',
+                    cancel_url='https://account.meteor2.io/billing',
+                )
+                return jsonify({'url': checkout_session.url}), 200
+            except Exception as e:
+                return jsonify({'message': str(e)}), 400
+
         @account_blueprint.route('/account/email/resend', methods=['POST'])
         def account_email_resend_method():
             # Check parameters

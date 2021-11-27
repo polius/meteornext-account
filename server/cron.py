@@ -37,7 +37,13 @@ class Cron:
             query = """
                 DELETE FROM mail
                 WHERE action = 'reset_password'
-                AND DATE_ADD(created, INTERVAL 1 DAY) <= CURRENT_DATE
+                AND DATE_ADD(created, INTERVAL 7 DAY) <= CURRENT_DATE
+            """
+            self._sql.execute(query)
+            query = """
+                DELETE FROM mail
+                WHERE action = 'update_payment'
+                AND DATE_ADD(created, INTERVAL 30 DAY) <= CURRENT_DATE
             """
             self._sql.execute(query)
 

@@ -15,7 +15,7 @@ CREATE TABLE `accounts` (
 
 CREATE TABLE `mail` (
   `account_id` INT UNSIGNED NOT NULL,
-  `action` ENUM ('reset_password','verify_email') NOT NULL,
+  `action` ENUM ('reset_password','verify_email','update_payment') NOT NULL,
   `data` VARCHAR(191) NULL,
   `code` VARCHAR(191) NOT NULL,
   `created` DATETIME NOT NULL,

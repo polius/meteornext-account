@@ -90,11 +90,12 @@ class Mail:
         if request['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise Exception()
 
-    def send_payment_failed_email(self, email, price, card):
+    def send_payment_failed_email(self, email, price, card, code):
         # Get email template
         with open(os.path.dirname(__file__) + "/payment_failed.html", "r") as fopen:
             HTML_EMAIL_CONTENT = fopen.read()
         # Add parameters
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CODE}', code)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{PRICE}', str(price))
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD}', str(card))
         # Send mail
@@ -119,11 +120,12 @@ class Mail:
         if request['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise Exception()
 
-    def send_expiring_card_email(self, email, card, card_number):
+    def send_expiring_card_email(self, email, card, card_number, code):
         # Get email template
         with open(os.path.dirname(__file__) + "/expiring_card.html", "r") as fopen:
             HTML_EMAIL_CONTENT = fopen.read()
         # Add parameters
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CODE}', code)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD}', card)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD_NUMBER}', str(card_number))
         # Send mail
