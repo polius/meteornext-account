@@ -63,8 +63,10 @@ class Stripe:
         self._account.new_subscription(account['id'], product['id'], stripe_id, created)
 
     def subscription_deleted(self, data):
+        print("- Subscription deleted.")
         account = self._account.get_by_customer(data['object']['customer'])[0]
         self._account.remove_subscription(account['id'])
+        self._account.change_license(account['id'], 1)
 
     def invoice_paid(self, data):
         # Get common information

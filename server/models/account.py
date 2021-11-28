@@ -266,6 +266,11 @@ class Account:
         query = """
             INSERT INTO payments (account_id, product_id, date, price, status, stripe_id, invoice)
             VALUES (%s, %s, FROM_UNIXTIME(%s), %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                date = VALUES(date),
+                price = VALUES(price),
+                status = VALUES(status),
+                invoice = VALUES(invoice);
         """
         self._sql.execute(query, (account_id, product_id, date, price, status, stripe_id, invoice))
 
