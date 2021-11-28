@@ -1,20 +1,31 @@
 #!/bin/sh
-cd /root/licenser
+cd /root/meteor2-account
 
-if [[ -n $HOST && -n $USER && -n $PASS && -n $PORT && -n $DB ]]; then
-    cat >./licenser.conf <<EOF
+cat >./server.conf <<EOF
 {
     "sql": {
-        "hostname": "$HOST",
-        "username": "$USER",
-        "password": "$PASS",
-        "port": "$PORT",
-        "database": "$DB"
+        "engine": "$SQL_ENGINE",
+        "hostname": "$SQL_HOST",
+        "port": "$SQL_PORT",
+        "username": "$SQL_USER",
+        "password": "$SQL_PASS",
+        "database": "$SQL_DB"
+    },
+    "aws": {
+        "region_name": "$AWS_REGION_NAME",
+        "access_key": "$AWS_ACCESS_KEY",
+        "secret_access_key": "$AWS_SECRET_ACCESS_KEY"
+    },
+    "stripe": {
+        "api_key": "$STRIPE_API_KEY",
+        "webhook_secret": "$STRIPE_WEBHOOK_SECRET"
+    },
+    "hcaptcha": {
+        "secret": "$HCAPTCHA_SECRET"
     }
 }
 EOF
-fi
 
-python3 licenser.py
+python3 app2.py
 nginx
 /bin/sh

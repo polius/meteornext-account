@@ -51,6 +51,9 @@ export default {
   },
   mounted() {
     EventBus.$on('get-account', this.getAccount)
+    if (this.$route.path == '/license') this.tab = 0
+    else if (this.$route.path == '/billing') this.tab = 1
+    else if (this.$route.path == '/profile') this.tab = 2
   },
   watch: {
     tab(value) {
@@ -64,7 +67,6 @@ export default {
       axios.get('/account')
         .then((response) => {
           this.account = response.data
-          console.log(this.account)
         })
         .catch((error) => {
           if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))

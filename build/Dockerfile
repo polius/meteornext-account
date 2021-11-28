@@ -2,13 +2,13 @@
 FROM nginx:alpine
 
 # Copy src code
-COPY src/ /root/licenser/
+COPY src/ /root/meteor2-account/
 
 # Copy the respective nginx configuration files
 COPY build/nginx.conf /etc/nginx/
 
 # Copy the start.sh into docker
-COPY build/start.sh /root/licenser/
+COPY build/start.sh /root/meteor2-account/
 
 # Install required software
 RUN apk update && \
@@ -19,9 +19,10 @@ RUN apk update && \
     pip3 install flask && \
     pip3 install flask_cors && \
     pip3 install pymysql && \
+    pip3 install stripe && \
     chown root:nginx /root && \
     chmod 750 /root && \
-    chmod 764 /root/licenser/start.sh
+    chmod 764 /root/meteor2-account/start.sh
 
 # Start nginx and keep the process from backgrounding and the container from quitting
-CMD ["/root/licenser/start.sh"]
+CMD ["/root/meteor2-account/start.sh"]

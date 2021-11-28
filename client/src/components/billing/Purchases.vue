@@ -12,7 +12,7 @@
           {{ item.resources == -1 ? 'Unlimited' : item.resources }}
         </template>
         <template v-slot:[`item.price`]="{ item }">
-          {{ `$ ${item.price / 100}` }}
+          {{ `€ ${item.price / 100}` }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
           <v-icon :color="item.status == 'success' ? '#20bf6b' : item.status == 'pending' ? '#ff9800' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>

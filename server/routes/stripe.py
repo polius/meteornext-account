@@ -40,7 +40,6 @@ class Stripe:
                 self.customer_source_expiring(event['data'])
             elif event['type'] == 'payment_method.attached':
                 self.payment_method_attached(event['data'])
-            print(event['type'])
 
             return jsonify({'status': 'success'})
 
@@ -63,7 +62,6 @@ class Stripe:
         self._account.new_subscription(account['id'], product['id'], stripe_id, created)
 
     def subscription_deleted(self, data):
-        print("- Subscription deleted.")
         account = self._account.get_by_customer(data['object']['customer'])[0]
         self._account.remove_subscription(account['id'])
         self._account.change_license(account['id'], 1)
@@ -88,7 +86,6 @@ class Stripe:
 
         # Send email
         email = account['email']
-        price = data['object']['amount_paid'] / 100
         name = data['object']['customer_name']
         date = datetime.datetime.utcfromtimestamp(data['object']['created'])
         date = f"{date.strftime('%B')} {date.strftime('%d')}, {date.strftime('%Y')}"
@@ -97,9 +94,6 @@ class Stripe:
 
     def invoice_payment_failed(self, data):
         if data['object']['billing_reason'] == 'subscription_cycle':
-            print(data)
-            print("INVOICE_ID")
-            print(data['object']['id'])
             # Get common information
             account = self._account.get_by_customer(data['object']['customer'])[0]
             product = self._account.get_products_by_stripe(data['object']['lines']['data'][0]['plan']['id'])[0]
@@ -107,7 +101,7 @@ class Stripe:
             account_id = account['id']
             product_id = product['id']
             created = data['object']['created']
-            price = data['object']['amount_due'] / 100
+            price = data['object']['amount_due']
             status = 'error'
             stripe_id = data['object']['id']
             invoice = None
@@ -118,7 +112,6 @@ class Stripe:
             # Send email
             payment_methods = stripe.PaymentMethod.list(customer=data['object']['customer'], type="card")['data']
             email = data['object']['customer_email']
-            price = data['object']['amount_due'] / 100
             card = payment_methods[0]['card']['last4']
             self._mail.send_payment_failed_email(email, price, card, code)
 
@@ -141,8 +134,8 @@ class Stripe:
         # Delete old payment methods
         for i in payment_methods:
             stripe.PaymentMethod.detach(i['id'])
-        # Update customer's name to the current payment name
-        stripe.Customer.modify(data['object']['customer'], name=data['object']['billing_details']['name'])
+        # Update customer's name and assign the current payment method to him/her
+        stripe.Customer.modify(data['object']['customer'], name=data['object']['billing_details']['name'], invoice_settings={"default_payment_method":data['object']['id']})
         # Expire mail codes
         account = self._account.get_by_customer(data['object']['customer'])[0]
         self._account.clean_mail(account['id'], 'update_payment')
