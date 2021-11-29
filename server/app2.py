@@ -15,4 +15,4 @@ class GUnicornFlaskApplication(Application):
 if __name__ == "__main__":
     # Init Gunicorn App
     gunicorn_app = GUnicornFlaskApplication(app)
-    gunicorn_app.run(worker_class="gunicorn.workers.sync.SyncWorker", bind='unix:/root/meteor2-account/meteor2-account.sock', capture_output=True, errorlog='error.log', daemon=True)
+    gunicorn_app.run(worker_class="gunicorn.workers.sync.SyncWorker", bind='unix:/root/server.sock', capture_output=True, errorlog='error.log', daemon=True)

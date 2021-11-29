@@ -1,5 +1,5 @@
 #!/bin/sh
-cd /root/meteor2-account
+cd /root
 
 cat >./server.conf <<EOF
 {
