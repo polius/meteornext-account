@@ -48,7 +48,7 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`resources`, `price`, `stripe_id`) VALUES
 (1, 0, NULL),
-(5, 12.5, 'price_1JxaCAC4ZmM6nJCB'),
+(5, 12.5, NULL),
 (10, 24, NULL),
 (25, 57.5, NULL),
 (50, 110, NULL),
