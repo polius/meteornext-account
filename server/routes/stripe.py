@@ -62,9 +62,10 @@ class Stripe:
         self._account.new_subscription(account['id'], product['id'], stripe_id, created)
 
     def subscription_deleted(self, data):
-        account = self._account.get_by_customer(data['object']['customer'])[0]
-        self._account.remove_subscription(account['id'])
-        self._account.change_license(account['id'], 1)
+        account = self._account.get_by_customer(data['object']['customer'])
+        if len(account) > 0:
+            self._account.remove_subscription(account[0]['id'])
+            self._account.change_license(account[0]['id'], 1)
 
     def invoice_paid(self, data):
         # Get common information
@@ -86,7 +87,8 @@ class Stripe:
 
         # Send email
         email = account['email']
-        name = data['object']['customer_name']
+        payment_method = stripe.Subscription.retrieve(data['object']['subscription'])['default_payment_method']
+        name = stripe.PaymentMethod.retrieve(payment_method)['billing_details']['name']
         date = datetime.datetime.utcfromtimestamp(data['object']['created'])
         date = f"{date.strftime('%B')} {date.strftime('%d')}, {date.strftime('%Y')}"
         resources = product['resources']
