@@ -11,7 +11,7 @@
 
 <style scoped>
 ::v-deep .v-input__control {
-  border: 1px solid #d2ddec !important;
+  border: 1px solid #b6b6b6 !important;
 }
 </style>
 

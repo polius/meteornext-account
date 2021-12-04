@@ -5,29 +5,29 @@
     <v-checkbox v-model="confirm" color="red" label="I confirm I want to delete my Meteor Next account." style="margin-top:15px" hide-details>
       <template v-slot:label>
         <div style="margin-left:5px">
-          <div style="color:black">I confirm I want to delete my Meteor Next account.</div>
-          <div class="font-weight-regular caption" style="color:black; font-size:0.85rem !important">Existing active licenses will be canceled. The data stored in your database won't be deleted.</div>
+          <div style="color:#e2e2e2">I confirm I want to delete my Meteor Next account.</div>
+          <div class="font-weight-regular caption" style="font-size:0.85rem !important">Existing active licenses will be canceled. The data stored in your database won't be deleted.</div>
         </div>
       </template>
     </v-checkbox>
     <v-btn :loading="loading" color="#eb4d4b" @click="deleteAccount" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
     <v-dialog v-model="dialog" width="640px">
-      <v-card style="background-color:#fffcfa">
-        <v-toolbar dense flat color="#f5983b">
-          <v-toolbar-title class="white--text text-body-1 font-weight-medium">Delete account</v-toolbar-title>
+      <v-card>
+        <v-toolbar dense flat color="#303030">
+          <v-toolbar-title class="white--text text-body-1 font-weight-regular">Delete account</v-toolbar-title>
         </v-toolbar>
         <v-card-text style="padding:15px">
           <v-card>
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
-                <v-icon color="warning">fas fa-exclamation-triangle</v-icon>
+                <v-icon size="20" color="warning">fas fa-exclamation-triangle</v-icon>
               </v-col>
               <v-col>
                 <div class="text-body-1">This action cannot be undone.</div>
               </v-col>
             </v-row>
           </v-card>
-          <div class="text-body-1" style="color:black; margin-top:15px">Are you sure you want to delete your account?</div>
+          <div class="text-body-1" style="margin-top:15px">Are you sure you want to delete your account?</div>
           <v-divider style="margin-top:15px"></v-divider>
           <v-row no-gutters style="margin-top:15px;">
             <v-btn :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitDelete">Confirm</v-btn>

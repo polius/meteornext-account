@@ -5,11 +5,11 @@
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
-              <v-card style="border-radius:5px">
+              <v-card style="border-radius:5px; background-color:#444444">
                 <v-card-text>
                   <v-avatar :size="130" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
-                  <div class="display-2" style="color:black; margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
-                  <div class="headline" style="font-size:1.3rem!important; color:black; margin-top:10px; margin-bottom:20px">ACCOUNT | LOGIN</div>
+                  <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
+                  <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | LOGIN</div>
                   <v-divider></v-divider>
                   <v-form ref="form" @submit.prevent style="margin-top:20px">
                     <div v-if="mfa == '2fa'">
@@ -19,20 +19,20 @@
                       <v-card>
                         <v-progress-linear v-show="loading" indeterminate></v-progress-linear>
                         <v-card-text>
-                          <div class="text-h5 font-weight-light" style="color:black; text-align:center; font-size:1.4rem !important">Verify your identity</div>
+                          <div class="text-h5 font-weight-light" style="text-align:center; font-size:1.4rem !important">Verify your identity</div>
                           <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#20bf6b' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
-                          <div class="text-body-1" style="color:black; text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
+                          <div class="text-body-1" style="text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
                         </v-card-text>
                       </v-card>
                     </div>
                     <div v-else>
                       <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="[v => !!v || '']" required v-on:keyup.enter="login()" style="margin-bottom:20px" hide-details autofocus></v-text-field>
                       <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="login()" hide-details></v-text-field>
-                      <p style="margin-top:8px; margin-bottom:8px; text-align:right"><span @click="resetPassword" class="link">Forgot password?</span></p>
+                      <p style="margin-top:8px; margin-bottom:8px; text-align:right; color:#e2e2e2"><span @click="resetPassword" class="link">Forgot password?</span></p>
                     </div>
                   </v-form>
                   <v-btn v-if="!(mfa == 'webauthn')" x-large type="submit" color="info" :loading="loading" block style="margin-top:0px;" @click="login()">LOGIN</v-btn>
-                  <div v-if="!(mfa == 'webauthn')" class="text-body-2" style="color:black; margin-top:15px">Don't have an account? <router-link to="/register" style="text-decoration:none; font-weight:500">Sign up</router-link></div>
+                  <div v-if="!(mfa == 'webauthn')" class="text-body-2" style="margin-top:15px; color:#e2e2e2">Don't have an account? <router-link to="/register" style="text-decoration:none; font-weight:500">Sign up</router-link></div>
                 </v-card-text>
               </v-card>
             </v-slide-y-transition>
@@ -53,6 +53,15 @@
 .link:hover {
   color: #1976d2;
   cursor: pointer;
+}
+::v-deep .v-main::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-color: rgba(0,0,0,0.05);
 }
 </style>
 

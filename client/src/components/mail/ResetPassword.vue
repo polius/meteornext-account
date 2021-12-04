@@ -5,23 +5,23 @@
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
-              <v-card style="border-radius:5px">
+              <v-card style="border-radius:5px; background-color:#444444">
                 <v-card-text>
                   <v-avatar :size="130" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
-                  <div class="display-2" style="color:black; margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
-                  <div class="headline" style="font-size:1.3rem!important; color:black; margin-top:10px; margin-bottom:20px">ACCOUNT | Reset Password</div>
+                  <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
+                  <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | Reset Password</div>
                   <v-divider></v-divider>
                   <div v-if="$route.params.code === undefined">
                     <div v-if="!completed">
                       <v-form ref="form" @submit.prevent>
-                        <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left">Email</div>
+                        <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">Email</div>
                         <v-text-field flat v-model="item.email" :readonly="loading" :rules="emailRules" solo v-on:keyup.enter="submitEmail()" style="padding-top:5px" hide-details autofocus></v-text-field>
                       </v-form>
                       <v-btn block x-large :loading="loading" color="info" @click="submitEmail" style="margin-top:20px">SUBMIT</v-btn>
                     </div>
                     <div v-else style="margin-top:20px; margin-bottom:10px">
-                      <div class="text-h6" style="color:black; font-weight:400">Verify your email</div>
-                      <div class="text-body-1 font-weight-light" style="color:black; margin-top:15px; margin-bottom:15px">We have sent an email to the address you entered</div>
+                      <div class="text-h6" style="font-weight:400">Verify your email</div>
+                      <div class="text-body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">We have sent an email to the address you entered</div>
                       </div>
                     </div>
                   <div v-else>
@@ -35,8 +35,8 @@
                       <v-btn block x-large :loading="loading" color="info" @click="submitPassword" style="margin-top:20px">RESET PASSWORD</v-btn>
                     </div>
                     <div v-else-if="valid != null && !valid" style="margin-top:20px; margin-bottom:10px">
-                      <div class="text-body-1 font-weight-medium" style="color:black;">ERROR</div>
-                      <div class="text-body-1" style="color:black; margin-top:5px">This link has expired</div>
+                      <div class="text-body-1 font-weight-medium">ERROR</div>
+                      <div class="text-body-1" style="margin-top:5px">This link has expired</div>
                     </div>
                   </div>
                 </v-card-text>
@@ -55,6 +55,15 @@
 }
 ::v-deep .v-input__control {
   border: 1px solid #d2ddec !important;
+}
+::v-deep .v-main::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-color: rgba(0,0,0,0.05);
 }
 </style>
 

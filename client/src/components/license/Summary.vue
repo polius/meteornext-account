@@ -8,13 +8,13 @@
     <v-text-field flat readonly solo v-model="pricing" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Next payment</div>
     <v-text-field flat readonly solo v-model="next" style="padding-top:5px" hide-details></v-text-field>
-    <v-btn :disabled="account.license === undefined" color="info" @click="$router.push('/license/change')" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:15px;">Change license</v-btn>
+    <v-btn :disabled="account.license === undefined" color="info" @click="$router.push('/license/change')" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px;">Change license</v-btn>
   </div>
 </template>
 
 <style scoped>
 ::v-deep .v-input__control {
-  border: 1px solid #d2ddec !important;
+  border: 1px solid #b6b6b6 !important;
 }
 </style>
 

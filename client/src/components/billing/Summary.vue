@@ -9,17 +9,17 @@
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Expiration date</div>
     <v-text-field flat readonly solo v-model="expiration" style="padding-top:5px" hide-details></v-text-field>
     <v-btn :disabled="account.billing === undefined" :loading="loading" color="#2196f3" @click="submitPaymentMethodChange" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px; margin-right:10px">{{ card == '-' ? 'Add payment method' : 'Update payment method' }}</v-btn>
-    <v-btn :disabled="account.billing === undefined || account.billing.details.card === undefined" :loading="loading" color="warning" @click="dialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Remove payment method</v-btn>
+    <v-btn :disabled="account.billing === undefined || account.billing.details.card === undefined" :loading="loading" color="#f18805" @click="dialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Remove payment method</v-btn>
     <v-dialog v-model="dialog" width="640px">
-      <v-card style="background-color:#fffcfa">
-        <v-toolbar dense flat color="#f5983b">
-          <v-toolbar-title class="white--text text-body-1 font-weight-medium">Remove payment method</v-toolbar-title>
+      <v-card>
+        <v-toolbar dense flat color="#303030">
+          <v-toolbar-title class="white--text text-body-1 font-weight-regular">Remove payment method</v-toolbar-title>
         </v-toolbar>
         <v-card-text style="padding:15px">
           <v-card>
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
-                <v-icon color="warning">fas fa-exclamation-triangle</v-icon>
+                <v-icon color="warning" size="20">fas fa-exclamation-triangle</v-icon>
               </v-col>
               <v-col>
                 <div class="text-body-1">This action cannot be undone.</div>
@@ -29,14 +29,14 @@
           <v-card style="margin-top:15px">
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
-                <v-icon color="#eb4d4b">fas fa-exclamation-circle</v-icon>
+                <v-icon color="#eb4d4b" size="20">fas fa-exclamation-circle</v-icon>
               </v-col>
               <v-col>
                 <div class="text-body-1">Your current license will be automatically changed to <span class="font-weight-medium">1 Resource</span>.</div>
               </v-col>
             </v-row>
           </v-card>
-          <div class="text-body-1" style="color:black; margin-top:15px">Are you sure you want to remove the current payment method?</div>
+          <div class="text-body-1" style="margin-top:15px">Are you sure you want to remove the current payment method?</div>
           <v-divider style="margin-top:15px"></v-divider>
           <v-row no-gutters style="margin-top:15px;">
             <v-btn :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitPaymentMethodRemove">Confirm</v-btn>
@@ -53,7 +53,7 @@
   border: 1px solid #2196f3 !important;
 }
 ::v-deep .v-input__control {
-  border: 1px solid #d2ddec !important;
+  border: 1px solid #b6b6b6 !important;
 }
 </style>
 

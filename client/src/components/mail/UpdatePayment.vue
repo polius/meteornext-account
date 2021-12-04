@@ -5,21 +5,21 @@
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
-              <v-card style="border-radius:5px">
+              <v-card style="border-radius:5px; background-color:#444444">
                 <v-card-text>
                   <v-avatar :size="130" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
-                  <div class="display-2" style="color:black; margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
-                  <div class="headline" style="font-size:1.3rem!important; color:black; margin-top:10px; margin-bottom:20px">ACCOUNT | Update Payment</div>
+                  <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
+                  <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | Update Payment</div>
                   <v-divider></v-divider>
                   <div v-if="valid == null" class="text-center" style="margin-top:20px; margin-bottom:10px">
                     <v-progress-circular indeterminate color="primary"></v-progress-circular>
                   </div>
                   <div v-else-if="valid == false" style="margin-top:20px; margin-bottom:10px">
-                    <div class="text-body-1 font-weight-medium" style="color:black;">ERROR</div>
-                    <div class="text-body-1" style="color:black; margin-top:5px">This link has expired</div>
+                    <div class="text-body-1 font-weight-medium">ERROR</div>
+                    <div class="text-body-1" style="margin-top:5px">This link has expired</div>
                   </div>
                   <div v-else-if="valid == true" style="margin-top:20px; margin-bottom:10px">
-                    <div class="text-h6" style="color:black">Payment information changed</div>
+                    <div class="text-h6">Payment information changed</div>
                     <v-row no-gutters>
                       <v-col>
                         <v-icon size="50" color="#20bf6b" style="margin:15px">fas fa-check-circle</v-icon>
@@ -36,6 +36,18 @@
     </v-main>
   </div>
 </template>
+
+<style scoped>
+::v-deep .v-main::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-color: rgba(0,0,0,0.05);
+}
+</style>
 
 <script>
 import axios from 'axios'

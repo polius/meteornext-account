@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main style="background-color:#fffcfa">
+    <v-main style="background-color:#333333">
       <router-view/>
     </v-main>
     <v-snackbar v-model="snackbar" :multi-line="false" :timeout="snackbarTimeout" :color="snackbarColor" top style="padding-top:0px;">
@@ -14,7 +14,7 @@
 
 <style>
 body {
-  background-color:#fffcfa;
+  background-color:#333333;
 }
 </style>
 

@@ -1,29 +1,30 @@
 <template>
   <div>
-    <v-toolbar color="#f5983b" style="max-height:64px; z-index:1">
+    <v-toolbar color="#424242" style="max-height:64px; z-index:1">
       <v-img class="mr-2" :src="require('../assets/logo.png')" max-height="40" max-width="40" contain style="margin-bottom:2px"></v-img>
       <v-toolbar-title style="color:white">Meteor Next | Account</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn @click="logout" class="d-none d-sm-flex" text style="color:white; height:45px"><v-icon size="22px" style="margin-right:10px">fas fa-sign-out-alt</v-icon>Logout</v-btn>
       <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout" style="color:white"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
     </v-toolbar>
-    <v-tabs v-model="tab" background-color="#ffe8c2" slider-color="#f5983b" height="55px">
-      <v-tab active-class="active" style="color:black">License</v-tab>
-      <v-tab active-class="active" style="color:black">Billing</v-tab>
-      <v-tab active-class="active" style="color:black">Profile</v-tab>
-    </v-tabs>
-    <v-container style="max-width:min(100%,90em); padding:15px 20px 25px">
-      <License v-show="tab == 0" :account="account"/>
-      <Billing v-show="tab == 1" :account="account"/>
-      <Profile v-show="tab == 2" :account="account"/>
-    </v-container>
+    <div :style="{ height:'100%', width:'100%', padding:'0px', backgroundImage: 'url(' + require('@/assets/bg.jpg') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }">
+      <v-container style="max-width:min(100%,65em); background-color:#444444; padding:0px">
+        <v-tabs v-model="tab" background-color="#333333" center-active centered slider-color="white" height="55px">
+          <v-tab active-class="active" style="color:white">License</v-tab>
+          <v-tab active-class="active" style="color:white">Billing</v-tab>
+          <v-tab active-class="active" style="color:white">Profile</v-tab>
+        </v-tabs>
+        <License v-show="tab == 0" :account="account" style="padding:15px 20px 25px"/>
+        <Billing v-show="tab == 1" :account="account" style="padding:15px 20px 25px"/>
+        <Profile v-show="tab == 2" :account="account" style="padding:15px 20px 25px"/>
+      </v-container>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .active {
-  color: #fa8c1e!important;
-  font-weight:600;
+  color: white!important;
 }
 </style>
 

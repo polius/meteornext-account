@@ -5,7 +5,7 @@
     <v-card v-if="mfa.mode == null" style="margin-bottom:20px">
       <v-row no-gutters align="center" justify="center">
         <v-col cols="auto" style="display:flex; margin:15px">
-          <v-icon color="#20bf6b">fas fa-shield-alt</v-icon>
+          <v-icon color="#20bf6b" size="20">fas fa-shield-alt</v-icon>
         </v-col>
         <v-col>
           <div class="text-body-1">Protect your account by requiring an additional layer of security to sign in.</div>
@@ -19,19 +19,19 @@
         </v-col>
         <v-col style="padding-top:5px">
           <div class="text-body-1" style="color:#20bf6b">{{ `The MFA (${mfa.mode == '2fa' ? '2FA' : 'Security Key'}) is currently enabled.` }}</div>
-          <div class="text-body-2">Active since: {{ dateFormat(mfa.created) }}</div>
+          <div class="text-body-2" style="color:#e2e2e2">Active since: {{ dateFormat(mfa.created) }}</div>
         </v-col>
       </v-row>
     </v-card>
-    <v-btn v-if="mfa.mode != null" :loading="loading" color="warning" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Disable MFA</v-btn>
+    <v-btn v-if="mfa.mode != null" :loading="loading" color="#f18805" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Disable MFA</v-btn>
     <v-btn v-else :loading="loading" color="#2196f3" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Enable MFA</v-btn>
     <v-dialog v-model="mfaDialog" width="672px">
-      <v-card style="background-color:#fffcfa">
-        <v-toolbar dense flat color="#f5983b">
-          <v-toolbar-title class="white--text text-body-1">Multi-factor authentication</v-toolbar-title>
+      <v-card>
+        <v-toolbar dense flat color="#303030">
+          <v-toolbar-title class="text-body-1" style="color:#e2e2e2">Multi-factor authentication</v-toolbar-title>
           <v-divider v-if="mfa.mode != null || mfaDialogStep == 2" class="mx-3" inset vertical></v-divider>
-          <div v-if="mfa.mode == '2fa' || (mfaDialogStep == 2 && mfaMode == '2fa')" class="text-body-1 white--text">Virtual 2FA Device</div>
-          <div v-if="mfa.mode == 'webauthn' || (mfaDialogStep == 2 && mfaMode == 'webauthn')" class="text-body-1 white--text">Security Key</div>
+          <div v-if="mfa.mode == '2fa' || (mfaDialogStep == 2 && mfaMode == '2fa')" class="text-body-1" style="color:#e2e2e2">Virtual 2FA Device</div>
+          <div v-if="mfa.mode == 'webauthn' || (mfaDialogStep == 2 && mfaMode == 'webauthn')" class="text-body-1" style="color:#e2e2e2">Security Key</div>
         </v-toolbar>
         <v-card-text style="padding:15px">
           <v-container style="padding:0px">
@@ -40,12 +40,12 @@
                 <v-form ref="mfaForm" @submit.prevent style="margin-bottom:15px">
                   <div v-if="mfa.mode == null">
                     <div v-if="mfaDialogStep == 1">
-                      <div class="text-body-1" style="color:black">Choose the type of MFA device to assign:</div>
+                      <div class="text-body-1" style="color:#e2e2e2">Choose the type of MFA device to assign:</div>
                       <v-radio-group v-model="mfaMode" hide-details style="margin-top:10px">
                         <v-radio value="2fa">
                           <template v-slot:label>
                             <div>
-                              <div style="color:black">Virtual 2FA Device</div>
+                              <div class="white--text">Virtual 2FA Device</div>
                               <div class="font-weight-regular caption" style="font-size:0.85rem !important">Authenticator app installed on your mobile device or computer</div>
                             </div>
                           </template>
@@ -53,7 +53,7 @@
                         <v-radio value="webauthn" style="margin-top:5px">
                           <template v-slot:label>
                             <div>
-                              <div style="color:black">Security Key</div>
+                              <div class="white--text">Security Key</div>
                               <div class="font-weight-regular caption" style="font-size:0.85rem !important">YubiKey or any other compliant device</div>
                             </div>
                           </template>
@@ -67,15 +67,15 @@
                           <v-row no-gutters>
                             <v-col style="margin:15px">
                               <v-progress-circular v-if="twoFactor['uri'] == null" indeterminate style="margin-left:auto; margin-right:auto; display:table;"></v-progress-circular>
-                              <qrcode-vue v-else :value="twoFactor['uri']" size="200" level="H" background="#ffffff" foreground="#000000" style="text-align:center"></qrcode-vue>
-                              <v-btn @click="twoFactorCodeDialog = true" text block hide-details>CAN'T SCAN THE QR?</v-btn>
+                              <qrcode-vue v-else :value="twoFactor['uri']" size="200" level="H" background="#e2e2e2" foreground="#000000" style="text-align:center"></qrcode-vue>
+                              <v-btn @click="twoFactorCodeDialog = true" text block hide-details color="#e2e2e2">CAN'T SCAN THE QR?</v-btn>
                               <v-text-field ref="twoFactorCode" outlined v-model="twoFactor['value']" v-on:keyup.enter="submitMFA" label="MFA Code" maxlength="6" :rules="[v => v == parseInt(v) && v >= 0 || '']" required hide-details style="margin-top:10px"></v-text-field>
                             </v-col>
                             <v-col style="margin:15px">
-                              <div class="text-body-1 font-weight-regular" style="color:black; margin-bottom:20px">How to enable app based authentication</div>
-                              <div class="text-body-1 font-weight-light" style="color:black; margin-bottom:15px">1. Download and install an app (such as Google Authenticator) on your mobile device.</div>
-                              <div class="text-body-1 font-weight-light" style="color:black; margin-bottom:15px">2. Scan the QR code.</div>
-                              <div class="text-body-1 font-weight-light" style="color:black">3. Enter and verify the authentication code generated by the app.</div>
+                              <div class="text-body-1 font-weight-regular" style="margin-bottom:20px; color:#e2e2e2">How to enable app based authentication</div>
+                              <div class="text-body-1 font-weight-light" style="margin-bottom:15px"><span class="font-weight-regular">1.</span> Download and install an app (such as Google Authenticator) on your mobile device.</div>
+                              <div class="text-body-1 font-weight-light" style="margin-bottom:15px"><span class="font-weight-regular">2.</span> Scan the QR code.</div>
+                              <div class="text-body-1 font-weight-light"><span class="font-weight-regular">3.</span> Enter and verify the authentication code generated by the app.</div>
                             </v-col>
                           </v-row>
                         </v-card-text>
@@ -83,15 +83,15 @@
                       <v-card v-else-if="mfaMode == 'webauthn'">
                         <v-progress-linear v-show="loadingFingerprint" indeterminate></v-progress-linear>
                         <v-card-text>
-                          <div class="text-h5 font-weight-light" style="color:black; text-align:center; font-size:1.4rem !important">Verify your identity</div>
+                          <div class="text-h5 font-weight-light white--text" style="text-align:center; font-size:1.4rem !important">Verify your identity</div>
                           <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#20bf6b' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
-                          <div class="text-body-1" style="color:black; text-align:center; font-size:1.1rem !important;">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
+                          <div class="text-body-1" style="text-align:center; font-size:1.1rem !important; color:#e2e2e2">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
                         </v-card-text>
                       </v-card>
                     </div>
                   </div>
                   <div v-else>
-                    <div class="text-body-1" style="color:black">Are you sure you want to disable the MFA method?</div>
+                    <div class="text-body-1">Are you sure you want to disable the MFA method?</div>
                   </div>
                 </v-form>
                 <v-divider></v-divider>
@@ -114,7 +114,7 @@
           <v-container>
             <v-layout wrap>
               <v-flex xs12>
-                <div style="color:black; font-size:18px; letter-spacing:0.08em; text-align:center;">{{ twoFactor['hash'] }}</div>
+                <div style="font-size:18px; letter-spacing:0.08em; text-align:center;">{{ twoFactor['hash'] }}</div>
               </v-flex>
             </v-layout>
           </v-container>
