@@ -20,16 +20,16 @@
                       <v-btn block x-large :loading="loading" color="info" @click="submitEmail" style="margin-top:20px">SUBMIT</v-btn>
                     </div>
                     <div v-else style="margin-top:20px; margin-bottom:10px">
-                      <div class="text-h6" style="font-weight:400">Verify your email</div>
-                      <div class="text-body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">We have sent an email to the address you entered</div>
+                      <div class="text-h6 white--text" style="font-weight:400">Verify your email</div>
+                      <div class="text-body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px; color:#e2e2e2">We have sent an email to the address you entered</div>
                       </div>
                     </div>
                   <div v-else>
                     <div v-if="valid != null && valid" style="margin-top:20px; margin-bottom:10px">
                       <v-form ref="form" @submit.prevent>
-                        <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left">New password</div>
+                        <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">New password</div>
                         <v-text-field flat v-model="item.password" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" autofocus hide-details></v-text-field>
-                        <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left">Confirm new password</div>
+                        <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">Confirm new password</div>
                         <v-text-field flat v-model="item.password2" type="password" :readonly="loading" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
                       </v-form>
                       <v-btn block x-large :loading="loading" color="info" @click="submitPassword" style="margin-top:20px">RESET PASSWORD</v-btn>
