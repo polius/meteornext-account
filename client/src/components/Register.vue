@@ -12,8 +12,8 @@
                   <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | REGISTER</div>
                   <v-divider></v-divider>
                   <div v-if="verify" style="margin-top:20px; margin-bottom:5px">
-                    <div class="text-h6" style="font-weight:400">Verify your email</div>
-                    <div class="text-body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">We have sent an email to the address you entered</div>
+                    <div class="text-h6 white--text" style="font-weight:400">Verify your email</div>
+                    <div class="text-body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px; color:#e2e2e2">We have sent an email to the address you entered</div>
                   </div>
                   <v-form v-else ref="form" @submit.prevent style="margin-top:20px">
                     <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="emailRules" required style="margin-bottom:20px;" hide-details autofocus></v-text-field>
