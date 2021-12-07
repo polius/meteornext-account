@@ -14,9 +14,9 @@
           <v-tab active-class="active" style="color:white">Billing</v-tab>
           <v-tab active-class="active" style="color:white">Profile</v-tab>
         </v-tabs>
-        <License v-show="tab == 0" :account="account" style="padding:15px 20px 25px; margin-bottom:20px;"/>
-        <Billing v-show="tab == 1" :account="account" style="padding:15px 20px 25px; margin-bottom:20px;"/>
-        <Profile v-show="tab == 2" :account="account" style="padding:15px 20px 25px; margin-bottom:20px;"/>
+        <License v-show="tab == 0" :account="account" :style="`padding:15px 20px 25px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
+        <Billing v-show="tab == 1" :account="account" :style="`padding:15px 20px 25px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
+        <Profile v-show="tab == 2" :account="account" :style="`padding:15px 20px 25px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
       </v-container>
     </div>
   </div>
@@ -31,7 +31,6 @@
 <script>
 import EventBus from '../js/event-bus'
 import axios from 'axios'
-import moment from 'moment'
 
 import Profile from './profile/Profile'
 import License from './license/License'
@@ -41,9 +40,15 @@ export default {
   data: () => ({
     account: {},
     tab: 0,
+    isMobile: false,
   }),
   components: { Profile, License, Billing },
+  beforeDestroy () {
+    if (typeof window === 'undefined') return
+    window.removeEventListener('resize', this.onResize, { passive: true })
+  },
   created() {
+    this.onResize()
     this.getAccount()
     if (this.$route.params.path !== undefined) {
       if (this.$route.params.path == 'billing') this.tab = 1
@@ -51,6 +56,7 @@ export default {
     }
   },
   mounted() {
+    window.addEventListener('resize', this.onResize, { passive: true })
     EventBus.$on('get-account', this.getAccount)
     if (this.$route.path == '/license') this.tab = 0
     else if (this.$route.path == '/billing') this.tab = 1
@@ -64,6 +70,9 @@ export default {
     }
   },
   methods: {
+    onResize () {
+      this.isMobile = window.innerWidth < 1040
+    },
     getAccount() {
       axios.get('/account')
         .then((response) => {
@@ -76,10 +85,6 @@ export default {
     },
     logout() {
       this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
-    },
-    dateFormat(date) {
-      if (date) return moment.utc(date).local().format("YYYY-MM-DD HH:mm:ss")
-      return date
     },
   },
 }
