@@ -8,7 +8,7 @@
           <v-icon color="#20bf6b" size="20">fas fa-shield-alt</v-icon>
         </v-col>
         <v-col>
-          <div class="text-body-1">Protect your account by requiring an additional layer of security to sign in.</div>
+          <div class="text-body-1" style="color:#e2e2e2">Protect your account by requiring an additional layer of security to sign in.</div>
         </v-col>
       </v-row>
     </v-card>
@@ -27,13 +27,13 @@
     <v-btn v-else :loading="loading" color="#2196f3" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Enable MFA</v-btn>
     <v-dialog v-model="mfaDialog" width="672px">
       <v-card>
-        <v-toolbar dense flat color="#303030">
+        <v-toolbar dense flat color="#303030" style="border:solid rgba(255, 255, 255, 0.12) 1px">
           <v-toolbar-title class="text-body-1" style="color:#e2e2e2">Multi-factor authentication</v-toolbar-title>
           <v-divider v-if="mfa.mode != null || mfaDialogStep == 2" class="mx-3" inset vertical></v-divider>
           <div v-if="mfa.mode == '2fa' || (mfaDialogStep == 2 && mfaMode == '2fa')" class="text-body-1" style="color:#e2e2e2">Virtual 2FA Device</div>
           <div v-if="mfa.mode == 'webauthn' || (mfaDialogStep == 2 && mfaMode == 'webauthn')" class="text-body-1" style="color:#e2e2e2">Security Key</div>
         </v-toolbar>
-        <v-card-text style="padding:15px">
+        <v-card-text style="padding:15px; border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
           <v-container style="padding:0px">
             <v-layout wrap>
               <v-flex xs12>

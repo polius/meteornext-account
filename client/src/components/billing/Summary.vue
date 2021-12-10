@@ -12,17 +12,17 @@
     <v-btn :disabled="account.billing === undefined || account.billing.details.card === undefined" :loading="loading" color="#f18805" @click="dialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Remove payment method</v-btn>
     <v-dialog v-model="dialog" width="640px">
       <v-card>
-        <v-toolbar dense flat color="#303030">
+        <v-toolbar dense flat color="#303030" style="border:solid rgba(255, 255, 255, 0.12) 1px">
           <v-toolbar-title class="white--text text-body-1 font-weight-regular">Remove payment method</v-toolbar-title>
         </v-toolbar>
-        <v-card-text style="padding:15px">
+        <v-card-text style="padding:15px; border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
           <v-card>
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
                 <v-icon color="warning" size="20">fas fa-exclamation-triangle</v-icon>
               </v-col>
               <v-col>
-                <div class="text-body-1">This action cannot be undone.</div>
+                <div class="text-body-1" style="color:#e2e2e2">This action cannot be undone.</div>
               </v-col>
             </v-row>
           </v-card>
@@ -32,7 +32,7 @@
                 <v-icon color="#eb4d4b" size="20">fas fa-exclamation-circle</v-icon>
               </v-col>
               <v-col>
-                <div class="text-body-1">Your current license will be automatically changed to <span class="font-weight-medium">1 Resource</span>.</div>
+                <div class="text-body-1" style="color:#e2e2e2">Your current license will be automatically changed to 1 Resource.</div>
               </v-col>
             </v-row>
           </v-card>

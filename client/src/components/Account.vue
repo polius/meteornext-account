@@ -8,7 +8,7 @@
       <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout" style="color:white"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
     </v-toolbar>
     <div :style="{ height:'100%', width:'100%', padding:'0px', backgroundImage: 'url(' + require('@/assets/bg.jpg') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }">
-      <v-container style="max-width:min(100%,65em); background-color:#444444; padding:0px">
+      <v-container style="max-width:min(100%,65em); background-color:#444444; padding:0px; border-bottom-left-radius:10px; border-bottom-right-radius:10px">
         <v-tabs v-model="tab" background-color="#333333" center-active centered slider-color="white" height="55px">
           <v-tab active-class="active" style="color:white">License</v-tab>
           <v-tab active-class="active" style="color:white">Billing</v-tab>

@@ -6,24 +6,34 @@
       <template v-slot:label>
         <div style="margin-left:5px">
           <div style="color:#e2e2e2">I confirm I want to delete my Meteor Next account.</div>
-          <div class="font-weight-regular caption" style="font-size:0.85rem !important">Existing active licenses will be canceled. The data stored in your database won't be deleted.</div>
+          <div class="font-weight-regular caption" style="font-size:0.85rem !important">Existing active licenses will be canceled. The data stored in your database will not be deleted.</div>
         </div>
       </template>
     </v-checkbox>
     <v-btn :loading="loading" color="#eb4d4b" @click="deleteAccount" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
     <v-dialog v-model="dialog" width="640px">
       <v-card>
-        <v-toolbar dense flat color="#303030">
+        <v-toolbar dense flat color="#303030" style="border:solid rgba(255, 255, 255, 0.12) 1px">
           <v-toolbar-title class="white--text text-body-1 font-weight-regular">Delete account</v-toolbar-title>
         </v-toolbar>
-        <v-card-text style="padding:15px">
+        <v-card-text style="padding:15px; border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
           <v-card>
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
                 <v-icon size="20" color="warning">fas fa-exclamation-triangle</v-icon>
               </v-col>
               <v-col>
-                <div class="text-body-1">This action cannot be undone.</div>
+                <div class="text-body-1" style="color:#e2e2e2">This action cannot be undone.</div>
+              </v-col>
+            </v-row>
+          </v-card>
+          <v-card style="margin-top:15px">
+            <v-row no-gutters align="center" justify="center">
+              <v-col cols="auto" style="display:flex; margin:15px">
+                <v-icon color="#eb4d4b" size="20">fas fa-exclamation-circle</v-icon>
+              </v-col>
+              <v-col>
+                <div class="text-body-1" style="color:#e2e2e2">Your account will be automatically deleted.</div>
               </v-col>
             </v-row>
           </v-card>
