@@ -3,11 +3,11 @@
     <div class="text-h6 font-weight-medium">BILLING</div>
     <div class="body-1 font-weight-light" style="margin-top:15px">Here are your billing details.</div>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Card</div>
-    <v-text-field flat readonly solo v-model="card" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field :loading="account.billing === undefined" flat readonly solo v-model="card" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Last four digits</div>
-    <v-text-field flat readonly solo v-model="last4" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field :loading="account.billing === undefined" flat readonly solo v-model="last4" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Expiration date</div>
-    <v-text-field flat readonly solo v-model="expiration" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field :loading="account.billing === undefined" flat readonly solo v-model="expiration" style="padding-top:5px" hide-details></v-text-field>
     <v-btn :disabled="account.billing === undefined" :loading="loading" color="#2196f3" @click="submitPaymentMethodChange" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px; margin-right:10px">{{ card == '-' ? 'Add payment method' : 'Update payment method' }}</v-btn>
     <v-btn :disabled="account.billing === undefined || account.billing.details.card === undefined" :loading="loading" color="#f18805" @click="dialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Remove payment method</v-btn>
     <v-dialog v-model="dialog" width="640px">
@@ -71,15 +71,18 @@ export default {
   },
   computed: {
     card() {
-      if (this.account.billing === undefined || this.account.billing.details.card === undefined) return '-'
+      if (this.account.billing === undefined) return ''
+      if (this.account.billing.details.card === undefined) return '-'
       return this.account.billing.details.card
     },
     last4() {
-      if (this.account.billing === undefined ||  this.account.billing.details.last4 === undefined) return '-'
+      if (this.account.billing === undefined) return ''
+      if (this.account.billing.details.last4 === undefined) return '-'
       return this.account.billing.details.last4
     },
     expiration() {
-      if (this.account.billing === undefined ||  this.account.billing.details.expiration === undefined) return '-'
+      if (this.account.billing === undefined) return ''
+      if (this.account.billing.details.expiration === undefined) return '-'
       return this.account.billing.details.expiration
     },
   },

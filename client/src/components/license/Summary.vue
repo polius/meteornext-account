@@ -3,11 +3,11 @@
     <div class="text-h6 font-weight-medium">LICENSE</div>
     <div class="body-1 font-weight-light" style="margin-top:15px">Here are your license details.</div>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Resources</div>
-    <v-text-field flat readonly solo v-model="resources" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field :loading="account.license === undefined" flat readonly solo v-model="resources" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Pricing</div>
-    <v-text-field flat readonly solo v-model="pricing" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field :loading="account.license === undefined" flat readonly solo v-model="pricing" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Next payment</div>
-    <v-text-field flat readonly solo v-model="next" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field :loading="account.license === undefined" flat readonly solo v-model="next" style="padding-top:5px" hide-details></v-text-field>
     <v-btn :disabled="account.license === undefined" color="info" @click="$router.push('/license/change')" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px;">Change license</v-btn>
   </div>
 </template>
