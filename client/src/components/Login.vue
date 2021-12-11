@@ -40,7 +40,7 @@
         </v-layout>
       </v-container>
     </v-main>
-    <v-snackbar v-model="snackbar" :multi-line="false" :timeout="Number(3000)" color="#EF5354" top style="padding-top:0px;">
+    <v-snackbar v-model="snackbar" :multi-line="false" :timeout="Number(3000)" color="info" top style="padding-top:0px;">
       Please verify your email address
       <template v-slot:action="{ attrs }">
         <v-btn text v-bind="attrs" @click="sendVerifyMail">Resend email</v-btn>
