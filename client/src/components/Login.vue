@@ -166,8 +166,7 @@ export default {
     },
     loginSuccess() {
       if (this.$route.query.url !== undefined) this.$router.push({ path: this.$route.query.url })
-      else if (this.prevRoute == '') this.$router.push('/')
-      else this.$router.push(this.prevRoute)
+      else this.$router.push('/')
     },
     resetPassword() {
       this.$router.push({ name: 'resetPassword' })
