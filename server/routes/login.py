@@ -1,6 +1,5 @@
 import pyotp
 import bcrypt
-import secrets
 from datetime import timedelta
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import (create_access_token, set_access_cookies, unset_access_cookies)

@@ -35,9 +35,11 @@ RUN apk update && \
     pip3 install --no-cache-dir schedule && \
     pip3 install --no-cache-dir stripe && \
     pip3 install --no-cache-dir gunicorn && \
+    pip3 install --no-cache-dir sentry-sdk[flask] && \
     tar -zxf /usr/share/nginx/html/client.tar.gz -C /usr/share/nginx/html/ && \
     mv /usr/share/nginx/html/client/* /usr/share/nginx/html/ && \
     rm -rf /usr/share/nginx/html/client* && \
+    rm -rf /root/server.conf && \
     chown -R root:root /usr/share/nginx/html/ && \
     chown -R root:nginx /root && \
     chmod 750 /root && \

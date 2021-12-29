@@ -1,0 +1,98 @@
+{
+  "executionRoleArn": "arn:aws:iam::633757032102:role/ecsTaskExecutionRole",
+  "family": "meteor2-account",
+  "containerDefinitions": [
+      {
+      "name": "meteor2-account",
+      "image": "633757032102.dkr.ecr.eu-west-1.amazonaws.com/meteor2-account",
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 80
+        }
+      ],
+      "environment": [
+        {
+          "name": "AWS_ACCESS_KEY",
+          "value": ""
+        },
+        {
+          "name": "AWS_REGION",
+          "value": "eu-west-1"
+        },
+        {
+          "name": "AWS_SECRET_ACCESS_KEY",
+          "value": ""
+        },
+        {
+          "name": "HCAPTCHA_SECRET",
+          "value": ""
+        },
+        {
+          "name": "JWT_SECRET_KEY",
+          "value": ""
+        },
+        {
+          "name": "SENTRY_DSN",
+          "value": ""
+        },
+        {
+          "name": "SENTRY_ENV",
+          "value": "production"
+        },
+        {
+          "name": "SQL_DATABASE",
+          "value": ""
+        },
+        {
+          "name": "SQL_ENGINE",
+          "value": "MySQL"
+        },
+        {
+          "name": "SQL_HOSTNAME",
+          "value": ""
+        },
+        {
+          "name": "SQL_PASSWORD",
+          "value": ""
+        },
+        {
+          "name": "SQL_PORT",
+          "value": "3306"
+        },
+        {
+          "name": "SQL_USERNAME",
+          "value": ""
+        },
+        {
+          "name": "STRIPE_API_KEY",
+          "value": ""
+        },
+        {
+          "name": "STRIPE_WEBHOOK_SECRET",
+          "value": ""
+        }
+      ],
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/meteor2-account",
+          "awslogs-region": "eu-west-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "ARM64"
+  },
+  "cpu": "256",
+  "memory": "512"
+}
