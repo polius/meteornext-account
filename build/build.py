@@ -32,6 +32,7 @@ class build:
         subprocess.call("docker tag meteor2-account:latest 633757032102.dkr.ecr.eu-west-1.amazonaws.com/meteor2-account:latest", shell=True)
         subprocess.call("docker push 633757032102.dkr.ecr.eu-west-1.amazonaws.com/meteor2-account:latest", shell=True)
         subprocess.call("aws --profile meteor2-account ecs update-service --cluster meteor2 --service meteor2-account --force-new-deployment --region eu-west-1 --deployment-configuration minimumHealthyPercent=100,maximumPercent=200", shell=True)
-        subprocess.call("docker rmi $(docker images 'meteor2-account' -a -q)", shell=True)
+        subprocess.call("docker rmi $(docker images 'meteor2-account' -a -q) --force", shell=True)
+        subprocess.call("docker buildx prune --force >/dev/null 2>&1", shell=True)
         # One-Time: Create new ecs task definition version with platform=arm64
         # aws --profile meteor2-account --region eu-west-1 ecs register-task-definition --cli-input-json file://ecs_task_definition.json

@@ -27,7 +27,6 @@ CREATE TABLE `mail` (
 CREATE TABLE `accounts_mfa` (
   `account_id` INT UNSIGNED NOT NULL,
   `2fa_hash` VARCHAR(191) NULL,
-  `webauthn_ukey` TEXT NULL,
   `webauthn_pub_key` TEXT NULL,
   `webauthn_credential_id` TEXT NULL,
   `webauthn_sign_count` INT UNSIGNED NULL,

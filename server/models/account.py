@@ -15,7 +15,7 @@ class Account:
                 a.stripe_id,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
-                    WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
+                    WHEN mfa.webauthn_pub_key IS NOT NULL THEN 'webauthn'
                     ELSE NULL
                 END AS 'mfa'
             FROM accounts a
@@ -36,7 +36,7 @@ class Account:
                 a.stripe_id,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
-                    WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
+                    WHEN mfa.webauthn_pub_key IS NOT NULL THEN 'webauthn'
                     ELSE NULL
                 END AS 'mfa'
             FROM accounts a
@@ -57,7 +57,7 @@ class Account:
                 a.stripe_id,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
-                    WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
+                    WHEN mfa.webauthn_pub_key IS NOT NULL THEN 'webauthn'
                     ELSE NULL
                 END AS 'mfa'
             FROM accounts a
@@ -74,7 +74,7 @@ class Account:
                 a.created,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
-                    WHEN mfa.webauthn_ukey IS NOT NULL THEN 'webauthn'
+                    WHEN mfa.webauthn_pub_key IS NOT NULL THEN 'webauthn'
                     ELSE NULL
                 END AS 'mfa'
             FROM accounts a
@@ -171,7 +171,7 @@ class Account:
 
     def get_mfa(self, account_id):
         query = """
-            SELECT 2fa_hash, webauthn_ukey, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created
+            SELECT 2fa_hash, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created
             FROM accounts_mfa
             WHERE account_id = %s
         """
@@ -195,10 +195,10 @@ class Account:
     def enable_webauthn(self, data):
         self.disable_mfa(data['account_id'])
         query = """
-            INSERT INTO accounts_mfa (account_id, webauthn_ukey, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO accounts_mfa (account_id, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created)
+            VALUES (%s, %s, %s, %s, %s, %s)
         """
-        self._sql.execute(query, (data['account_id'], data['webauthn_ukey'], data['webauthn_pub_key'], data['webauthn_credential_id'], data['webauthn_sign_count'], data['webauthn_rp_id'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
+        self._sql.execute(query, (data['account_id'], data['webauthn_pub_key'], data['webauthn_credential_id'], data['webauthn_sign_count'], data['webauthn_rp_id'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
 
     def put_webauthn_sign_count(self, data):
         query = """

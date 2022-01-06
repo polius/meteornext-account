@@ -15,11 +15,11 @@
     <v-card v-else style="margin-bottom:20px">
       <v-row no-gutters>
         <v-col cols="auto" style="display:flex; margin:15px">
-          <v-icon color="#20bf6b">fas fa-check-circle</v-icon>
+          <v-icon color="#20bf6b" size="20">fas fa-check-circle</v-icon>
         </v-col>
         <v-col style="padding-top:5px">
           <div class="text-body-1" style="color:#20bf6b">{{ `The MFA (${mfa.mode == '2fa' ? '2FA' : 'Security Key'}) is currently enabled.` }}</div>
-          <div class="text-body-2" style="color:#e2e2e2">Active since: {{ dateFormat(mfa.created) }}</div>
+          <div class="text-body-2" style="color:#e2e2e2; padding-bottom:5px">Active since: {{ dateFormat(mfa.created) }}</div>
         </v-col>
       </v-row>
     </v-card>

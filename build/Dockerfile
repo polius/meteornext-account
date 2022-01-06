@@ -25,7 +25,7 @@ RUN apk update && \
     pip3 install --no-cache-dir requests && \
     pip3 install --no-cache-dir pymysql && \
     pip3 install --no-cache-dir DBUtils && \
-    pip3 install --no-cache-dir webauthn==0.4.7 && \
+    pip3 install --no-cache-dir webauthn && \
     pip3 install --no-cache-dir bcrypt && \
     pip3 install --no-cache-dir pyotp && \
     pip3 install --no-cache-dir flask && \
