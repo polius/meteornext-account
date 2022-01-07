@@ -36,6 +36,14 @@ CREATE TABLE `accounts_mfa` (
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
+CREATE TABLE `accounts_sentry` (
+  `account_id` INT UNSIGNED NOT NULL,
+  `sentry_dsn` VARCHAR(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sentry_enabled` TINYINT(1) UNSIGNED NOT NULL,
+  PRIMARY KEY (`account_id`),
+  FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+
 CREATE TABLE `products` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `resources` INT NOT NULL,
