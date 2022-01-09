@@ -18,6 +18,9 @@ body {
 }
 </style>
 
+<style src="@/fonts/roboto.css"></style>
+<style src="@/fonts/materialicons.css"></style>
+
 <script>
 import EventBus from './js/event-bus'
 

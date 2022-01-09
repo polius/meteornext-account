@@ -35,7 +35,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON `meteor2-account`.* TO 'meteor2-account'
                 "ecr:PutImage"
             ],
             "Resource": [
-                "arn:aws:ecs:eu-west-1:633757032102:service/meteor2-account",
+                "arn:aws:ecs:eu-west-1:633757032102:service/meteor2/meteor2-account",
                 "arn:aws:ecr:eu-west-1:633757032102:repository/meteor2-account",
                 "arn:aws:iam::633757032102:role/ecsTaskExecutionRole"
             ]
