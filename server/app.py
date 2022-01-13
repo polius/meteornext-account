@@ -63,7 +63,7 @@ jwt = JWTManager(app)
 Compress(app)
 
 # Init Sentry
-sentry_sdk.init(dsn=conf['sentry']['dsn'], environment=conf['sentry']['environment'], traces_sample_rate=1.0, integrations=[FlaskIntegration()])
+sentry_sdk.init(dsn=conf['sentry']['dsn'], environment=conf['sentry']['environment'], traces_sample_rate=0, integrations=[FlaskIntegration()])
 
 # Init app routes
 from cron import Cron
