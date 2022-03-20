@@ -4,8 +4,8 @@ from boto3.session import Session
 class Mail:
     def __init__(self, conf):
         # Init ses client
-        session = Session(aws_access_key_id=conf['aws']['access_key'], aws_secret_access_key=conf['aws']['secret_access_key'], region_name=conf['aws']['region_name'])
-        self._ses = session.client("ses")
+        session = Session(aws_access_key_id=conf['aws']['access_key'], aws_secret_access_key=conf['aws']['secret_access_key'])
+        self._ses = session.client(service_name="ses", region_name=conf['aws']['region_name'])
 
     def send_verify_email(self, email, code):
         # Get email template

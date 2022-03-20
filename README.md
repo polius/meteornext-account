@@ -7,11 +7,8 @@ python3 /home/ec2-user/git/meteor2-account/build/build.py
 #### SQL Permissions
 
 ```
-GRANT SELECT, INSERT, UPDATE, DELETE ON `meteor2-account`.* TO 'meteor2-account'@'localhost';
-GRANT SELECT, INSERT, UPDATE, DELETE ON `meteor2-account`.* TO 'meteor2-account'@'172.17.3.%';
-GRANT SELECT, INSERT, UPDATE, DELETE ON `meteor2-account`.* TO 'meteor2-account'@'172.17.4.%';
-GRANT SELECT, INSERT, UPDATE, DELETE ON `meteor2-account`.* TO 'meteor2-account'@'172.17.5.%';
-GRANT SELECT, INSERT, UPDATE, DELETE ON `meteor2-account`.* TO 'meteor2-account'@'172.17.6.%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `meteor2-account`.* TO 'meteor2-account'@'10.0.0.229';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `meteor2-account`.* TO 'meteor2-account'@'172.17.0.%';
 ```
 
 ### AWS Policy
