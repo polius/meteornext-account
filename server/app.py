@@ -16,7 +16,7 @@ if os.path.isfile(f"{current_dir}/server.conf"):
         conf = json.load(fopen)
 else:
     conf = {
-            "sql": {
+        "sql": {
             "engine": os.getenv('SQL_ENGINE'),
             "hostname": os.getenv('SQL_HOSTNAME'),
             "port": os.getenv('SQL_PORT'),
@@ -86,7 +86,7 @@ Cron(app, sql)
 
 # Register blueprints
 URL_PREFIX = "/api"
-login = routes.login.Login(sql, conf)
+login = routes.login.Login(sql)
 register = routes.register.Register(sql, conf)
 account = routes.account.Account(sql, conf)
 license = routes.license.License(sql, conf)

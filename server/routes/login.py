@@ -6,16 +6,13 @@ from flask_jwt_extended import (create_access_token, set_access_cookies, unset_a
 
 import models.account
 import routes.mfa
-import mail.mail
 
 class Login:
-    def __init__(self, sql, conf):
+    def __init__(self, sql):
         # Init models
         self._account = models.account.Account(sql)
         # Init routes
         self._mfa = routes.mfa.MFA(sql)
-        # Init mail class
-        self._mail = mail.mail.Mail(conf)
 
     def blueprint(self):
         # Init blueprint
