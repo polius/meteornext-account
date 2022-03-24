@@ -1,6 +1,7 @@
 import os
 import json
-import secrets
+import uuid
+import hashlib
 import datetime
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -51,7 +52,7 @@ app.config.from_object(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
 # JWT Config
-app.config['JWT_SECRET_KEY'] = conf['jwt']['secret_key'] if os.getenv('JWT_SECRET_KEY') else secrets.token_urlsafe(nbytes=64)
+app.config['JWT_SECRET_KEY'] = conf['jwt']['secret_key'] if os.getenv('JWT_SECRET_KEY') else hashlib.sha256(str(uuid.getnode()).encode()).hexdigest()
 app.secret_key = app.config['JWT_SECRET_KEY']
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(hours=12)
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
