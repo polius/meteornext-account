@@ -1,6 +1,5 @@
 import pyotp
 import bcrypt
-from datetime import timedelta
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import (create_access_token, set_access_cookies, unset_access_cookies)
 
@@ -59,7 +58,7 @@ class Login:
                         return jsonify({'message': str(e)}), 400
 
             # Generate access tokens
-            access_token = create_access_token(identity=account['id'], fresh=timedelta(days=30))
+            access_token = create_access_token(identity=account['id'])
 
             # Update user data
             ip = request.headers.getlist("X-Forwarded-For")[0].split(',')[0] if request.headers.getlist("X-Forwarded-For") else request.remote_addr
