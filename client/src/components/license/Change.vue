@@ -1,6 +1,6 @@
 <template>
   <div style="height:100%">
-    <v-main :style="{ height:'100%', padding:'0px', backgroundImage: 'url(' + require('@/assets/bg.jpg') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }">
+    <v-main style="height:100%">
       <v-container grid-list-xl text-center style="height:100%; display:flex; justify-content:center; align-items:center;">
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
