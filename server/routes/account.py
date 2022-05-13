@@ -42,6 +42,7 @@ class Account:
                 products = self._account.get_products()
 
                 # Get billing card details
+                print(account['stripe_id'])
                 payment_methods = stripe.Customer.list_payment_methods(account['stripe_id'], type="card")['data']
                 if len(payment_methods) > 0:
                     billing['details'] = {
@@ -200,7 +201,7 @@ class Account:
                     mode='setup',
                     payment_method_types=['card'],
                     customer=account['stripe_id'],
-                    success_url='https://account.meteor2.io/update_payment/ok',
+                    success_url='https://account.meteor2.io/update/ok',
                     cancel_url='https://account.meteor2.io/billing',
                 )
                 return jsonify({'url': checkout_session.url}), 200

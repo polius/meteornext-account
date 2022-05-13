@@ -31,17 +31,17 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/verify_email/:code',
+    path: '/verify/:code',
     name: 'verifyEmail',
     component: () => import('../components/mail/VerifyEmail'),
   },
   {
-    path: '/reset_password/:code?',
+    path: '/reset/:code?',
     name: 'resetPassword',
     component: () => import('../components/mail/ResetPassword'),
   },
   {
-    path: '/update_payment/:code?',
+    path: '/update/:code?',
     name: 'updatePayment',
     component: () => import('../components/mail/UpdatePayment'),
   },
