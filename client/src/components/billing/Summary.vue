@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-h6 font-weight-medium">BILLING</div>
+    <div class="text-h6 font-weight-medium" style="letter-spacing:1px!important">BILLING</div>
     <div class="body-1 font-weight-light" style="margin-top:15px">Here are your billing details.</div>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Card</div>
     <v-text-field :loading="account.billing === undefined" flat readonly solo v-model="card" style="padding-top:5px" hide-details></v-text-field>
@@ -12,10 +12,10 @@
     <v-btn :disabled="account.billing === undefined || account.billing.details.card === undefined" :loading="loading" color="#f18805" @click="dialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Remove payment method</v-btn>
     <v-dialog v-model="dialog" width="640px">
       <v-card>
-        <v-toolbar dense flat color="#303030" style="border:solid rgba(255, 255, 255, 0.12) 1px">
+        <v-toolbar dense flat color="#323445" style="border:solid rgba(255, 255, 255, 0.12) 1px">
           <v-toolbar-title class="white--text text-body-1 font-weight-regular">Remove payment method</v-toolbar-title>
         </v-toolbar>
-        <v-card-text style="padding:15px; border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
+        <v-card-text style="padding:15px; background-color:#3d3d50; border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
           <v-card>
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
@@ -39,7 +39,7 @@
           <div class="text-body-1" style="margin-top:15px">Are you sure you want to remove the current payment method?</div>
           <v-divider style="margin-top:15px"></v-divider>
           <v-row no-gutters style="margin-top:15px;">
-            <v-btn :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitPaymentMethodRemove">Confirm</v-btn>
+            <v-btn :loading="loading" color="#35BA77" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitPaymentMethodRemove">Confirm</v-btn>
             <v-btn :disabled="loading" color="#eb4d4b" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
           </v-row>
         </v-card-text>
@@ -54,6 +54,9 @@
 }
 ::v-deep .v-input__control {
   border: 1px solid #b6b6b6 !important;
+}
+::v-deep .v-input__slot {
+  background-color:#393b4f !important;
 }
 </style>
 

@@ -12,10 +12,13 @@
 
 <style scoped>
 ::v-deep .v-input--is-focused .v-input__control {
-  border: 1px solid #2196f3 !important; /* #005fcc */
+  border: 1px solid #2196f3 !important;
 }
 ::v-deep .v-input__control {
   border: 1px solid #b6b6b6 !important;
+}
+::v-deep .v-input__slot {
+  background-color:#393b4f !important;
 }
 </style>
 

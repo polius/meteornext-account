@@ -13,11 +13,11 @@
     <v-btn :loading="loading" color="#eb4d4b" @click="deleteAccount" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
     <v-dialog v-model="dialog" width="640px">
       <v-card>
-        <v-toolbar dense flat color="#303030" style="border:solid rgba(255, 255, 255, 0.12) 1px">
+        <v-toolbar dense flat color="#323445" style="border:solid rgba(255, 255, 255, 0.12) 1px">
           <v-toolbar-title class="white--text text-body-1 font-weight-regular">Delete account</v-toolbar-title>
         </v-toolbar>
-        <v-card-text style="padding:15px; border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
-          <v-card>
+        <v-card-text style="padding:15px; background-color:#3d3d50; border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
+          <v-card style="background-color:rgb(57, 59, 79)">
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
                 <v-icon size="20" color="warning">fas fa-exclamation-triangle</v-icon>
@@ -27,7 +27,7 @@
               </v-col>
             </v-row>
           </v-card>
-          <v-card style="margin-top:15px">
+          <v-card style="margin-top:12px; background-color:rgb(57, 59, 79)">
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
                 <v-icon color="#eb4d4b" size="20">fas fa-exclamation-circle</v-icon>
@@ -40,7 +40,7 @@
           <div class="text-body-1" style="margin-top:15px">Are you sure you want to delete your account?</div>
           <v-divider style="margin-top:15px"></v-divider>
           <v-row no-gutters style="margin-top:15px;">
-            <v-btn :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitDelete">Confirm</v-btn>
+            <v-btn :loading="loading" color="#35BA77" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitDelete">Confirm</v-btn>
             <v-btn :disabled="loading" color="#eb4d4b" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
           </v-row>
         </v-card-text>

@@ -1,6 +1,6 @@
 <template>
-  <v-app>
-    <v-main style="background-color:#333333">
+  <v-app :style="{ height:'100%', padding:'0px', backgroundColor: 'transparent', backgroundImage: 'url(' + require('@/assets/bg.png') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }">
+    <v-main>
       <router-view/>
     </v-main>
     <v-snackbar v-model="snackbar" :multi-line="false" :timeout="snackbarTimeout" :color="snackbarColor" top style="padding-top:0px;">
@@ -11,12 +11,6 @@
     </v-snackbar>
   </v-app>
 </template>
-
-<style>
-body {
-  background-color:#333333;
-}
-</style>
 
 <style src="@/fonts/roboto.css"></style>
 <style src="@/fonts/materialicons.css"></style>

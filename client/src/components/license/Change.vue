@@ -7,7 +7,7 @@
             <v-slide-y-transition mode="out-in">
               <v-card style="border-radius:5px; background-color:#444444">
                 <v-card-text>
-                  <v-avatar :size="130" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
+                  <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                   <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
                   <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | CHANGE LICENSE</div>
                   <v-divider></v-divider>
@@ -27,14 +27,10 @@
                     </div>
                     <v-form v-else ref="form" @submit.prevent>
                       <p class="text-h6 font-weight-regular white--text" style="font-size:1.8rem!important; margin-top:20px; margin-bottom:20px">{{ price == 0 ? 'Free' : '$' + price }}<span v-if="price != 0" class="text-h6 font-weight-light" style="color:#e2e2e2; font-size:1.4rem!important; margin-left:5px">/ Month</span></p>
-                      <div class="text-body-1 font-weight-regular" style="color:#e2e2e2">How many
-                      <v-tooltip right>
-                        <template v-slot:activator="{ on }">
-                          <span v-on="on" class="text-body-1" style="border-bottom: 1px solid #ddd">resources</span>
-                        </template>
-                        <span>1 Resource = 1 Server / User</span>
-                      </v-tooltip>?</div>
-                      <v-select solo :readonly="loading" v-model="newLicense" :items="products" item-value="resources" item-text="resources" class="text-body-1" style="max-width:180px; margin-top:10px; margin-left:auto; margin-right:auto" hide-details>
+                      <div class="text-body-1 font-weight-regular" style="color:#e2e2e2">Enter the amount of servers</div>
+                      <v-text-field solo v-model="newLicense" class="centered-input" style="width:200px; margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:6px" hide-details></v-text-field>
+                      <v-slider :readonly="loading" v-model="newLicense" min="5" max="1000" style="margin-left:50px; margin-right:50px" hide-details></v-slider>
+                      <!-- <v-select solo :readonly="loading" v-model="newLicense" :items="products" item-value="resources" item-text="resources" class="text-body-1" style="max-width:180px; margin-top:10px; margin-left:auto; margin-right:auto" hide-details>
                         <template v-slot:[`selection`]="{ item }">
                           <span v-if="item.resources == -1">Unlimited</span>
                           <span v-else>{{ item.resources + (item.resources == 1 ? ' resource' : ' resources')}}</span>
@@ -43,8 +39,8 @@
                           <span v-if="item.resources == -1">Unlimited</span>
                           <span v-else>{{ item.resources + (item.resources == 1 ? ' resource' : ' resources')}}</span>
                         </template>
-                      </v-select>
-                      <div v-if="newLicense > 1" class="text-body-1 font-weight-regular" style="margin-top:15px; color:#e2e2e2">{{ `Avg. $${average} per resource` }}</div>
+                      </v-select> -->
+                      <div v-if="newLicense > 1" class="text-body-1 font-weight-regular" style="color:#e2e2e2">{{ `Avg. $${average} per server` }}</div>
                       <v-btn block x-large :disabled="!validLicense" :loading="loading" color="info" @click="submitChange(false)" style="margin-top:20px">CHANGE LICENSE</v-btn>
                     </v-form>
                   </div>
@@ -92,6 +88,10 @@
   bottom: 0px;
   left: 0px;
   background-color: rgba(0,0,0,0.05);
+}
+
+::v-deep .centered-input input {
+  text-align: center
 }
 </style>
 
@@ -156,6 +156,9 @@ export default {
           })
           .finally(() => this.loading = false)
       }
+    },
+    calculatePrice() {
+      
     },
     goBack() {
       this.$router.push('/')

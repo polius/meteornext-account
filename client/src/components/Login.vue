@@ -1,11 +1,11 @@
 <template>
   <div style="height:100%">
-    <v-main :style="{ height:'100%', padding:'0px', backgroundImage: 'url(' + require('@/assets/bg.jpg') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }">
+    <v-main style="height:100%">
       <v-container grid-list-xl text-center style="height:100%; display:flex; justify-content:center; align-items:center;">
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
-              <v-card style="border-radius:5px; background-color:#444444">
+              <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
                 <v-card-text>
                   <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                   <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
@@ -32,7 +32,7 @@
                     </div>
                   </v-form>
                   <v-btn v-if="!(mfa == 'webauthn')" x-large type="submit" color="info" :loading="loading" block style="margin-top:0px;" @click="login()">LOGIN</v-btn>
-                  <div v-if="!(mfa == 'webauthn')" class="text-body-2" style="margin-top:15px; color:#e2e2e2">Don't have an account? <router-link to="/register" style="text-decoration:none; font-weight:500">Sign up</router-link></div>
+                  <div v-if="!(mfa == 'webauthn')" class="text-body-2" style="margin-top:15px; color:#e2e2e2; font-size:15px!important">Don't have an account? <router-link to="/register" style="text-decoration:none; font-weight:500">Sign up</router-link></div>
                 </v-card-text>
               </v-card>
             </v-slide-y-transition>
@@ -51,17 +51,8 @@
 
 <style scoped>
 .link:hover {
-  color: #1976d2;
+  color: #2196f3;
   cursor: pointer;
-}
-::v-deep .v-main::before {
-  content: "";
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  background-color: rgba(0,0,0,0.05);
 }
 </style>
 

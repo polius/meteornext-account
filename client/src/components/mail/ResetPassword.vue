@@ -1,13 +1,13 @@
 <template>
   <div style="height:100%">
-    <v-main :style="{ height:'100%', padding:'0px', backgroundImage: 'url(' + require('@/assets/bg.jpg') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }">
+    <v-main style="height:100%">
       <v-container grid-list-xl text-center style="height:100%; display:flex; justify-content:center; align-items:center;">
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
-              <v-card style="border-radius:5px; background-color:#444444">
+              <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
                 <v-card-text>
-                  <v-avatar :size="130" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
+                  <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                   <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
                   <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | Reset Password</div>
                   <v-divider></v-divider>
@@ -51,19 +51,13 @@
 
 <style scoped>
 ::v-deep .v-input--is-focused .v-input__control {
-  border: 1px solid #2196f3 !important; /* #005fcc */
+  border: 1px solid #2196f3 !important;
 }
 ::v-deep .v-input__control {
-  border: 1px solid #d2ddec !important;
+  border: 1px solid #b6b6b6 !important;
 }
-::v-deep .v-main::before {
-  content: "";
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  background-color: rgba(0,0,0,0.05);
+::v-deep .v-input__slot {
+  background-color:#393b4f !important;
 }
 </style>
 

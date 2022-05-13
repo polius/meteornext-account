@@ -2,7 +2,7 @@
   <div>
     <div class="text-h6 font-weight-medium">Multi-factor authentication</div>
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">Multi-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</div>
-    <v-card v-if="mfa.mode == null" style="margin-bottom:20px">
+    <v-card v-if="mfa.mode == null" style="margin-bottom:20px; background-color:#393b4f">
       <v-row no-gutters align="center" justify="center">
         <v-col cols="auto" style="display:flex; margin:15px">
           <v-icon color="#20bf6b" size="20">fas fa-shield-alt</v-icon>
@@ -27,13 +27,13 @@
     <v-btn v-else :loading="loading" color="#2196f3" @click="mfaDialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white;">Enable MFA</v-btn>
     <v-dialog v-model="mfaDialog" width="672px">
       <v-card>
-        <v-toolbar dense flat color="#303030" style="border:solid rgba(255, 255, 255, 0.12) 1px">
+        <v-toolbar dense flat color="#323445" style="border:solid rgba(255, 255, 255, 0.12) 1px">
           <v-toolbar-title class="text-body-1" style="color:#e2e2e2">Multi-factor authentication</v-toolbar-title>
           <v-divider v-if="mfa.mode != null || mfaDialogStep == 2" class="mx-3" inset vertical></v-divider>
           <div v-if="mfa.mode == '2fa' || (mfaDialogStep == 2 && mfaMode == '2fa')" class="text-body-1" style="color:#e2e2e2">Virtual 2FA Device</div>
           <div v-if="mfa.mode == 'webauthn' || (mfaDialogStep == 2 && mfaMode == 'webauthn')" class="text-body-1" style="color:#e2e2e2">Security Key</div>
         </v-toolbar>
-        <v-card-text style="padding:15px; border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
+        <v-card-text style="padding:15px; background-color:#3d3d50; border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
           <v-container style="padding:0px">
             <v-layout wrap>
               <v-flex xs12>
@@ -63,7 +63,7 @@
                     <div v-else>
                       <v-alert dense v-if="mfaMode == 'webauthn' && webauthn.status == 'ko'" color="#EF5354">{{ webauthn.error }}</v-alert>
                       <v-card v-if="mfaMode == '2fa'">
-                        <v-card-text style="padding:0px">
+                        <v-card-text style="background-color:#3d3d50; padding:0px">
                           <v-row no-gutters>
                             <v-col style="margin:15px">
                               <v-progress-circular v-if="twoFactor['uri'] == null" indeterminate style="margin-left:auto; margin-right:auto; display:table;"></v-progress-circular>
@@ -82,7 +82,7 @@
                       </v-card>
                       <v-card v-else-if="mfaMode == 'webauthn'">
                         <v-progress-linear v-show="loadingFingerprint" indeterminate></v-progress-linear>
-                        <v-card-text>
+                        <v-card-text style="background-color:#3d3d50">
                           <div class="text-h5 font-weight-light white--text" style="text-align:center; font-size:1.4rem !important">Verify your identity</div>
                           <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#20bf6b' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
                           <div class="text-body-1" style="text-align:center; font-size:1.1rem !important; color:#e2e2e2">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
@@ -96,7 +96,7 @@
                 </v-form>
                 <v-divider></v-divider>
                 <v-row no-gutters style="margin-top:20px;">
-                  <v-btn :disabled="mfa.mode == null && mfaDialogStep == 2 && mfaMode == 'webauthn' && webauthn.status != 'ok'" :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitMFA">{{ mfa.mode ? 'Disable MFA' : 'Confirm' }}</v-btn>
+                  <v-btn :disabled="mfa.mode == null && mfaDialogStep == 2 && mfaMode == 'webauthn' && webauthn.status != 'ok'" :loading="loading" color="#35BA77" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitMFA">{{ mfa.mode ? 'Disable MFA' : 'Confirm' }}</v-btn>
                   <v-btn :disabled="loading" color="#eb4d4b" @click="cancelMFA" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
                 </v-row>
               </v-flex>

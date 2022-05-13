@@ -21,6 +21,9 @@
 ::v-deep .v-input__control {
   border: 1px solid #b6b6b6 !important;
 }
+::v-deep .v-input__slot {
+  background-color:#393b4f !important;
+}
 </style>
 
 <script>

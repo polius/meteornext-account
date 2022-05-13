@@ -1,11 +1,11 @@
 <template>
   <div style="height:100%">
-    <v-main :style="{ height:'100%', padding:'0px', backgroundImage: 'url(' + require('@/assets/bg.jpg') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }">
+    <v-main style="height:100%; padding:0px">
       <v-container grid-list-xl text-center style="height:100%; display:flex; justify-content:center; align-items:center;">
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
-              <v-card style="border-radius:5px; background-color:#444444">
+              <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
                 <v-card-text>
                   <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                   <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
@@ -19,9 +19,9 @@
                     <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="emailRules" required style="margin-bottom:20px;" hide-details autofocus></v-text-field>
                     <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" style="margin-bottom:20px;" hide-details></v-text-field>
                     <v-text-field ref="password2" filled v-model="password2" name="password2" label="Confirm Password" :rules="[v => !!v || '']" required type="password" style="margin-bottom:20px;" hide-details></v-text-field>
-                    <vue-hcaptcha ref="captcha" data-theme="dark" sitekey="d4fcdf7d-363a-495b-8e51-aff6e138aa6c" @verify="onVerify"></vue-hcaptcha>
+                    <vue-hcaptcha ref="captcha" data-theme="light" sitekey="d4fcdf7d-363a-495b-8e51-aff6e138aa6c" @verify="onVerify"></vue-hcaptcha>
                     <v-btn x-large type="submit" color="info" :loading="loading" block style="margin-top:10px;" @click="register()">CREATE ACCOUNT</v-btn>
-                    <div class="text-body-2" style="margin-top:15px; color:#e2e2e2">Have an account? <router-link to="/login" style="text-decoration:none; font-weight:500">Sign in</router-link></div>
+                    <div class="text-body-2" style="margin-top:15px; color:#e2e2e2; font-size:15px !important">Have an account? <router-link to="/login" style="text-decoration:none; font-weight:500">Sign in</router-link></div>
                   </v-form>
                 </v-card-text>
               </v-card>
@@ -32,18 +32,6 @@
     </v-main>
   </div>
 </template>
-
-<style scoped>
-::v-deep .v-main::before {
-  content: "";
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  background-color: rgba(0,0,0,0.05);
-}
-</style>
 
 <script>
 import VueHcaptcha from '@hcaptcha/vue-hcaptcha';
