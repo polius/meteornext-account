@@ -14,7 +14,7 @@
   border: 1px solid #b6b6b6 !important;
 }
 ::v-deep .v-input__slot {
-  background-color:#393b4f !important;
+  background-color:rgba(61, 61, 80, 0.75) !important;
 }
 </style>
 

@@ -2,7 +2,7 @@
   <div>
     <div class="text-h6 font-weight-medium">Multi-factor authentication</div>
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">Multi-factor authentication adds an additional layer of security to your account by requiring more than just a password to log in.</div>
-    <v-card v-if="mfa.mode == null" style="margin-bottom:20px; background-color:#393b4f">
+    <v-card v-if="mfa.mode == null" style="margin-bottom:20px; background-color:rgba(61, 61, 80, 0.75)">
       <v-row no-gutters align="center" justify="center">
         <v-col cols="auto" style="display:flex; margin:15px">
           <v-icon color="#20bf6b" size="20">fas fa-shield-alt</v-icon>

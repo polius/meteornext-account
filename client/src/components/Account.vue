@@ -1,6 +1,6 @@
 <template>
   <div style="height: calc(100% - 64px)">
-    <v-toolbar color="rgba(50, 52, 69, 0.9)" style="max-height:64px; z-index:1">
+    <v-toolbar color="rgba(50, 52, 69, 0.8)" style="max-height:64px; z-index:1">
       <v-img :src="require('../assets/logo.png')" max-height="40" max-width="40" contain style="margin-bottom:2px"></v-img>
       <v-toolbar-title style="color:white; margin-left:10px">Meteor Next | Account</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -8,22 +8,21 @@
       <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout" style="color:white"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
     </v-toolbar>
     <v-container style="max-width:min(100%,65em); padding:0px">
-      <v-tabs v-model="tab" background-color="transparent" center-active centered slider-color="white" height="55px">
-        <v-tab active-class="active" style="color:white">License</v-tab>
-        <v-tab active-class="active" style="color:white">Billing</v-tab>
-        <v-tab active-class="active" style="color:white">Profile</v-tab>
+      <v-tabs v-model="tab" background-color="transparent" center-active centered :slider-color="isMobile ? '#f0f1f3' : 'rgba(50, 52, 69, 0.9)'" height="55px">
+        <v-tab active-class="active" :style="`font-weight: 600; font-size:${isMobile ? '14px' : '14.5px'}; color:${isMobile ? '#f0f1f3' : 'rgba(50, 52, 69, 0.9)'}`">License</v-tab>
+        <v-tab active-class="active" :style="`font-weight: 600; font-size:${isMobile ? '14px' : '14.5px'}; color:${isMobile ? '#f0f1f3' : 'rgba(50, 52, 69, 0.9)'}`">Billing</v-tab>
+        <v-tab active-class="active" :style="`font-weight: 600; font-size:${isMobile ? '14px' : '14.5px'}; color:${isMobile ? '#f0f1f3' : 'rgba(50, 52, 69, 0.9)'}`">Profile</v-tab>
       </v-tabs>
-      <License v-show="tab == 0" :account="account" :style="`background-color:rgba(61, 61, 80, 0.7); border-radius:${isMobile ? '0px' : '5px'}; padding:20px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
-      <Billing v-show="tab == 1" :account="account" :style="`background-color:rgba(61, 61, 80, 0.7); border-radius:${isMobile ? '0px' : '5px'}; padding:20px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
-      <Profile v-show="tab == 2" :account="account" :style="`background-color:rgba(61, 61, 80, 0.7); border-radius:${isMobile ? '0px' : '5px'}; padding:20px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
+      <License v-show="tab == 0" :account="account" :style="`background-color:rgba(61, 61, 80, 0.75); border-radius:${isMobile ? '0px' : '5px'}; padding:20px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
+      <Billing v-show="tab == 1" :account="account" :style="`background-color:rgba(61, 61, 80, 0.75); border-radius:${isMobile ? '0px' : '5px'}; padding:20px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
+      <Profile v-show="tab == 2" :account="account" :style="`background-color:rgba(61, 61, 80, 0.75); border-radius:${isMobile ? '0px' : '5px'}; padding:20px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
     </v-container>
   </div>
 </template>
 
 <style scoped>
 .active {
-  color: white!important;
-  font-weight: 600;
+  /* font-weight: 600; */
 }
 </style>
 
