@@ -11,25 +11,25 @@
     <v-btn v-if="in_use" @click="dialog = true" color="info" title="Unregister your existing license to use it in another computer" style="font-size:0.95rem; letter-spacing:1px; font-weight:400; text-transform:none; color:white; margin-top:15px" :disabled="!in_use">Unregister license</v-btn>
     <v-dialog v-model="dialog" width="640px">
       <v-card>
-        <v-toolbar dense flat color="#323445" style="border:solid rgba(255, 255, 255, 0.12) 1px">
+        <v-toolbar dense flat color="rgb(50, 50, 60)" style="border:solid rgba(255, 255, 255, 0.12) 1px">
           <v-toolbar-title class="white--text text-body-1 font-weight-regular">Unregister license</v-toolbar-title>
         </v-toolbar>
-        <v-card-text style="padding:15px; background-color:#3d3d50; border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
-          <v-card style="background-color:rgb(57, 59, 79)">
+        <v-card-text style="padding:15px; background-color:rgb(65, 65, 75); border:solid rgba(255, 255, 255, 0.12) 1px; border-top:0px">
+          <v-card style="background-color:rgb(60, 60, 70)">
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
                 <v-icon size="20" color="info">fas fa-info-circle</v-icon>
               </v-col>
               <v-col>
-                <div class="text-body-1" style="color:#e2e2e2">The data stored in your database will not be deleted.</div>
+                <div class="text-body-1" style="color:#e2e2e2">The data stored in your database will not be deleted</div>
               </v-col>
             </v-row>
           </v-card>
           <div class="text-body-1" style="margin-top:15px">Do you want to unregister your license to be used in another device?</div>
           <v-divider style="margin-top:15px"></v-divider>
           <v-row no-gutters style="margin-top:15px;">
-            <v-btn :loading="loading" color="#35BA77" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitUnregister">Confirm</v-btn>
-            <v-btn :disabled="loading" color="#eb4d4b" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
+            <v-btn :loading="loading" color="primary" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitUnregister">Confirm</v-btn>
+            <v-btn :disabled="loading" text color="white" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; margin-left:5px">Cancel</v-btn>
           </v-row>
         </v-card-text>
       </v-card>
