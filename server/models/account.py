@@ -218,15 +218,7 @@ class Account:
 
     ###########
     # LICENSE #
-    ###########
-    def get_products(self):
-        query = """
-            SELECT resources, price
-            FROM products
-            ORDER BY id
-        """
-        return self._sql.execute(query)
-    
+    ###########   
     def get_products_by_resources(self, resources):
         query = """
             SELECT *

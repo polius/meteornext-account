@@ -39,7 +39,6 @@ class Account:
                     "details": {},
                     "payments": self._account.get_payments(get_jwt_identity())
                 }
-                products = self._account.get_products()
 
                 # Get billing card details
                 print(account['stripe_id'])
@@ -57,7 +56,7 @@ class Account:
                         pass
 
                 # Return data
-                return jsonify({'profile': profile, 'license': license, 'billing': billing, 'products': products}), 200
+                return jsonify({'profile': profile, 'license': license, 'billing': billing}), 200
 
             # Delete account
             elif request.method == 'DELETE':
