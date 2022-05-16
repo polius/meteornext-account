@@ -5,42 +5,50 @@
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
-              <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
-                <v-card-text>
-                  <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
-                  <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
-                  <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | CHANGE LICENSE</div>
-                  <v-divider></v-divider>
-                  <div v-if="$route.params.id !== undefined && $route.params.id == 'success'" style="margin-top:20px">
-                    <div class="text-h6">License successfully changed</div>
-                    <v-row no-gutters>
-                      <v-col>
-                        <v-icon size="50" color="#20bf6b" style="margin:15px">fas fa-check-circle</v-icon>
-                      </v-col>
-                    </v-row>
-                    <div v-if="license != null && license.resources > 1" class="text-body-1" style="margin-bottom:10px">Thanks for your purchase :)</div>
-                    <v-btn @click="goBack" color="info" style="margin-top:10px">Go back</v-btn>
-                  </div>
-                  <div v-else style="margin-top:20px">
-                    <div v-if="license == null" class="text-center" style="margin-bottom:10px">
-                      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+              <div>
+                <div style="text-align:left; margin-bottom:5px">
+                  <a href="https://account.meteor2.io" style="text-decoration:none; color: #393d4d; font-size:17px; font-weight:500"><v-icon size="16" style="margin-right:5px; padding-bottom:2px; color:#393d4d">fas fa-arrow-left</v-icon>Go back</a>
+                </div>
+                <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
+                  <v-card-text>
+                    <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
+                    <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
+                    <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | CHANGE LICENSE</div>
+                    <v-divider></v-divider>
+                    <div v-if="loading" style="height:255px; display:flex; justify-content:center; align-items:center">
+                      <v-progress-circular indeterminate></v-progress-circular>
                     </div>
-                    <v-form v-else ref="form" @submit.prevent>
-                      <p class="text-h6 font-weight-regular white--text" style="font-size:2rem!important; margin-top:20px; margin-bottom:20px">
-                        <span style="font-size:24px; vertical-align:middle; margin-right:5px; padding-bottom:2px">{{ license.priceInteger == 0 ? '' : license.priceCurrency }}</span>
-                        <span>{{ license.priceInteger == 0 ? 'Free' : license.priceInteger }}</span>
-                        <span style="font-size:20px">{{ license.priceInteger == 0 ? '' : license.priceDecimal }}</span>
-                        <span v-if="license.priceInteger != 0" class="text-h6 font-weight-light" style="color:#e2e2e2; font-size:20px!important; margin-left:5px">/ Month</span>
-                      </p>
-                      <div class="text-body-1 font-weight-regular" style="color:#e2e2e2">Enter the amount of servers</div>
-                      <v-text-field :readonly="resourcesText == 'Unlimited'" @keypress="isNumber($event)" @input="calculatePrice" solo v-model="resourcesText" class="centered-input" style="width:120px; margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:6px" hide-details></v-text-field>
-                      <v-slider @input="calculatePrice" :readonly="loading" v-model="resourcesSlider" min="1" max="1000" style="margin-left:50px; margin-right:50px" hide-details></v-slider>
-                      <div v-if="resourcesText != 'Unlimited'" class="text-body-1 font-weight-regular" style="color:#e2e2e2">{{ `Avg. $${license.priceAverage} per server` }}</div>
-                      <v-btn block x-large :loading="loading" color="info" @click="submitChange(false)" style="margin-top:20px">CHANGE LICENSE</v-btn>
-                    </v-form>
-                  </div>
-                </v-card-text>
-              </v-card>
+                    <div v-else-if="$route.params.id !== undefined && $route.params.id == 'success'" style="margin-top:20px">
+                      <div class="text-h6">License successfully changed</div>
+                      <v-row no-gutters>
+                        <v-col>
+                          <v-icon size="50" color="#20bf6b" style="margin:15px">fas fa-check-circle</v-icon>
+                        </v-col>
+                      </v-row>
+                      <div v-if="license != null && license.resources > 1" class="text-body-1" style="margin-bottom:10px">Thanks for your purchase :)</div>
+                      <v-btn @click="goBack" color="info" style="margin-top:10px">Go back</v-btn>
+                    </div>
+                    <div v-else style="margin-top:20px">
+                      <div v-if="license == null" class="text-center" style="margin-bottom:10px">
+                        <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                      </div>
+                      <v-form v-else ref="form" @submit.prevent>
+                        <p class="text-h6 font-weight-regular white--text" style="font-size:2rem!important; margin-top:20px; margin-bottom:20px">
+                          <span style="font-size:24px; vertical-align:middle; margin-right:5px; padding-bottom:2px">{{ license.priceInteger == 0 ? '' : license.priceCurrency }}</span>
+                          <span>{{ license.priceInteger == 0 ? 'Free' : license.priceInteger }}</span>
+                          <span style="font-size:20px">{{ license.priceInteger == 0 ? '' : license.priceDecimal }}</span>
+                          <span v-if="license.priceInteger != 0" class="text-h6 font-weight-light" style="color:#e2e2e2; font-size:20px!important; margin-left:5px">/ Month</span>
+                        </p>
+                        <div class="text-body-1 font-weight-regular" style="color:#e2e2e2">Enter the amount of servers</div>
+                        <v-text-field :readonly="resourcesText == 'Unlimited'" @keypress="isNumber($event)" @input="calculatePrice" solo v-model="resourcesText" class="centered-input" style="width:120px; margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:6px" hide-details></v-text-field>
+                        <v-slider @input="calculatePrice" :readonly="loading" v-model="resourcesSlider" min="1" max="1000" style="margin-left:50px; margin-right:50px" hide-details></v-slider>
+                        <div v-if="resourcesText != 'Unlimited'" class="text-body-1 font-weight-regular" style="color:#e2e2e2">{{ `Avg. $${license.priceAverage} per server` }}</div>
+                        <v-btn block x-large :loading="loading" color="info" @click="submitChange(false)" style="margin-top:20px">CHANGE LICENSE</v-btn>
+                      </v-form>
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </div>
             </v-slide-y-transition>
           </v-flex>
         </v-layout>
@@ -161,15 +169,22 @@ export default {
         this.priceAverage = parseFloat(price / resources).toFixed(2)
       }
       if (resources == -1) {
-        this.resourcesText = 'Unlimited'
-        this.resourcesSlider = max_servers
+        // Modify UI resources
+        setTimeout(() => {
+          this.resourcesText = 'Unlimited'
+          this.resourcesSlider = max_servers
+        },0)
       }
       else if (resources == 1) {
         this.license.priceInteger = 0
         this.license.priceDecimal = 0
         this.license.priceAverage = 0
-        this.resourcesText = resources
-        this.resourcesSlider = resources
+
+        // Modify UI resources
+        setTimeout(() => {
+          this.resourcesText = resources
+          this.resourcesSlider = resources
+        },0)
       }
       else if (resources > 1) {
         // Calculate Servers Count
