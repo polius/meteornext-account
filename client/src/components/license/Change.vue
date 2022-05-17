@@ -6,8 +6,8 @@
           <v-flex>
             <v-slide-y-transition mode="out-in">
               <div>
-                <div style="text-align:left; margin-bottom:5px">
-                  <a href="https://account.meteor2.io" style="text-decoration:none; color: #393d4d; font-size:17px; font-weight:500"><v-icon size="16" style="margin-right:5px; padding-bottom:2px; color:#393d4d">fas fa-arrow-left</v-icon>Go back</a>
+                <div @click="goBack" v-if="$route.params.id === undefined" style="text-align:left; margin-bottom:5px; color:#f6f6f6; font-size:17px; font-weight:400; cursor:pointer">
+                  <v-icon size="15" style="margin-right:5px; padding-bottom:3px">fas fa-arrow-left</v-icon>Back
                 </div>
                 <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
                   <v-card-text>
@@ -19,14 +19,10 @@
                       <v-progress-circular indeterminate></v-progress-circular>
                     </div>
                     <div v-else-if="$route.params.id !== undefined && $route.params.id == 'success'" style="margin-top:20px">
-                      <div class="text-h6">License successfully changed</div>
-                      <v-row no-gutters>
-                        <v-col>
-                          <v-icon size="50" color="#20bf6b" style="margin:15px">fas fa-check-circle</v-icon>
-                        </v-col>
-                      </v-row>
-                      <div v-if="license != null && license.resources > 1" class="text-body-1" style="margin-bottom:10px">Thanks for your purchase :)</div>
-                      <v-btn @click="goBack" color="info" style="margin-top:10px">Go back</v-btn>
+                      <v-icon size="34" color="#20bf6b" style="margin-right:10px">fas fa-check-circle</v-icon>
+                      <p style="color:white; font-size:19px; margin-top:20px">License successfully changed</p>
+                      <div v-if="license != null && license.resources > 1" class="text-body-1" style="margin-top:20px; margin-bottom:15px; color:#f6f6f6">Thank you for your purchase!</div>
+                      <v-btn @click="goBack" color="info" style="margin-top:10px; width:120px">Go back</v-btn>
                     </div>
                     <div v-else style="margin-top:20px">
                       <div v-if="license == null" class="text-center" style="margin-bottom:10px">
