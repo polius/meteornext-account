@@ -33,8 +33,8 @@ class Billing:
                         mode='setup',
                         payment_method_types=['card'],
                         customer=account['stripe_id'],
-                        success_url='https://account.meteor2.io/billing',
-                        cancel_url='https://account.meteor2.io/billing',
+                        success_url='https://account.meteornext.io/billing',
+                        cancel_url='https://account.meteornext.io/billing',
                     )
                     return jsonify({'url': checkout_session.url}), 200
                 except Exception as e:

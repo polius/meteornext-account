@@ -13,7 +13,7 @@ class Mail:
             HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}', code)
         # Send mail
         request = self._ses.send_email(
-            Source="Meteor Next <no-reply@meteor2.io>",
+            Source="Meteor Next <no-reply@meteornext.io>",
             Destination={
                 "ToAddresses": [ email ],
             },
@@ -39,7 +39,7 @@ class Mail:
             HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}', code)
         # Send mail
         request = self._ses.send_email(
-            Source="Meteor Next <no-reply@meteor2.io>",
+            Source="Meteor Next <no-reply@meteornext.io>",
             Destination={
                 "ToAddresses": [ email ],
             },
@@ -71,7 +71,7 @@ class Mail:
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{INVOICE_ID}', stripe_id)
         # Send mail
         request = self._ses.send_email(
-            Source="Meteor Next <no-reply@meteor2.io>",
+            Source="Meteor Next <no-reply@meteornext.io>",
             Destination={
                 "ToAddresses": [ email ],
             },
@@ -101,7 +101,7 @@ class Mail:
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD}', str(card))
         # Send mail
         request = self._ses.send_email(
-            Source="Meteor Next <no-reply@meteor2.io>",
+            Source="Meteor Next <no-reply@meteornext.io>",
             Destination={
                 "ToAddresses": [ email ],
             },
@@ -131,7 +131,7 @@ class Mail:
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD_NUMBER}', str(card_number))
         # Send mail
         request = self._ses.send_email(
-            Source="Meteor Next <no-reply@meteor2.io>",
+            Source="Meteor Next <no-reply@meteornext.io>",
             Destination={
                 "ToAddresses": [ email ],
             },
