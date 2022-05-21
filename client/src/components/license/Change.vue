@@ -6,7 +6,7 @@
           <v-flex>
             <v-slide-y-transition mode="out-in">
               <div>
-                <div @click="goBack" v-if="$route.params.id === undefined" style="text-align:left; margin-bottom:5px; color:#f6f6f6; font-size:17px; font-weight:400; cursor:pointer">
+                <div @click="goBack" v-if="$route.params.id === undefined" style="text-align:left; margin-bottom:5px; color:#f6f6f6; font-size:17px; font-weight:400; cursor:pointer; width:56px">
                   <v-icon size="15" style="margin-right:5px; padding-bottom:3px">fas fa-arrow-left</v-icon>Back
                 </div>
                 <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
@@ -15,14 +15,14 @@
                     <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
                     <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | CHANGE LICENSE</div>
                     <v-divider></v-divider>
-                    <div v-if="loading" style="height:255px; display:flex; justify-content:center; align-items:center">
+                    <div v-if="init" style="height:255px; display:flex; justify-content:center; align-items:center">
                       <v-progress-circular indeterminate></v-progress-circular>
                     </div>
                     <div v-else-if="$route.params.id !== undefined && $route.params.id == 'success'" style="margin-top:20px">
-                      <v-icon size="34" color="#20bf6b" style="margin-right:10px">fas fa-check-circle</v-icon>
-                      <p style="color:white; font-size:19px; margin-top:20px">License successfully changed</p>
-                      <div v-if="license != null && license.resources > 1" class="text-body-1" style="margin-top:20px; margin-bottom:15px; color:#f6f6f6">Thank you for your purchase!</div>
-                      <v-btn @click="goBack" color="info" style="margin-top:10px; width:120px">Go back</v-btn>
+                      <v-icon size="40" color="#20bf6b" style="margin-right:10px">fas fa-check-circle</v-icon>
+                      <p style="color:white; font-size:19px; margin-top:25px; margin-bottom:25px">License successfully changed</p>
+                      <div v-if="license != null && (license.resources > 1 || license.resources == -1)" class="text-body-1" style="margin-top:20px; margin-bottom:15px; color:#f6f6f6">Thank you for your purchase!</div>
+                      <v-btn @click="goBack" color="info" style="margin-top:10px">Go To Account</v-btn>
                     </div>
                     <div v-else style="margin-top:20px">
                       <div v-if="license == null" class="text-center" style="margin-bottom:10px">
@@ -39,7 +39,7 @@
                         <v-text-field :readonly="resourcesText == 'Unlimited'" @keypress="isNumber($event)" @input="calculatePrice" solo v-model="resourcesText" class="centered-input" style="width:120px; margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:6px" hide-details></v-text-field>
                         <v-slider @input="calculatePrice" :readonly="loading" v-model="resourcesSlider" min="1" max="1000" style="margin-left:50px; margin-right:50px" hide-details></v-slider>
                         <div v-if="resourcesText != 'Unlimited'" class="text-body-1 font-weight-regular" style="color:#e2e2e2">{{ `Avg. $${license.priceAverage} per server` }}</div>
-                        <v-btn block x-large :loading="loading" color="info" @click="submitChange(false)" style="margin-top:20px">CHANGE LICENSE</v-btn>
+                        <v-btn block x-large :disabled="(resourcesText == license.resources) || (resourcesText == 'Unlimited' && license.resources == -1)" :loading="loading" color="info" @click="submitChange(false)" style="margin-top:20px">CHANGE LICENSE</v-btn>
                       </v-form>
                     </div>
                   </v-card-text>
@@ -52,25 +52,25 @@
     </v-main>
     <v-dialog v-model="dialog" width="640px">
       <v-card style="background-color:#fffcfa">
-        <v-toolbar dense flat color="#f5983b">
-          <v-toolbar-title class="white--text text-body-1 font-weight-medium">Change license</v-toolbar-title>
+        <v-toolbar dense flat color="rgb(50, 50, 60)">
+          <v-toolbar-title class="white--text text-body-1 font-weight-regular">Change license</v-toolbar-title>
         </v-toolbar>
-        <v-card-text style="padding:15px">
-          <v-card>
+        <v-card-text style="padding:15px; background-color:rgb(65, 65, 75); border:solid rgba(255, 255, 255, 0.12) 1px">
+          <v-card style="background-color:rgb(60, 60, 70)">
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
-                <v-icon color="warning">fas fa-exclamation-triangle</v-icon>
+                <v-icon size="20" color="warning">fas fa-exclamation-triangle</v-icon>
               </v-col>
               <v-col>
-                <div class="text-body-1">This action cannot be undone.</div>
+                <div class="text-body-1" style="color:#e2e2e2">This action cannot be undone.</div>
               </v-col>
             </v-row>
           </v-card>
-          <div class="text-body-1" style="margin-top:15px">Are you sure you want to change your license to <span class="font-weight-medium">1 Resource</span>?</div>
+          <div class="text-body-1" style="margin-top:15px">Are you sure you want to change your license to <span class="font-weight-medium">1 Server</span>?</div>
           <v-divider style="margin-top:15px"></v-divider>
           <v-row no-gutters style="margin-top:15px;">
-            <v-btn :loading="loading" color="#20bf6b" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitChange(true)">Confirm</v-btn>
-            <v-btn :disabled="loading" color="#eb4d4b" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
+            <v-btn :loading="loading" color="primary" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white" @click="submitChange(true)">Confirm</v-btn>
+            <v-btn :disabled="loading" text color="white" @click="dialog = false" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-left:5px">Cancel</v-btn>
           </v-row>
         </v-card-text>
       </v-card>
@@ -96,6 +96,7 @@ import EventBus from '../../js/event-bus'
 
 export default {
   data: () => ({
+    init: true,
     loading: false,
     dialog: false,
     license: {
@@ -124,13 +125,13 @@ export default {
           if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
           else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
         })
-        .finally(() => this.loading = false)
+        .finally(() => { this.loading = false; this.init = false })
     },
     submitChange(confirm) {
-      if (this.licenseText == 1 && !confirm) this.dialog = true
+      if (this.resourcesText == 1 && !confirm) this.dialog = true
       else {
         this.loading = true
-        const payload = { 'resources': this.licenseText }
+        const payload = { 'resources': this.resourcesText }
         axios.post('/license', payload)
           .then((response) => {
             window.location.href = response.data.url

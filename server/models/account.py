@@ -43,6 +43,7 @@ class Account:
             LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id
             LEFT JOIN mail m ON m.account_id = a.id AND m.action = 'verify_email'
             WHERE a.email = %s
+            AND a.deleted_date IS NULL;
         """
         return self._sql.execute(query, (email))
 
@@ -71,7 +72,7 @@ class Account:
         query = """
             SELECT
                 a.email,
-                a.created,
+                a.created_date,
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
                     WHEN mfa.webauthn_pub_key IS NOT NULL THEN 'webauthn'
@@ -85,9 +86,10 @@ class Account:
 
     def get_license(self, account_id):
         query = """
-            SELECT p.resources, p.price, l.access_key, l.secret_key, l.in_use
+            SELECT prod.resources, IFNULL(pric.price, 0)/100 AS 'price', l.access_key, l.secret_key, l.in_use
             FROM licenses l
-            JOIN products p ON p.id = l.product_id
+            JOIN products prod ON prod.id = l.product_id
+            LEFT JOIN prices pric ON pric.product_id = prod.id
             WHERE l.account_id = %s
             ORDER BY l.id DESC
             LIMIT 1
@@ -96,10 +98,11 @@ class Account:
 
     def get_payments(self, account_id):
         query = """
-            SELECT pa.stripe_id AS 'invoice_id', pa.date, pr.resources, pa.price, pa.status, pa.invoice
+            SELECT pa.stripe_id AS 'invoice_id', pa.created_date, pr.resources, pa.price, pa.status, pa.invoice
             FROM payments pa
-            JOIN products pr ON pr.id = pa.product_id
-            WHERE pa.account_id = %s
+            JOIN subscriptions s ON s.id = pa.subscription_id AND s.account_id = %s
+            JOIN licenses l ON l.id = s.license_id
+            JOIN products pr ON pr.id = l.product_id
             ORDER BY pa.id DESC
         """
         return self._sql.execute(query, (account_id))
@@ -111,14 +114,14 @@ class Account:
         now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         # Create account
         query = """
-            INSERT INTO accounts (email, password, ip, created)
+            INSERT INTO accounts (email, password, ip, created_date)
             VALUES (%s, %s, %s, %s)
         """
         account_id = self._sql.execute(query, (data['email'], data['password'], data['ip'], now))
 
         # Create email code
         query = """
-            INSERT INTO mail (account_id, action, code, created)
+            INSERT INTO mail (account_id, action, code, created_date)
             VALUES (%s, 'verify_email', %s, %s)
         """
         self._sql.execute(query, (account_id, data['code'], now))
@@ -126,7 +129,13 @@ class Account:
         # Create license
         query = """
             INSERT INTO `licenses` (`account_id`, `product_id`, `access_key`, `secret_key`)
-            VALUES (%s, 1, %s, %s)
+            SELECT
+                %s AS 'account_id',
+                p.id AS 'product_id',
+                %s AS 'access_key',
+                %s AS 'secret_key'
+            FROM products
+            WHERE resources = 1
         """
         self._sql.execute(query, (account_id, data['access_key'], data['secret_key']))
 
@@ -149,7 +158,7 @@ class Account:
     def change_password(self, account):
         query = """
             UPDATE accounts
-            SET password = %s
+            SET `password` = %s
             WHERE id = %s
         """
         self._sql.execute(query, (account['password'], account['id']))
@@ -163,15 +172,17 @@ class Account:
         self._sql.execute(query, (email, account_id))
     
     def delete(self, account_id):
+        now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         query = """
-            DELETE FROM accounts
+            UPDATE accounts
+            SET deleted_date = %s
             WHERE id = %s
         """
-        self._sql.execute(query, (account_id))
+        self._sql.execute(query, (now, account_id))
 
     def get_mfa(self, account_id):
         query = """
-            SELECT 2fa_hash, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created
+            SELECT 2fa_hash, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created_date
             FROM accounts_mfa
             WHERE account_id = %s
         """
@@ -187,7 +198,7 @@ class Account:
     def enable_2fa(self, data):
         self.disable_mfa(data['account_id'])
         query = """
-            INSERT INTO accounts_mfa (account_id, 2fa_hash, created)
+            INSERT INTO accounts_mfa (account_id, 2fa_hash, created_date)
             VALUES (%s, %s, %s)
         """
         self._sql.execute(query, (data['account_id'], data['2fa_hash'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
@@ -195,7 +206,7 @@ class Account:
     def enable_webauthn(self, data):
         self.disable_mfa(data['account_id'])
         query = """
-            INSERT INTO accounts_mfa (account_id, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created)
+            INSERT INTO accounts_mfa (account_id, webauthn_pub_key, webauthn_credential_id, webauthn_sign_count, webauthn_rp_id, created_date)
             VALUES (%s, %s, %s, %s, %s, %s)
         """
         self._sql.execute(query, (data['account_id'], data['webauthn_pub_key'], data['webauthn_credential_id'], data['webauthn_sign_count'], data['webauthn_rp_id'], datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
@@ -219,13 +230,14 @@ class Account:
     ###########
     # LICENSE #
     ###########   
-    def get_products_by_resources(self, resources):
+    def get_product_by_resources(self, resources):
         query = """
-            SELECT *
-            FROM products
-            WHERE resources = %s
+            SELECT pro.*, pri.stripe_id AS 'price_stripe_id'
+            FROM products pro
+            LEFT JOIN prices pri ON pri.product_id = pro.id
+            WHERE pro.resources = %s
         """
-        return self._sql.execute(query, (resources))
+        return self._sql.execute(query, (resources))[0]
 
     def get_products_by_stripe(self, stripe_id):
         query = """
@@ -251,35 +263,57 @@ class Account:
         """
         self._sql.execute(query, (product_id, account_id))
 
+    def downgrade_license(self, stripe_subscription_id):
+        query = """
+            UPDATE licenses
+            JOIN subscriptions s ON s.license_id = licenses.id AND s.stripe_id = %s
+            SET licenses.product_id = (SELECT id FROM products WHERE resources = 1)
+        """
+        self._sql.execute(query, (stripe_subscription_id))
+
     ###########
     # BILLING #
     ###########
-    def new_purchase(self, account_id, product_id, date, price, status, stripe_id, invoice):
+    def new_purchase(self, subscription_stripe, date, price, status, stripe_id, invoice):
         query = """
-            INSERT INTO payments (account_id, product_id, date, price, status, stripe_id, invoice)
-            VALUES (%s, %s, FROM_UNIXTIME(%s), %s, %s, %s, %s)
+            INSERT INTO payments (subscription_id, created_date, price, status, stripe_id, invoice)
+            SELECT
+                id AS 'subscription_id',
+                FROM_UNIXTIME(%s) AS 'created_date',
+                %s AS 'price',
+                %s AS 'status',
+                %s AS 'stripe_id',
+                %s AS 'invoice'
+            FROM subscriptions
+            WHERE stripe_id = %s
             ON DUPLICATE KEY UPDATE
-                date = VALUES(date),
+                created_date = VALUES(created_date),
                 price = VALUES(price),
                 status = VALUES(status),
                 invoice = VALUES(invoice);
         """
-        self._sql.execute(query, (account_id, product_id, date, price, status, stripe_id, invoice))
+        self._sql.execute(query, (date, price, status, stripe_id, invoice, subscription_stripe))
 
-    def new_subscription(self, account_id, product_id, stripe_id, date):
-        self.remove_subscription(account_id)
+    def new_subscription(self, account_id, price_id, stripe_id, date):
         query = """
-            INSERT INTO subscriptions (account_id, product_id, stripe_id, date)
-            VALUES (%s, %s, %s, FROM_UNIXTIME(%s))
+            INSERT INTO subscriptions (account_id, license_id, price_id, stripe_id, start_date)
+            SELECT
+                %(account_id)s AS 'account_id',
+                (SELECT id FROM licenses WHERE account_id = %(account_id)s LIMIT 1) AS 'license_id',
+                (SELECT id FROM prices WHERE stripe_id = %(price_id)s) AS 'price_id',
+                %(stripe_id)s AS 'stripe_id',
+                FROM_UNIXTIME(%(date)s) AS 'start_date'
         """
-        self._sql.execute(query, (account_id, product_id, stripe_id, date))
+        self._sql.execute(query, {"account_id": account_id, "price_id": price_id, "stripe_id": stripe_id, "date": date})
 
-    def remove_subscription(self, account_id):
+    def remove_subscription(self, stripe_subscription_id):
+        now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         query = """
-            DELETE FROM subscriptions
-            WHERE account_id = %s
+            UPDATE subscriptions
+            SET end_date = %s
+            WHERE stripe_id = %s
         """
-        self._sql.execute(query, (account_id))
+        self._sql.execute(query, (now, stripe_subscription_id))
 
     ########
     # MAIL #
@@ -295,12 +329,12 @@ class Account:
 
     def create_mail(self, account_id, action, code, data=None):
         query = """
-            INSERT INTO mail (account_id, action, code, data, created)
+            INSERT INTO mail (account_id, action, code, data, created_date)
             VALUES (%s, %s, %s, %s, %s)
             ON DUPLICATE KEY UPDATE
                 code = VALUES(code),
                 data = VALUES(data),
-                created = VALUES(created);
+                created_date = VALUES(created_date);
         """
         self._sql.execute(query, (account_id, action, code, data, datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")))
 

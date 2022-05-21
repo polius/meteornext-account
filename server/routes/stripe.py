@@ -54,36 +54,35 @@ class Stripe:
         for subscription in subscriptions['data'][1:]:
             stripe.Subscription.delete(subscription['id'])
 
-        # Create entry to the subscriptions table
-        account = self._account.get_by_customer(data['object']['customer'])[0]
-        product = self._account.get_products_by_stripe(data['object']['items']['data'][0]['plan']['id'])[0]
-        stripe_id = data['object']['id']
-        created = data['object']['created'],
-        self._account.new_subscription(account['id'], product['id'], stripe_id, created)
-
     def subscription_deleted(self, data):
-        account = self._account.get_by_customer(data['object']['customer'])
-        if len(account) > 0:
-            self._account.remove_subscription(account[0]['id'])
-            self._account.change_license(account[0]['id'], 1)
+        self._account.remove_subscription(data['object']['id'])
+        if data['object']['status'] == 'unpaid':
+            self._account.downgrade_license(data['object']['id'])
 
     def invoice_paid(self, data):
         # Get common information
         account = self._account.get_by_email(data['object']['customer_email'])[0]
-        product = self._account.get_products_by_stripe(data['object']['lines']['data'][0]['plan']['id'])[0]
+        product = self._account.get_products_by_stripe(data['object']['lines']['data'][0]['plan']['product'])[0]
+        subscription_stripe = data['object']['subscription']
         account_id = account['id']
         product_id = product['id']
 
         # Update licence entry
         self._account.change_license(account_id, product_id)
 
+        # Create entry to the subscriptions table
+        account = self._account.get_by_customer(data['object']['customer'])[0]
+        stripe_id = data['object']['subscription']
+        price_id = data['object']['lines']['data'][0]['price']['id']
+        created = data['object']['created'],
+        self._account.new_subscription(account['id'], price_id, stripe_id, created)
+
         # Create entry to the payments table
-        created = data['object']['created']
         price = data['object']['amount_paid']
         status = 'success'
         stripe_id = data['object']['id']
         invoice = data['object']['invoice_pdf']
-        self._account.new_purchase(account_id,  product_id, created, price, status, stripe_id, invoice)
+        self._account.new_purchase(subscription_stripe, created, price, status, stripe_id, invoice)
 
         # Send email
         email = account['email']
@@ -95,27 +94,26 @@ class Stripe:
         self._mail.send_payment_success_email(email, price, name, date, resources, stripe_id)
 
     def invoice_payment_failed(self, data):
-        if data['object']['billing_reason'] == 'subscription_cycle':
-            # Get common information
-            account = self._account.get_by_customer(data['object']['customer'])[0]
-            product = self._account.get_products_by_stripe(data['object']['lines']['data'][0]['plan']['id'])[0]
-            # Create entry to the payments table
-            account_id = account['id']
-            product_id = product['id']
-            created = data['object']['created']
-            price = data['object']['amount_due']
-            status = 'error'
-            stripe_id = data['object']['id']
-            invoice = None
-            self._account.new_purchase(account_id,  product_id, created, price, status, stripe_id, invoice)
-            # Add entry to mail table
-            code = secrets.token_urlsafe(64)
-            self._account.create_mail(account_id, 'update_payment', code)
-            # Send email
-            payment_methods = stripe.PaymentMethod.list(customer=data['object']['customer'], type="card")['data']
-            email = data['object']['customer_email']
-            card = payment_methods[0]['card']['last4']
-            self._mail.send_payment_failed_email(email, price, card, code)
+        # if data['object']['billing_reason'] == 'subscription_cycle':
+        # Get common information
+        account = self._account.get_by_customer(data['object']['customer'])[0]
+        subscription_stripe = data['object']['subscription']
+        # Create entry to the payments table
+        account_id = account['id']
+        created = data['object']['created']
+        price = data['object']['amount_due']
+        status = 'error'
+        stripe_id = data['object']['id']
+        invoice = None
+        self._account.new_purchase(subscription_stripe, created, price, status, stripe_id, invoice)
+        # Add entry to mail table
+        code = secrets.token_urlsafe(64)
+        self._account.create_mail(account_id, 'update_payment', code)
+        # Send email
+        payment_methods = stripe.PaymentMethod.list(customer=data['object']['customer'], type="card")['data']
+        email = data['object']['customer_email']
+        card = payment_methods[0]['card']['last4']
+        self._mail.send_payment_failed_email(email, price, card, code)
 
     def customer_source_expiring(self, data):
         account = self._account.get_by_email(data['object']['owner']['email'])[0]

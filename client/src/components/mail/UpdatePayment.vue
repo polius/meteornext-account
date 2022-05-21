@@ -5,9 +5,9 @@
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
-              <v-card style="border-radius:5px; background-color:#444444">
+              <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
                 <v-card-text>
-                  <v-avatar :size="130" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
+                  <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                   <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
                   <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | Update Payment</div>
                   <v-divider></v-divider>
@@ -16,7 +16,7 @@
                   </div>
                   <div v-else-if="valid == false" style="margin-top:20px; margin-bottom:10px">
                     <div class="text-body-1 font-weight-medium">ERROR</div>
-                    <div class="text-body-1" style="margin-top:5px">This link has expired</div>
+                    <div class="text-body-1" style="margin-top:20px">{{ error }}</div>
                   </div>
                   <div v-else-if="valid == true" style="margin-top:20px; margin-bottom:10px">
                     <div class="text-h6">Payment information changed</div>
@@ -54,7 +54,8 @@ import axios from 'axios'
 
 export default {
   data: () => ({
-    valid: null
+    valid: null,
+    error: '',
   }),
   created() {
     if (this.$route.params.code === undefined) this.valid = false
@@ -63,7 +64,10 @@ export default {
       const payload = { code: this.$route.params.code }
       axios.post('/account/billing/update', payload)
       .then((response) => window.location.href = response.data.url)
-      .catch(() => this.valid = false)
+      .catch((error) => {
+        this.valid = false
+        this.error = error.response.data.message !== undefined ? error.response.data.message : 'This link has expired'
+      })
     }
   },
   methods: {

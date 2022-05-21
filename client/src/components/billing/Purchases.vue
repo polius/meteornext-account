@@ -5,8 +5,8 @@
     <v-text-field v-model="search" placeholder="Search" style="padding-top:0px" hide-details></v-text-field>
     <v-card style="margin-top:15px; background-color:transparent">
       <v-data-table :loading="account.billing === undefined" :headers="headers" :items="items" :search="search" :options="{itemsPerPage: 3}" :footer-props="{'items-per-page-options':[3, 6, 12, -1]}" :hide-default-footer="items.length == 0" no-data-text="No payments done" style="background-color:transparent">
-        <template v-slot:[`item.date`]="{ item }">
-          {{ dateFormat(item.date) }}
+        <template v-slot:[`item.created_date`]="{ item }">
+          {{ dateFormat(item.created_date) }}
         </template>
         <template v-slot:[`item.resources`]="{ item }">
           {{ item.resources == -1 ? 'Unlimited' : item.resources }}
@@ -19,7 +19,7 @@
           {{ item.status == 'success' ? 'Payment successful' : 'Payment failed' }}
         </template>
         <template v-slot:[`item.invoice`]="{ item }">
-          <v-btn icon title="Download invoice"><v-icon small @click="downloadInvoice(item.invoice)">fas fa-arrow-down</v-icon></v-btn>
+          <v-btn v-if="item.invoice != null" icon title="Download invoice"><v-icon small @click="downloadInvoice(item.invoice)">fas fa-arrow-down</v-icon></v-btn>
         </template>
       </v-data-table>
     </v-card>
@@ -34,7 +34,7 @@ export default {
     loading: false,
     headers: [
       { text: 'ID', value: 'invoice_id' },
-      { text: 'Purchase date', value: 'date' },
+      { text: 'Purchase date', value: 'created_date' },
       { text: 'Resources', value: 'resources' },
       { text: 'Price', value: 'price' },
       { text: 'Status', value: 'status' },

@@ -53,7 +53,8 @@ class Billing:
                     for method in payment_methods: 
                         stripe.PaymentMethod.detach(method['id'])
                 # Change license product to 1 Resource
-                self._account.change_license(account['id'], 1)
+                product = self._account.get_product_by_resources(1)
+                self._account.change_license(account['id'], product['id'])
                 # Return response
                 return jsonify({'message': "Payment method removed"}), 200
 

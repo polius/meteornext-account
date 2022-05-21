@@ -38,7 +38,7 @@ export default {
     },
     pricing() {
       if (this.account.license === undefined) return ''
-      if (this.account.license.resources == 1) return 'Free'
+      if (this.account.license.price == 0) return 'Free'
       return '$' + this.account.license.price + ' / Month'
     },
     next() {

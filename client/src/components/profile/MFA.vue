@@ -12,7 +12,7 @@
         </v-col>
       </v-row>
     </v-card>
-    <v-card v-else style="margin-bottom:20px">
+    <v-card v-else style="margin-bottom:20px; background-color:rgba(61, 61, 80, 0.75)">
       <v-row no-gutters>
         <v-col cols="auto" style="display:flex; margin:15px">
           <v-icon color="#20bf6b" size="20">fas fa-check-circle</v-icon>
@@ -63,7 +63,7 @@
                     <div v-else>
                       <v-alert dense v-if="mfaMode == 'webauthn' && webauthn.status == 'ko'" color="#EF5354">{{ webauthn.error }}</v-alert>
                       <v-card v-if="mfaMode == '2fa'">
-                        <v-card-text style="background-color:rgb(60, 60, 70); padding:0px">
+                        <v-card-text style="background-color:rgb(65, 65, 75); padding:0px">
                           <v-row no-gutters>
                             <v-col style="margin:15px">
                               <v-progress-circular v-if="twoFactor['uri'] == null" indeterminate style="margin-left:auto; margin-right:auto; display:table;"></v-progress-circular>
@@ -82,7 +82,7 @@
                       </v-card>
                       <v-card v-else-if="mfaMode == 'webauthn'">
                         <v-progress-linear v-show="loadingFingerprint" indeterminate></v-progress-linear>
-                        <v-card-text style="background-color:rgb(60, 60, 70)">
+                        <v-card-text style="background-color:rgb(65, 65, 75)">
                           <div class="text-h5 font-weight-light white--text" style="text-align:center; font-size:1.4rem !important">Verify your identity</div>
                           <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#20bf6b' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
                           <div class="text-body-1" style="text-align:center; font-size:1.1rem !important; color:#e2e2e2">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>

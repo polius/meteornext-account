@@ -16,11 +16,11 @@
                       <v-text-field ref="2fa" filled v-model="twoFactor['value']" label="2FA Code" maxlength="6" :rules="[v => !!v || '']" v-on:keyup.enter="login()" style="margin-bottom:20px;" hide-details></v-text-field>
                     </div>
                     <div v-else-if="mfa == 'webauthn'">
-                      <v-card>
+                      <v-card style="background-color:rgba(255,255,255,0.1)">
                         <v-progress-linear v-show="loading" indeterminate></v-progress-linear>
                         <v-card-text>
                           <div class="text-h5 font-weight-light white--text" style="text-align:center; font-size:1.4rem !important">Verify your identity</div>
-                          <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#046cdc' : webauthn.status == 'ok' ? '#20bf6b' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
+                          <v-icon :style="`display:table; margin-left:auto; margin-right:auto; margin-top:20px; margin-bottom:20px; color:${ webauthn.status == 'init' ? '#2196f3' : webauthn.status == 'ok' ? '#20bf6b' : webauthn.status == 'ko' ? '#ff5252' : '#fa8131'}`" size="55">fas fa-fingerprint</v-icon>
                           <div class="text-body-1" style="text-align:center; font-size:1.1rem !important; color:#e2e2e2">{{ ['init','validating'].includes(webauthn.status) ? 'Touch sensor' : webauthn.status == 'ok' ? 'Fingerprint recognized' : 'Fingerprint not recognized' }}</div>
                         </v-card-text>
                       </v-card>

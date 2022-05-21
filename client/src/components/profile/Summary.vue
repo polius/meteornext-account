@@ -32,7 +32,7 @@ export default {
       return (this.account.profile === undefined) ? '' : this.account.profile.email
     },
     created() {
-      return (this.account.profile === undefined) ? '' : this.dateFormat(this.account.profile.created)
+      return (this.account.profile === undefined) ? '' : this.dateFormat(this.account.profile.created_date)
     },
   },
   methods: {

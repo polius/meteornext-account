@@ -41,7 +41,6 @@ class Account:
                 }
 
                 # Get billing card details
-                print(account['stripe_id'])
                 payment_methods = stripe.Customer.list_payment_methods(account['stripe_id'], type="card")['data']
                 if len(payment_methods) > 0:
                     billing['details'] = {
@@ -186,10 +185,10 @@ class Account:
 
             # Get mail data
             mail = self._account.get_mail('update_payment', data['code'])
-            
+
             # Check if code exists
             if len(mail) == 0:
-                return jsonify({'message': 'This code is not valid'}), 400
+                return jsonify({'message': 'This link has expired'}), 400
 
             # Get account
             account = self._account.get(mail[0]['account_id'])[0]
