@@ -15,8 +15,8 @@
           {{ `€ ${item.price / 100}` }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <v-icon :color="item.status == 'success' ? '#20bf6b' : item.status == 'pending' ? '#ff9800' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>
-          {{ item.status == 'success' ? 'Payment successful' : 'Payment failed' }}
+          <v-icon :color="item.status == 'paid' ? '#20bf6b' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>
+          {{ item.status == 'paid' ? 'Payment successful' : 'Payment failed' }}
         </template>
         <template v-slot:[`item.invoice`]="{ item }">
           <v-btn v-if="item.invoice != null" icon title="Download invoice"><v-icon small @click="downloadInvoice(item.invoice)">fas fa-arrow-down</v-icon></v-btn>

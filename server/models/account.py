@@ -86,7 +86,7 @@ class Account:
 
     def get_license(self, account_id):
         query = """
-            SELECT prod.resources, IFNULL(pric.price, 0)/100 AS 'price', l.access_key, l.secret_key, l.in_use
+            SELECT prod.resources, IFNULL(pric.price, 0)/100 AS 'price', l.access_key, l.secret_key, l.in_use, l.unregistered_date
             FROM licenses l
             JOIN products prod ON prod.id = l.product_id
             LEFT JOIN prices pric ON pric.product_id = prod.id
@@ -102,10 +102,32 @@ class Account:
             FROM payments pa
             JOIN subscriptions s ON s.id = pa.subscription_id AND s.account_id = %s
             JOIN licenses l ON l.id = s.license_id
-            JOIN products pr ON pr.id = l.product_id
+            JOIN products pr ON pr.id = s.product_id
             ORDER BY pa.id DESC
         """
         return self._sql.execute(query, (account_id))
+
+    def get_last_invoice_unpayed(self, customer_id):
+        query = """
+            SELECT p.stripe_id
+            FROM (
+                SELECT MAX(p.id) AS 'id'
+                FROM payments p
+                JOIN subscriptions s ON s.id = p.subscription_id
+                JOIN accounts a ON a.id = s.account_id AND a.stripe_id = %(customer_id)s
+                WHERE p.status = 'unpaid'
+            ) t1
+            JOIN (
+                SELECT MAX(p.id) AS 'id'
+                FROM payments p
+                JOIN subscriptions s ON s.id = p.subscription_id
+                JOIN accounts a ON a.id = s.account_id AND a.stripe_id = %(customer_id)s
+                WHERE p.status = 'paid'
+            ) t2
+            JOIN payments p ON p.id = t1.id
+            WHERE t1.id > t2.id
+        """
+        return self._sql.execute(query, {"customer_id": customer_id})
 
     ############
     # REGISTER #
@@ -248,12 +270,14 @@ class Account:
         return self._sql.execute(query, (stripe_id))
 
     def unregister_license(self, account_id):
+        now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         query = """
             UPDATE licenses
-            SET in_use = 0
+            SET in_use = 0,
+                unregistered_date = %s
             WHERE account_id = %s
         """
-        self._sql.execute(query, (account_id))
+        self._sql.execute(query, (now, account_id))
 
     def change_license(self, account_id, product_id):
         query = """
@@ -274,15 +298,16 @@ class Account:
     ###########
     # BILLING #
     ###########
-    def new_purchase(self, subscription_stripe, date, price, status, stripe_id, invoice):
+    def new_purchase(self, subscription_stripe, date, price, status, stripe_id, next_payment_attempt, invoice):
         query = """
-            INSERT INTO payments (subscription_id, created_date, price, status, stripe_id, invoice)
+            INSERT INTO payments (subscription_id, created_date, price, status, stripe_id, next_payment_attempt, invoice)
             SELECT
                 id AS 'subscription_id',
                 FROM_UNIXTIME(%s) AS 'created_date',
                 %s AS 'price',
                 %s AS 'status',
                 %s AS 'stripe_id',
+                %s AS 'next_payment_attempt',
                 %s AS 'invoice'
             FROM subscriptions
             WHERE stripe_id = %s
@@ -290,21 +315,23 @@ class Account:
                 created_date = VALUES(created_date),
                 price = VALUES(price),
                 status = VALUES(status),
+                next_payment_attempt = VALUES(next_payment_attempt),
                 invoice = VALUES(invoice);
         """
-        self._sql.execute(query, (date, price, status, stripe_id, invoice, subscription_stripe))
+        self._sql.execute(query, (date, price, status, stripe_id, next_payment_attempt, invoice, subscription_stripe))
 
-    def new_subscription(self, account_id, price_id, stripe_id, date):
+    def new_subscription(self, account_id, product_id, price_id, stripe_id, date):
         query = """
-            INSERT INTO subscriptions (account_id, license_id, price_id, stripe_id, start_date)
+            INSERT INTO subscriptions (account_id, license_id, product_id, price_id, stripe_id, start_date)
             SELECT
                 %(account_id)s AS 'account_id',
                 (SELECT id FROM licenses WHERE account_id = %(account_id)s LIMIT 1) AS 'license_id',
+                (SELECT id FROM products WHERE stripe_id = %(product_id)s) AS 'product_id',
                 (SELECT id FROM prices WHERE stripe_id = %(price_id)s) AS 'price_id',
                 %(stripe_id)s AS 'stripe_id',
                 FROM_UNIXTIME(%(date)s) AS 'start_date'
         """
-        self._sql.execute(query, {"account_id": account_id, "price_id": price_id, "stripe_id": stripe_id, "date": date})
+        self._sql.execute(query, {"account_id": account_id, "product_id": product_id, "price_id": price_id, "stripe_id": stripe_id, "date": date})
 
     def remove_subscription(self, stripe_subscription_id):
         now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
@@ -314,6 +341,15 @@ class Account:
             WHERE stripe_id = %s
         """
         self._sql.execute(query, (now, stripe_subscription_id))
+
+    def expire_payment(self, stripe_invoice_id):
+        query = """
+            UPDATE payments
+            SET status = 'expired'
+            WHERE stripe_id = %s
+            AND status = 'unpaid'
+        """
+        self._sql.execute(query, (stripe_invoice_id))
 
     ########
     # MAIL #

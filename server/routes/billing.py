@@ -33,8 +33,8 @@ class Billing:
                         mode='setup',
                         payment_method_types=['card'],
                         customer=account['stripe_id'],
-                        success_url='https://account.meteornext.io/billing',
-                        cancel_url='https://account.meteornext.io/billing',
+                        success_url='https://account-dev.meteornext.io/billing',
+                        cancel_url='https://account-dev.meteornext.io/billing',
                     )
                     return jsonify({'url': checkout_session.url}), 200
                 except Exception as e:
@@ -44,19 +44,12 @@ class Billing:
                 # Get customer subscription
                 subscription = stripe.Subscription.list(customer=account['stripe_id'])['data']
                 if len(subscription) > 0:
-                    # Cancel subscription
-                    stripe.Subscription.delete(subscription[0]['id'])
-                    # Remove payment method
-                    stripe.PaymentMethod.detach(subscription[0]['default_payment_method'])
+                    return jsonify({'message': "The current payment method is already being used in a subscription. First change your license to 1 server."}), 400
                 else:
                     payment_methods = stripe.Customer.list_payment_methods(account['stripe_id'], type="card")
                     for method in payment_methods: 
                         stripe.PaymentMethod.detach(method['id'])
-                # Change license product to 1 Resource
-                product = self._account.get_product_by_resources(1)
-                self._account.change_license(account['id'], product['id'])
-                # Return response
-                return jsonify({'message': "Payment method removed"}), 200
+                    return jsonify({'message': "Payment method removed"}), 200
 
             @billing_bluepring.route('/billing/invoice', methods=['GET'])
             @jwt_required()

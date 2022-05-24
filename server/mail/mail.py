@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from boto3.session import Session
 
 class Mail:
@@ -91,7 +92,7 @@ class Mail:
         if request['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise Exception()
 
-    def send_payment_failed_email(self, email, price, card, code):
+    def send_payment_failed_email(self, email, price, card, code, next_payment_attempt):
         # Get email template
         with open(os.path.dirname(__file__) + "/payment_failed.html", "r") as fopen:
             HTML_EMAIL_CONTENT = fopen.read()
@@ -99,6 +100,11 @@ class Mail:
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CODE}', code)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{PRICE}', str(price / 100))
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD}', str(card))
+        if next_payment_attempt is None:
+            HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NEXT_PAYMENT_ATTEMPT}', 'This payment attempt was the last one. Your licence has automatically been changed to 1 Server.')
+        else:
+            next_payment_attempt = datetime.utcfromtimestamp(int(next_payment_attempt)).strftime('%a, %d %b %Y %H:%M:%S') + ' UTC+0'
+            HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NEXT_PAYMENT_ATTEMPT}', f"The next payment attempt will be made at {next_payment_attempt}.")
         # Send mail
         request = self._ses.send_email(
             Source="Meteor Next <no-reply@meteornext.io>",

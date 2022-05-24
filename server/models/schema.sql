@@ -79,6 +79,7 @@ CREATE TABLE `licenses` (
   `uuid` VARCHAR(255) DEFAULT NULL,
   `last_used` DATETIME DEFAULT NULL,
   `version` VARCHAR(255) NULL,
+  `unregistered_date` DATETIME NULL,
   PRIMARY KEY (`id`),
   UNIQUE `account_id` (`account_id`),
   INDEX `product_id` (`product_id`),
@@ -91,6 +92,7 @@ CREATE TABLE `subscriptions` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `account_id` INT UNSIGNED NOT NULL,
   `license_id` INT UNSIGNED NOT NULL,
+  `product_id` INT UNSIGNED NOT NULL,
   `price_id` INT UNSIGNED NULL,
   `stripe_id` VARCHAR(255) NOT NULL COMMENT 'subscription_id',
   `created_date` DATETIME NOT NULL,
@@ -98,9 +100,11 @@ CREATE TABLE `subscriptions` (
   PRIMARY KEY (`id`),
   INDEX `account_id` (`account_id`),
   INDEX `license_id` (`license_id`),
+  INDEX `product_id` (`product_id`),
   INDEX `price_id` (`price_id`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`license_id`) REFERENCES `licenses` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`price_id`) REFERENCES `prices` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
@@ -109,8 +113,9 @@ CREATE TABLE `payments` (
   `subscription_id` INT UNSIGNED NOT NULL,
   `created_date` DATETIME NOT NULL,
   `price` DOUBLE NOT NULL,
-  `status` ENUM('success','error') NOT NULL,
+  `status` ENUM('paid','unpaid','expired') NOT NULL,
   `stripe_id` VARCHAR(255) NOT NULL COMMENT 'invoice_id',
+  `next_payment_attempt` INT UNSIGNED NULL COMMENT 'unixtime',
   `invoice` TEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `subscription_id` (`subscription_id`),

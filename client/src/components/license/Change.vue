@@ -66,6 +66,16 @@
               </v-col>
             </v-row>
           </v-card>
+          <v-card style="margin-top:15px; background-color:rgb(60, 60, 70)">
+            <v-row no-gutters align="center" justify="center">
+              <v-col cols="auto" style="display:flex; margin:15px">
+                <v-icon color="#eb4d4b" size="20">fas fa-exclamation-circle</v-icon>
+              </v-col>
+              <v-col>
+                <div class="text-body-1" style="color:#e2e2e2">Active subscriptions will automatically be cancelled.</div>
+              </v-col>
+            </v-row>
+          </v-card>
           <div class="text-body-1" style="margin-top:15px">Are you sure you want to change your license to <span class="font-weight-medium">1 Server</span>?</div>
           <v-divider style="margin-top:15px"></v-divider>
           <v-row no-gutters style="margin-top:15px;">

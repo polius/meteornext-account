@@ -18,10 +18,10 @@
           <v-card style="background-color:rgb(60, 60, 70)">
             <v-row no-gutters align="center" justify="center">
               <v-col cols="auto" style="display:flex; margin:15px">
-                <v-icon size="20" color="info">fas fa-info-circle</v-icon>
+                <v-icon size="20" color="warning">fas fa-exclamation-triangle</v-icon>
               </v-col>
               <v-col>
-                <div class="text-body-1" style="color:#e2e2e2">The data stored in your database will not be deleted</div>
+                <div class="text-body-1" style="color:#e2e2e2">You can unregister the license once per hour.</div>
               </v-col>
             </v-row>
           </v-card>
