@@ -318,7 +318,7 @@ class Account:
                 next_payment_attempt = VALUES(next_payment_attempt),
                 invoice = VALUES(invoice);
         """
-        self._sql.execute(query, (date, price, status, stripe_id, next_payment_attempt, invoice, subscription_stripe))
+        self._sql.execute(query, (date, int(price)/100, status, stripe_id, next_payment_attempt, invoice, subscription_stripe))
 
     def new_subscription(self, account_id, product_id, price_id, stripe_id, date):
         query = """

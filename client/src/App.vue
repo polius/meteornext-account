@@ -1,5 +1,6 @@
 <template>
-  <v-app :style="{ height:'100%', padding:'0px', backgroundColor: 'transparent', backgroundImage: 'url(' + require('@/assets/bg.png') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }">
+  <!-- <v-app :style="{ height:'100%', padding:'0px', backgroundColor: 'transparent', backgroundImage: 'url(' + require('@/assets/bg.png') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }"> -->
+  <v-app style="height:100%; padding:0px; background-color:transparent; background-image: url('https://www.meteornext.io/assets/bg.png'); background-repeat:no-repeat; background-size:cover">
     <v-main>
       <router-view/>
     </v-main>

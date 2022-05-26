@@ -5,42 +5,47 @@
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
-              <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
-                <v-card-text>
-                  <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
-                  <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
-                  <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | Reset Password</div>
-                  <v-divider></v-divider>
-                  <div v-if="$route.params.code === undefined">
-                    <div v-if="!completed">
-                      <v-form ref="form" @submit.prevent>
-                        <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">Email</div>
-                        <v-text-field flat v-model="item.email" :readonly="loading" :rules="emailRules" solo v-on:keyup.enter="submitEmail()" style="padding-top:5px" hide-details autofocus></v-text-field>
-                      </v-form>
-                      <v-btn block x-large :loading="loading" color="info" @click="submitEmail" style="margin-top:20px">SUBMIT</v-btn>
-                    </div>
-                    <div v-else style="margin-top:20px; margin-bottom:10px">
-                      <div class="text-h6 white--text" style="font-weight:400">Verify your email</div>
-                      <div class="text-body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px; color:#e2e2e2">We have sent an email to the address you entered</div>
+              <div>
+                <div @click="goBack" style="text-align:left; margin-bottom:5px; color:#f6f6f6; font-size:17px; font-weight:400; cursor:pointer; width:56px">
+                  <v-icon size="15" style="margin-right:5px; padding-bottom:3px">fas fa-arrow-left</v-icon>Back
+                </div>
+                <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
+                  <v-card-text>
+                    <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
+                    <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
+                    <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | Reset Password</div>
+                    <v-divider></v-divider>
+                    <div v-if="$route.params.code === undefined">
+                      <div v-if="!completed">
+                        <v-form ref="form" @submit.prevent>
+                          <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">Email</div>
+                          <v-text-field flat v-model="item.email" :readonly="loading" :rules="emailRules" solo v-on:keyup.enter="submitEmail()" style="padding-top:5px" hide-details autofocus></v-text-field>
+                        </v-form>
+                        <v-btn block x-large :loading="loading" color="info" @click="submitEmail" style="margin-top:20px">SUBMIT</v-btn>
+                      </div>
+                      <div v-else style="margin-top:20px; margin-bottom:10px">
+                        <div class="text-h6 white--text" style="font-weight:400">Verify your email</div>
+                        <div class="text-body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px; color:#e2e2e2">We have sent an email to the address you entered</div>
+                        </div>
+                      </div>
+                    <div v-else>
+                      <div v-if="valid != null && valid" style="margin-top:20px; margin-bottom:10px">
+                        <v-form ref="form" @submit.prevent>
+                          <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">New password</div>
+                          <v-text-field flat v-model="item.password" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" autofocus hide-details></v-text-field>
+                          <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">Confirm new password</div>
+                          <v-text-field flat v-model="item.password2" type="password" :readonly="loading" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
+                        </v-form>
+                        <v-btn block x-large :loading="loading" color="info" @click="submitPassword" style="margin-top:20px">RESET PASSWORD</v-btn>
+                      </div>
+                      <div v-else-if="valid != null && !valid" style="margin-top:20px; margin-bottom:10px">
+                        <div class="text-body-1 font-weight-medium">ERROR</div>
+                        <div class="text-body-1" style="margin-top:5px">This link has expired</div>
                       </div>
                     </div>
-                  <div v-else>
-                    <div v-if="valid != null && valid" style="margin-top:20px; margin-bottom:10px">
-                      <v-form ref="form" @submit.prevent>
-                        <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">New password</div>
-                        <v-text-field flat v-model="item.password" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" autofocus hide-details></v-text-field>
-                        <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">Confirm new password</div>
-                        <v-text-field flat v-model="item.password2" type="password" :readonly="loading" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
-                      </v-form>
-                      <v-btn block x-large :loading="loading" color="info" @click="submitPassword" style="margin-top:20px">RESET PASSWORD</v-btn>
-                    </div>
-                    <div v-else-if="valid != null && !valid" style="margin-top:20px; margin-bottom:10px">
-                      <div class="text-body-1 font-weight-medium">ERROR</div>
-                      <div class="text-body-1" style="margin-top:5px">This link has expired</div>
-                    </div>
-                  </div>
-                </v-card-text>
-              </v-card>
+                  </v-card-text>
+                </v-card>
+              </div>
             </v-slide-y-transition>
           </v-flex>
         </v-layout>
@@ -115,6 +120,9 @@ export default {
           EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
         })
         .finally(() => this.loading = false)
+    },
+    goBack() {
+      this.$router.push('/')
     },
   }
 }
