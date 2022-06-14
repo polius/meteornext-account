@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from boto3.session import Session
+from sentry_sdk import capture_exception, flush
 
 class Mail:
     def __init__(self, conf):
@@ -9,56 +10,68 @@ class Mail:
         self._ses = session.client(service_name="ses", region_name=conf['aws']['region_name'])
 
     def send_verify_email(self, email, code):
-        # Get email template
-        with open(os.path.dirname(__file__) + "/verify_email.html", "r") as fopen:
-            HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}', code)
-        # Send mail
-        request = self._ses.send_email(
-            Source="Meteor Next <no-reply@meteornext.io>",
-            Destination={
-                "ToAddresses": [ email ],
-            },
-            Message={
-                "Subject": {
-                    "Data": "Verify email address",
-                    "Charset": "UTF-8",
+        try:
+            # Get email template
+            with open(os.path.dirname(__file__) + "/verify_email.html", "r") as fopen:
+                HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}', code)
+            # Send mail
+            request = self._ses.send_email(
+                Source="Meteor Next <no-reply@meteornext.io>",
+                Destination={
+                    "ToAddresses": [ email ],
                 },
-                "Body": {
-                    "Html": {
-                        "Data": HTML_EMAIL_CONTENT,
+                Message={
+                    "Subject": {
+                        "Data": "Verify email address",
                         "Charset": "UTF-8",
-                    }
+                    },
+                    "Body": {
+                        "Html": {
+                            "Data": HTML_EMAIL_CONTENT,
+                            "Charset": "UTF-8",
+                        }
+                    },
                 },
-            },
-        )
-        if request['ResponseMetadata']['HTTPStatusCode'] != 200:
-            raise Exception()
+            )
+            if request['ResponseMetadata']['HTTPStatusCode'] != 200:
+                raise Exception()
+
+        except Exception as e:
+            capture_exception(e)
+            flush()
+            raise
 
     def send_reset_password(self, email, code):
-        # Get email template
-        with open(os.path.dirname(__file__) + "/reset_password.html", "r") as fopen:
-            HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}', code)
-        # Send mail
-        request = self._ses.send_email(
-            Source="Meteor Next <no-reply@meteornext.io>",
-            Destination={
-                "ToAddresses": [ email ],
-            },
-            Message={
-                "Subject": {
-                    "Data": "Reset password",
-                    "Charset": "UTF-8",
+        try:
+            # Get email template
+            with open(os.path.dirname(__file__) + "/reset_password.html", "r") as fopen:
+                HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}', code)
+            # Send mail
+            request = self._ses.send_email(
+                Source="Meteor Next <no-reply@meteornext.io>",
+                Destination={
+                    "ToAddresses": [ email ],
                 },
-                "Body": {
-                    "Html": {
-                        "Data": HTML_EMAIL_CONTENT,
+                Message={
+                    "Subject": {
+                        "Data": "Reset password",
                         "Charset": "UTF-8",
-                    }
+                    },
+                    "Body": {
+                        "Html": {
+                            "Data": HTML_EMAIL_CONTENT,
+                            "Charset": "UTF-8",
+                        }
+                    },
                 },
-            },
-        )
-        if request['ResponseMetadata']['HTTPStatusCode'] != 200:
-            raise Exception()
+            )
+            if request['ResponseMetadata']['HTTPStatusCode'] != 200:
+                raise Exception()
+
+        except Exception as e:
+            capture_exception(e)
+            flush()
+            raise
 
     def send_payment_success_email(self, email, price, name, date, resources, stripe_id):
         # Get email template

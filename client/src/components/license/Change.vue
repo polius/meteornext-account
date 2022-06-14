@@ -38,7 +38,7 @@
                         <div class="text-body-1 font-weight-regular" style="color:#e2e2e2">Enter the amount of servers</div>
                         <v-text-field :readonly="resourcesText == 'Unlimited'" @keypress="isNumber($event)" @input="calculatePrice" solo v-model="resourcesText" class="centered-input" style="width:120px; margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:6px" hide-details></v-text-field>
                         <v-slider @input="calculatePrice" :readonly="loading" v-model="resourcesSlider" min="1" max="1000" style="margin-left:50px; margin-right:50px" hide-details></v-slider>
-                        <div v-if="resourcesText != 'Unlimited'" class="text-body-1 font-weight-regular" style="color:#e2e2e2">{{ `Avg. $${license.priceAverage} per server` }}</div>
+                        <div v-if="resourcesText != 'Unlimited'" class="text-body-1 font-weight-regular" style="color:#e2e2e2">{{ `Avg. ${license.priceAverage}€ per server` }}</div>
                         <v-btn block x-large :disabled="(resourcesText == license.resources) || (resourcesText == 'Unlimited' && license.resources == -1)" :loading="loading" color="info" @click="submitChange(false)" style="margin-top:20px">CHANGE LICENSE</v-btn>
                       </v-form>
                     </div>
@@ -111,7 +111,7 @@ export default {
     dialog: false,
     license: {
       resources: 1,
-      priceCurrency: '$',
+      priceCurrency: '€',
       priceInteger: 0,
       priceDecimal: 0,
       priceAvg: null

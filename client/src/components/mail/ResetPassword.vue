@@ -19,7 +19,7 @@
                       <div v-if="!completed">
                         <v-form ref="form" @submit.prevent>
                           <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">Email</div>
-                          <v-text-field flat v-model="item.email" :readonly="loading" :rules="emailRules" solo v-on:keyup.enter="submitEmail()" style="padding-top:5px" hide-details autofocus></v-text-field>
+                          <v-text-field flat v-model="item.email" type="email" :readonly="loading" :rules="emailRules" solo v-on:keyup.enter="submitEmail()" style="padding-top:5px" hide-details autofocus></v-text-field>
                         </v-form>
                         <v-btn block x-large :loading="loading" color="info" @click="submitEmail" style="margin-top:20px">SUBMIT</v-btn>
                       </div>

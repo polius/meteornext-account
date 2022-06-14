@@ -74,7 +74,7 @@ class Profile:
                 self._account.create_mail(account['id'], 'verify_email', code, data['email'])
                 self._mail.send_verify_email(data['email'], code)
             except Exception:
-                return jsonify({'message': 'An error occurred sending the verification mail'}), 400
+                return jsonify({'message': 'An error occurred sending the verification mail. Please try again later.'}), 400
 
             return jsonify({'message': 'Please verify your email address'}), 200
 

@@ -26,7 +26,7 @@
                       </v-card>
                     </div>
                     <div v-else>
-                      <v-text-field ref="email" filled v-model="email" name="email" label="Email" :rules="[v => !!v || '']" required v-on:keyup.enter="login()" style="margin-bottom:20px" hide-details autofocus></v-text-field>
+                      <v-text-field ref="email" filled v-model="email" name="email" label="Email" type="email" :rules="[v => !!v || '']" required v-on:keyup.enter="login()" style="margin-bottom:20px" hide-details autofocus></v-text-field>
                       <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="login()" hide-details></v-text-field>
                       <p style="margin-top:8px; margin-bottom:8px; text-align:right; color:#e2e2e2"><span @click="resetPassword" class="link">Forgot password?</span></p>
                     </div>
