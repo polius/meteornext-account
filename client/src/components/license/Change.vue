@@ -37,7 +37,7 @@
                         </p>
                         <div class="text-body-1 font-weight-regular" style="color:#e2e2e2">Enter the amount of servers</div>
                         <v-text-field :readonly="resourcesText == 'Unlimited'" @keypress="isNumber($event)" @input="calculatePrice" solo v-model="resourcesText" class="centered-input" style="width:120px; margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:6px" hide-details></v-text-field>
-                        <v-slider @input="calculatePrice" :readonly="loading" v-model="resourcesSlider" min="1" max="1000" style="margin-left:50px; margin-right:50px" hide-details></v-slider>
+                        <v-slider @input="calculatePrice" :readonly="loading" v-model="resourcesSlider" min="1" max="500" style="margin-left:50px; margin-right:50px" hide-details></v-slider>
                         <div v-if="resourcesText != 'Unlimited'" class="text-body-1 font-weight-regular" style="color:#e2e2e2">{{ `Avg. ${license.priceAverage}€ per server` }}</div>
                         <v-btn block x-large :disabled="(resourcesText == license.resources) || (resourcesText == 'Unlimited' && license.resources == -1)" :loading="loading" color="info" @click="submitChange(false)" style="margin-top:20px">CHANGE LICENSE</v-btn>
                       </v-form>
@@ -156,15 +156,15 @@ export default {
     isNumber(event) {
       const keysAllowed = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
       const keyPressed = event.key
-      if (!keysAllowed.includes(keyPressed) || this.resourcesSlider == 1000) event.preventDefault()
+      if (!keysAllowed.includes(keyPressed) || this.resourcesSlider == 500) event.preventDefault()
     },
     calculatePrice(resources, price) {
       if (resources.length == 0) return
 
       // Init pricing
-      const max_price_x_server = 3
-      const max_price_reduction = 2
-      const max_servers = 1000
+      const max_price_x_server = 5
+      const max_price_reduction = 3
+      const max_servers = 500
       
       // Check resources parameter
       resources = Number.isNaN(parseInt(resources)) ? this.license.resources : parseInt(resources)
@@ -200,7 +200,7 @@ export default {
         // Calculate Servers Pricing
         let price_x_server = max_price_x_server
         if (resources < 5) price_x_server = max_price_x_server
-        else if (resources > 10) price_x_server = max_price_x_server - (((max_price_x_server - max_price_reduction) / max_servers) * resources)
+        else if (resources > 5) price_x_server = max_price_x_server - (((max_price_x_server - max_price_reduction) / max_servers) * resources)
         const new_price = (resources < 5) ? 5 * max_price_x_server : price_x_server * resources
 
         // Assign components values

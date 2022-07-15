@@ -141,6 +141,13 @@ class Account:
         """
         account_id = self._sql.execute(query, (data['email'], data['password'], data['ip'], now))
 
+        # Enable sentry
+        query = """
+            INSERT INTO accounts_sentry (account_id, sentry_enabled)
+            VALUES (%s, 1)
+        """
+        self._sql.execute(query, (account_id))
+
         # Create email code
         query = """
             INSERT INTO mail (account_id, action, code, created_date)

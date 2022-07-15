@@ -41,7 +41,6 @@ CREATE TABLE `accounts_mfa` (
 
 CREATE TABLE `accounts_sentry` (
   `account_id` INT UNSIGNED NOT NULL,
-  `sentry_dsn` VARCHAR(255) DEFAULT NULL,
   `sentry_enabled` TINYINT(1) UNSIGNED NOT NULL,
   PRIMARY KEY (`account_id`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
