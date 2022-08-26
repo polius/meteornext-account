@@ -160,7 +160,7 @@ class Account:
             INSERT INTO `licenses` (`account_id`, `product_id`, `access_key`, `secret_key`)
             SELECT
                 %s AS 'account_id',
-                p.id AS 'product_id',
+                id AS 'product_id',
                 %s AS 'access_key',
                 %s AS 'secret_key'
             FROM products
