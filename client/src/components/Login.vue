@@ -32,7 +32,7 @@
                     </div>
                   </v-form>
                   <v-btn v-if="!(mfa == 'webauthn')" x-large type="submit" color="info" :loading="loading" block style="margin-top:0px;" @click="login()">LOGIN</v-btn>
-                  <div v-if="!(mfa == 'webauthn')" class="text-body-2" style="margin-top:15px; color:#e2e2e2; font-size:15px!important">Don't have an account? <router-link to="/register" style="text-decoration:none; font-weight:500">Sign up</router-link></div>
+                  <div v-if="!(mfa == 'webauthn')" class="text-body-2" style="margin-top:15px; color:#e2e2e2; font-size:15px!important">Don't have an account? <router-link to="/register" style="text-decoration:none; font-weight:500; color:white">Sign up</router-link></div>
                 </v-card-text>
               </v-card>
             </v-slide-y-transition>

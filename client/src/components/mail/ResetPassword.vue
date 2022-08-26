@@ -32,9 +32,9 @@
                       <div v-if="valid != null && valid" style="margin-top:20px; margin-bottom:10px">
                         <v-form ref="form" @submit.prevent>
                           <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">New password</div>
-                          <v-text-field flat v-model="item.password" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" autofocus hide-details></v-text-field>
+                          <v-text-field flat v-model="item.password" :readonly="loading" type="password" :rules="[v => !!v || '']" v-on:keyup.enter="submitPassword" solo style="padding-top:5px" autocomplete="new-password" autofocus hide-details></v-text-field>
                           <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">Confirm new password</div>
-                          <v-text-field flat v-model="item.password2" type="password" :readonly="loading" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
+                          <v-text-field flat v-model="item.password2" type="password" :readonly="loading" :rules="[v => !!v || '']" v-on:keyup.enter="submitPassword" solo style="padding-top:5px" autocomplete="new-password" hint="Use 8 or more characters with a mix of letters and numbers" persistent-hint></v-text-field>
                         </v-form>
                         <v-btn block x-large :loading="loading" color="info" @click="submitPassword" style="margin-top:20px">RESET PASSWORD</v-btn>
                       </div>

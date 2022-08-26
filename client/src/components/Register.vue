@@ -18,10 +18,10 @@
                   <v-form v-else ref="form" @submit.prevent style="margin-top:20px">
                     <v-text-field ref="email" filled v-model="email" name="email" label="Email" type="email" :rules="emailRules" required style="margin-bottom:20px;" hide-details autofocus></v-text-field>
                     <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" style="margin-bottom:20px;" hide-details></v-text-field>
-                    <v-text-field ref="password2" filled v-model="password2" name="password2" label="Confirm Password" :rules="[v => !!v || '']" required type="password" style="margin-bottom:20px;" hide-details></v-text-field>
+                    <v-text-field ref="password2" filled v-model="password2" name="password2" label="Confirm Password" :rules="[v => !!v || '']" required type="password" style="margin-bottom:10px;" hint="Use 8 or more characters with a mix of letters and numbers" persistent-hint></v-text-field>
                     <vue-hcaptcha ref="captcha" data-theme="light" sitekey="d4fcdf7d-363a-495b-8e51-aff6e138aa6c" @verify="onVerify"></vue-hcaptcha>
                     <v-btn x-large type="submit" color="info" :loading="loading" block style="margin-top:10px;" @click="register()">CREATE ACCOUNT</v-btn>
-                    <div class="text-body-2" style="margin-top:15px; color:#e2e2e2; font-size:15px !important">Have an account? <router-link to="/login" style="text-decoration:none; font-weight:500">Sign in</router-link></div>
+                    <div class="text-body-2" style="margin-top:15px; color:#e2e2e2; font-size:15px !important">Have an account? <router-link to="/login" style="text-decoration:none; font-weight:500; color:white">Sign in</router-link></div>
                   </v-form>
                 </v-card-text>
               </v-card>
