@@ -141,10 +141,6 @@ class Stripe:
             stripe.PaymentMethod.detach(i['id'])
         # Update customer's name and assign the current payment method as a default
         stripe.Customer.modify(data['object']['customer'], name=data['object']['billing_details']['name'], invoice_settings={"default_payment_method":data['object']['id']})
-        # Charge last failed payment
-        invoice = self._account.get_last_invoice_unpayed(data['object']['customer'])
-        if len(invoice) > 0:
-            stripe.Invoice.pay(invoice[0]['stripe_id'])
         # Expire mail codes
         account = self._account.get_by_customer(data['object']['customer'])[0]
         self._account.clean_mail(account['id'], 'update_payment')

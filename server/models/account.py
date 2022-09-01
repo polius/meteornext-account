@@ -107,28 +107,6 @@ class Account:
         """
         return self._sql.execute(query, (account_id))
 
-    def get_last_invoice_unpayed(self, customer_id):
-        query = """
-            SELECT p.stripe_id
-            FROM (
-                SELECT MAX(p.id) AS 'id'
-                FROM payments p
-                JOIN subscriptions s ON s.id = p.subscription_id
-                JOIN accounts a ON a.id = s.account_id AND a.stripe_id = %(customer_id)s
-                WHERE p.status = 'unpaid'
-            ) t1
-            JOIN (
-                SELECT MAX(p.id) AS 'id'
-                FROM payments p
-                JOIN subscriptions s ON s.id = p.subscription_id
-                JOIN accounts a ON a.id = s.account_id AND a.stripe_id = %(customer_id)s
-                WHERE p.status = 'paid'
-            ) t2
-            JOIN payments p ON p.id = t1.id
-            WHERE t1.id > t2.id
-        """
-        return self._sql.execute(query, {"customer_id": customer_id})
-
     ############
     # REGISTER #
     ############

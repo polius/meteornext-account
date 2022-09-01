@@ -17,12 +17,13 @@ CREATE TABLE `accounts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `mail` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `account_id` INT UNSIGNED NOT NULL,
   `action` ENUM('reset_password','verify_email','update_payment') NOT NULL,
   `data` VARCHAR(255) NULL,
   `code` VARCHAR(255) NOT NULL,
   `created_date` DATETIME NOT NULL,
-  PRIMARY KEY (`account_id`),
+  PRIMARY KEY (`id`),
   UNIQUE `account_id__action` (`account_id`, `action`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
