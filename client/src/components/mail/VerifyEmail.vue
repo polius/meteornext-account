@@ -1,6 +1,6 @@
 <template>
   <div v-if="!valid" style="height:100%">
-    <v-main style="height:'100%'">
+    <v-main style="height:100%">
       <v-container grid-list-xl text-center style="height:100%; display:flex; justify-content:center; align-items:center;">
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
@@ -16,8 +16,8 @@
                     <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | Verify Email</div>
                     <v-divider></v-divider>
                     <div style="margin-top:20px; margin-bottom:10px">
-                      <div class="text-body-1 font-weight-medium">ERROR</div>
-                      <div class="text-body-1" style="margin-top:5px">This link has expired</div>
+                      <v-icon size="40" color="#f0ad4e" style="margin-right:10px">fas fa-exclamation-triangle</v-icon>
+                      <p style="color:white; font-size:19px; margin-top:25px; margin-bottom:25px">This link has expired</p>
                     </div>
                   </v-card-text>
                 </v-card>
@@ -59,9 +59,9 @@ export default {
       .catch(() => this.valid = false)
     }
   },
-  method: {
+  methods: {
     goBack() {
-      this.$router.push('/')
+      this.$router.push('/login')
     },
   }
 }

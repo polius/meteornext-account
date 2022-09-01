@@ -19,17 +19,13 @@
                       <v-progress-circular indeterminate color="primary"></v-progress-circular>
                     </div>
                     <div v-else-if="valid == false" style="margin-top:20px; margin-bottom:10px">
-                      <div class="text-body-1 font-weight-medium">ERROR</div>
-                      <div class="text-body-1" style="margin-top:20px">{{ error }}</div>
+                      <v-icon size="40" color="#f0ad4e" style="margin-right:10px">fas fa-exclamation-triangle</v-icon>
+                      <p style="color:white; font-size:19px; margin-top:25px; margin-bottom:25px">{{ error }}</p>
                     </div>
                     <div v-else-if="valid == true" style="margin-top:20px; margin-bottom:10px">
-                      <div class="text-h6">Payment information changed</div>
-                      <v-row no-gutters>
-                        <v-col>
-                          <v-icon size="50" color="#20bf6b" style="margin:15px">fas fa-check-circle</v-icon>
-                        </v-col>
-                      </v-row>
-                      <v-btn @click="goAccount" color="info" style="margin-top:10px">Go to Account</v-btn>
+                      <v-icon size="40" color="#20bf6b" style="margin-right:10px">fas fa-check-circle</v-icon>
+                      <p style="color:white; font-size:19px; margin-top:25px; margin-bottom:25px">Payment information changed</p>
+                      <v-btn @click="goAccount" color="info" style="margin-top:10px">Go To Account</v-btn>
                     </div>
                   </v-card-text>
                 </v-card>

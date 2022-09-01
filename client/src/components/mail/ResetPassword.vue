@@ -25,7 +25,7 @@
                       </div>
                       <div v-else style="margin-top:20px; margin-bottom:10px">
                         <div class="text-h6 white--text" style="font-weight:400">Verify your email</div>
-                        <div class="text-body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px; color:#e2e2e2">We have sent an email to the address you entered</div>
+                        <div class="text-body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px; color:white">We have sent an email to the address you entered</div>
                         </div>
                       </div>
                     <div v-else>
@@ -39,8 +39,8 @@
                         <v-btn block x-large :loading="loading" color="info" @click="submitPassword" style="margin-top:20px">RESET PASSWORD</v-btn>
                       </div>
                       <div v-else-if="valid != null && !valid" style="margin-top:20px; margin-bottom:10px">
-                        <div class="text-body-1 font-weight-medium">ERROR</div>
-                        <div class="text-body-1" style="margin-top:5px">This link has expired</div>
+                        <v-icon size="40" color="#f0ad4e" style="margin-right:10px">fas fa-exclamation-triangle</v-icon>
+                        <p style="color:white; font-size:19px; margin-top:25px; margin-bottom:25px">This link has expired</p>
                       </div>
                     </div>
                   </v-card-text>
@@ -122,7 +122,7 @@ export default {
         .finally(() => this.loading = false)
     },
     goBack() {
-      this.$router.push('/')
+      this.$router.push('/login')
     },
   }
 }
