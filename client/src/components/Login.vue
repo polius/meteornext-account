@@ -82,15 +82,14 @@ export default {
     // Snackbar
     snackbar: false,
   }),
-  props: ['url'],
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.prevRoute = from
     })
   },
   mounted() {
-    if (this.prevRoute.name == 'verifyEmail') EventBus.$emit('send-notification', 'Email verified', '#20bf6b')
-    else if (this.prevRoute.name == 'resetPasswordCode') EventBus.$emit('send-notification', 'Password updated', '#20bf6b')
+    if (this.$route.params.status == 'emailVerified') EventBus.$emit('send-notification', 'Email verified', '#20bf6b')
+    else if (this.$route.params.status == 'passwordUpdated') EventBus.$emit('send-notification', 'Password updated', '#20bf6b')
   },
   watch: {
     mfa: function (val) {

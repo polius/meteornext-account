@@ -55,7 +55,7 @@ export default {
     else {
       const payload = { code: this.$route.params.code }
       axios.post('/account/email/verify', payload)
-      .then(() => this.$router.push('/login'))
+      .then(() => this.$router.push({name: 'login', params: {status: 'emailVerified'}}))
       .catch(() => this.valid = false)
     }
   },
