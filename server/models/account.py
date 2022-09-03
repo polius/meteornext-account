@@ -86,7 +86,7 @@ class Account:
 
     def get_license(self, account_id):
         query = """
-            SELECT prod.resources, IFNULL(pric.price, 0)/100 AS 'price', l.access_key, l.secret_key, l.in_use, l.unregistered_date
+            SELECT prod.resources, IFNULL(pric.price, 0) AS 'price', l.access_key, l.secret_key, l.in_use, l.unregistered_date
             FROM licenses l
             JOIN products prod ON prod.id = l.product_id
             LEFT JOIN prices pric ON pric.product_id = prod.id
@@ -303,7 +303,7 @@ class Account:
                 next_payment_attempt = VALUES(next_payment_attempt),
                 invoice = VALUES(invoice);
         """
-        self._sql.execute(query, (date, int(price)/100, status, stripe_id, next_payment_attempt, invoice, subscription_stripe))
+        self._sql.execute(query, (date, price, status, stripe_id, next_payment_attempt, invoice, subscription_stripe))
 
     def new_subscription(self, account_id, product_id, price_id, stripe_id, date):
         query = """

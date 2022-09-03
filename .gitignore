@@ -2,6 +2,7 @@
 node_modules
 dist/
 build/deploy.py
+resources/stripe_products.txt
 
 # local env files
 .env.local
