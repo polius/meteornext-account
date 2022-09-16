@@ -162,8 +162,8 @@ export default {
       if (resources.length == 0) return
 
       // Init pricing
-      const max_price_x_server = 8
-      const max_price_reduction = 6.5
+      const max_price_x_server = 10
+      const max_price_reduction = 7.5
       const max_servers = 500
       
       // Check resources parameter
