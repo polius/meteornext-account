@@ -163,7 +163,7 @@ export default {
 
       // Init pricing
       const max_price_x_server = 10
-      const max_price_reduction = 7.5
+      const max_price_reduction = 8.5
       const max_servers = 500
       
       // Check resources parameter
