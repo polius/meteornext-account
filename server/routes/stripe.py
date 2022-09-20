@@ -82,11 +82,11 @@ class Stripe:
         self._account.new_subscription(account['id'], product_id, price_id, stripe_id, created)
 
         # Create entry to the payments table
-        price = data['object']['amount_paid']
+        price = data['object']['amount_paid'] / 100
         status = 'paid'
         stripe_id = data['object']['id']
         next_payment_attempt = data['object']['next_payment_attempt']
-        invoice = data['object']['invoice_pdf']
+        invoice = data['object']['hosted_invoice_url']
         self._account.new_purchase(subscription_stripe, created, price, status, stripe_id, next_payment_attempt, invoice)
 
         # Send email
@@ -105,7 +105,7 @@ class Stripe:
             # Create entry to the payments table
             account_id = account['id']
             created = data['object']['created']
-            price = data['object']['amount_due']
+            price = data['object']['amount_due'] / 100
             status = 'unpaid'
             stripe_id = data['object']['id']
             next_payment_attempt = data['object']['next_payment_attempt']

@@ -307,7 +307,7 @@ class Account:
 
     def new_subscription(self, account_id, product_id, price_id, stripe_id, date):
         query = """
-            INSERT INTO subscriptions (account_id, license_id, product_id, price_id, stripe_id, start_date)
+            INSERT IGNORE INTO subscriptions (account_id, license_id, product_id, price_id, stripe_id, start_date)
             SELECT
                 %(account_id)s AS 'account_id',
                 (SELECT id FROM licenses WHERE account_id = %(account_id)s LIMIT 1) AS 'license_id',

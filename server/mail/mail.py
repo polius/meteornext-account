@@ -78,7 +78,7 @@ class Mail:
         with open(os.path.dirname(__file__) + "/payment_success.html", "r") as fopen:
             HTML_EMAIL_CONTENT = fopen.read()
         # Add parameters
-        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{PRICE}', str(price / 100))
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{PRICE}', str(price))
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NAME}', name)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{DATE}', date)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{RESOURCES}', str(resources))
@@ -111,7 +111,7 @@ class Mail:
             HTML_EMAIL_CONTENT = fopen.read()
         # Add parameters
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CODE}', code)
-        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{PRICE}', str(price / 100))
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{PRICE}', str(price))
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD}', str(card))
         if next_payment_attempt is None:
             HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NEXT_PAYMENT_ATTEMPT}', 'This payment attempt was the last one. Your licence has automatically been changed to 1 Server.')

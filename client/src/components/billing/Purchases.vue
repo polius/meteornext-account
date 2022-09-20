@@ -12,14 +12,14 @@
           {{ item.resources == -1 ? 'Unlimited' : item.resources }}
         </template>
         <template v-slot:[`item.price`]="{ item }">
-          {{ `€ ${item.price}` }}
+          {{ `€ ${priceFormat(item.price)}` }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
           <v-icon :color="item.status == 'paid' ? '#20bf6b' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>
           {{ item.status == 'paid' ? 'Payment successful' : 'Payment failed' }}
         </template>
         <template v-slot:[`item.invoice`]="{ item }">
-          <v-btn v-if="item.invoice != null" icon title="Download invoice"><v-icon small @click="downloadInvoice(item.invoice)">fas fa-arrow-down</v-icon></v-btn>
+          <v-btn v-if="item.invoice != null" icon title="View invoice details"><v-icon small @click="viewInvoice(item.invoice)">fas fa-external-link-alt</v-icon></v-btn>
         </template>
       </v-data-table>
     </v-card>
@@ -52,12 +52,17 @@ export default {
     }
   },
   methods: {
-    downloadInvoice(invoice) {
+    viewInvoice(invoice) {
       window.open(invoice, '_blank')
     },
     dateFormat(date) {
       if (date) return moment.utc(date).local().format("DD MMMM YYYY, HH:mm:ss")
       return date
+    },
+    priceFormat(price) {
+      let newPrice = price.toString()
+      if (newPrice.split('.').length > 1 && newPrice.split('.')[1].length === 1) newPrice += '0'
+      return newPrice
     },
   }
 }

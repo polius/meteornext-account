@@ -101,7 +101,7 @@ CREATE TABLE `subscriptions` (
   INDEX `account_id` (`account_id`),
   INDEX `license_id` (`license_id`),
   INDEX `product_id` (`product_id`),
-  INDEX `price_id` (`price_id`),
+  UNIQUE `price_id` (`price_id`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`license_id`) REFERENCES `licenses` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
