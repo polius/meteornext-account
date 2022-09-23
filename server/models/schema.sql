@@ -1,5 +1,6 @@
 CREATE TABLE `accounts` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `stripe_id` VARCHAR(255) NULL COMMENT 'customer_id',
@@ -95,20 +96,21 @@ CREATE TABLE `subscriptions` (
   `product_id` INT UNSIGNED NOT NULL,
   `price_id` INT UNSIGNED NULL,
   `stripe_id` VARCHAR(255) NOT NULL COMMENT 'subscription_id',
-  `created_date` DATETIME NOT NULL,
+  `start_date` DATETIME NOT NULL,
   `end_date` DATETIME NULL,
   PRIMARY KEY (`id`),
   INDEX `account_id` (`account_id`),
   INDEX `license_id` (`license_id`),
   INDEX `product_id` (`product_id`),
-  UNIQUE `price_id` (`price_id`),
+  INDEX `price_id` (`price_id`),
+  UNIQUE `stripe_id` (`stripe_id`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`license_id`) REFERENCES `licenses` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`price_id`) REFERENCES `prices` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
-CREATE TABLE `payments` (
+CREATE TABLE `invoices` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `subscription_id` INT UNSIGNED NOT NULL,
   `created_date` DATETIME NOT NULL,
@@ -116,7 +118,7 @@ CREATE TABLE `payments` (
   `status` ENUM('paid','unpaid','expired') NOT NULL,
   `stripe_id` VARCHAR(255) NOT NULL COMMENT 'invoice_id',
   `next_payment_attempt` INT UNSIGNED NULL COMMENT 'unixtime',
-  `invoice` TEXT NULL,
+  `invoice_url` TEXT NULL,
   PRIMARY KEY (`id`),
   INDEX `subscription_id` (`subscription_id`),
   UNIQUE `stripe_id` (`stripe_id`),

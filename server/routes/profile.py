@@ -20,9 +20,9 @@ class Profile:
         # Init blueprint
         profile_blueprint = Blueprint('profile', __name__, template_folder='profile')
 
-        @profile_blueprint.route('/profile/password', methods=['POST'])
+        @profile_blueprint.route('/profile/name', methods=['POST'])
         @jwt_required()
-        def profile_password_method():
+        def profile_name_method():
             # Get account
             account = self._account.get(get_jwt_identity())[0]
 
@@ -34,15 +34,18 @@ class Profile:
             data = request.get_json()
 
             # Check parameters
-            if 'current' not in data or 'new' not in data or 'repeat' not in data:
+            if 'name' not in data:
                 return jsonify({'message': 'Insufficient parameters'}), 400
+            if len(data['name']) > 100:
+                return jsonify({'message': 'The name exceeds the maximum length allowed.'}), 400
 
-            # Change password
+            # Change name
             try:
-                self.change_password(account, data['current'], data['new'], data['repeat'])
-                return jsonify({'message': 'Password successfully changed'}), 200
-            except Exception as e:
-                return jsonify({'message': str(e)}), 400
+                self._account.change_name(account['id'], data['name'])
+                stripe.Customer.modify(account['stripe_id'], name=data['name'])
+                return jsonify({'message': 'Name successfully changed'}), 200
+            except Exception:
+                return jsonify({'message': 'An error occurred changing the name. Please try again later.'}), 400
 
         @profile_blueprint.route('/profile/email', methods=['POST'])
         @jwt_required()
@@ -60,6 +63,8 @@ class Profile:
             # Check parameters
             if 'email' not in data:
                 return jsonify({'message': 'Insufficient parameters'}), 400
+            if len(data['email']) > 100:
+                return jsonify({'message': 'The email exceeds the maximum length allowed.'}), 400
 
             # Check email
             if account['email'] == data['email']:
@@ -73,10 +78,35 @@ class Profile:
                 code = secrets.token_urlsafe(64)
                 self._account.create_mail(account['id'], 'verify_email', code, data['email'])
                 self._mail.send_verify_email(data['email'], code)
+                return jsonify({'message': 'Please verify your email address'}), 200
             except Exception:
                 return jsonify({'message': 'An error occurred sending the verification mail. Please try again later.'}), 400
 
-            return jsonify({'message': 'Please verify your email address'}), 200
+        @profile_blueprint.route('/profile/password', methods=['POST'])
+        @jwt_required()
+        def profile_password_method():
+            # Get account
+            account = self._account.get(get_jwt_identity())[0]
+
+            # Check disabled
+            if account['disabled']:
+                return jsonify({"message": "Account disabled"}), 401
+
+            # Get Request Json
+            data = request.get_json()
+
+            # Check parameters
+            if 'current' not in data or 'new' not in data or 'repeat' not in data:
+                return jsonify({'message': 'Insufficient parameters'}), 400
+            if len(data['new']) > 100:
+                return jsonify({'message': 'The new password exceeds the maximum length allowed.'}), 400
+
+            # Change password
+            try:
+                self.change_password(account, data['current'], data['new'], data['repeat'])
+                return jsonify({'message': 'Password successfully changed'}), 200
+            except Exception as e:
+                return jsonify({'message': str(e)}), 400
 
         return profile_blueprint
 

@@ -15,11 +15,11 @@
           {{ `€ ${priceFormat(item.price)}` }}
         </template>
         <template v-slot:[`item.status`]="{ item }">
-          <v-icon :color="item.status == 'paid' ? '#20bf6b' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">fas fa-circle</v-icon>
-          {{ item.status == 'paid' ? 'Payment successful' : 'Payment failed' }}
+          <v-icon :color="item.status == 'paid' ? '#20bf6b' : '#EF5354'" small style="margin-bottom:2px; margin-right:5px">{{ item.status == 'paid' ? 'fas fa-check-circle' : 'fas fa-times-circle'}}</v-icon>
+          {{ item.status == 'paid' ? 'Payment successful' : item.status == 'unpaid' ? 'Payment failed' : 'Payment expired' }}
         </template>
-        <template v-slot:[`item.invoice`]="{ item }">
-          <v-btn v-if="item.invoice != null" icon title="View invoice details"><v-icon small @click="viewInvoice(item.invoice)">fas fa-external-link-alt</v-icon></v-btn>
+        <template v-slot:[`item.invoice_url`]="{ item }">
+          <v-btn v-if="item.invoice_url != null" icon title="View invoice details"><v-icon small @click="viewInvoice(item.invoice_url)">fas fa-external-link-alt</v-icon></v-btn>
         </template>
       </v-data-table>
     </v-card>
@@ -33,12 +33,11 @@ export default {
   data: () => ({
     loading: false,
     headers: [
-      { text: 'ID', value: 'invoice_id' },
       { text: 'Purchase date', value: 'created_date' },
       { text: 'Resources', value: 'resources' },
       { text: 'Price', value: 'price' },
       { text: 'Status', value: 'status' },
-      { text: 'Invoice', value: 'invoice'},
+      { text: 'Invoice', value: 'invoice_url'},
     ],
     search: '',
   }),
@@ -48,12 +47,12 @@ export default {
   computed: {
     items() {
       if (this.account.billing === undefined) return []
-      return this.account.billing.payments
+      return this.account.billing.invoices
     }
   },
   methods: {
-    viewInvoice(invoice) {
-      window.open(invoice, '_blank')
+    viewInvoice(invoice_url) {
+      window.open(invoice_url, '_blank')
     },
     dateFormat(date) {
       if (date) return moment.utc(date).local().format("DD MMMM YYYY, HH:mm:ss")

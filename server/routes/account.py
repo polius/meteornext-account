@@ -37,7 +37,7 @@ class Account:
                 license = self._account.get_license(get_jwt_identity())
                 billing = {
                     "details": {},
-                    "payments": self._account.get_payments(get_jwt_identity())
+                    "invoices": self._account.get_invoices(get_jwt_identity())
                 }
 
                 # Get billing card details
@@ -164,7 +164,7 @@ class Account:
             else:
                 # Create stripe customer
                 account = self._account.get(mail[0]['account_id'])[0]
-                customer = stripe.Customer.create(email=account['email'])
+                customer = stripe.Customer.create(email=account['email'], name=account['name'])
                 data = {'account_id': mail[0]['account_id'], 'stripe_id': customer['id']}
                 self._account.put_customer(data)
 

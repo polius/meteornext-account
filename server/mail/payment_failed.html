@@ -49,12 +49,12 @@
           <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
             <tr>
               <td bgcolor="#ffffff" align="left" style="padding:20px 30px 5px 30px; color: #393d4d; font-family: 'Lato', Helvetica, Arial, sans-serif; line-height: 35px;">
-                <p style="text-align:left; font-size:21px; font-weight:600; margin:0px">€{PRICE} payment to Meteor Next was unsuccessful</p>
+                <p style="text-align:left; font-size:21px; font-weight:600; margin:0px">Payment unsuccessful</p>
               </td>
             </tr>
             <tr>
               <td bgcolor="#ffffff" align="left" style="padding: 10px 30px 0px 30px; color: #393d4d; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 25px;">
-                <p style="margin: 0; font-weight:400">We were unable to charge your card ending in {CARD} for your payment. Please update your payment information to complete your purchase.</p>
+                <p style="margin: 0; font-weight:400">We were unable to charge {PRICE}€ from your card ending in {CARD} for your payment.</p>
               </td>
             </tr>
             <tr>
@@ -62,21 +62,26 @@
                 <p style="margin: 0; font-weight:400">{NEXT_PAYMENT_ATTEMPT}</p>
               </td>
             </tr>
-            <tr>
+            <tr {INVOICE_STYLE}>
               <td bgcolor="#ffffff" align="left">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 20px 30px;">
+                    <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 5px 30px;">
                       <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr>
                           <td align="center" style="border-radius: 20px;">
-                            <a href="https://account.meteornext.io/update/{CODE}" target="_blank" style="font-size: 16px; font-family: Lato, Helvetica, Arial, sans-serif; font-weight: 500; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; width:100%; padding-top:12px; padding-bottom:12px; border-radius: 5px; background-color: #2196f3; display: inline-block;">Update payment information</a>
+                            <a href="{INVOICE_URL}" target="_blank" style="font-size: 16px; font-family: Lato, Helvetica, Arial, sans-serif; font-weight: 500; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; width:100%; padding-top:12px; padding-bottom:12px; border-radius: 5px; background-color: #2196f3; display: inline-block;">Update payment information</a>
                           </td>
                         </tr>
                       </table>
                     </td>
                   </tr>
                 </table>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 10px 30px; color: #393d4d; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 400; line-height: 25px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;">
+                <p>You can view your invoices and manage your subscription in your <a href="https://account.meteornext.io" target="_blank" style="color:#2196f3; margin: 0; font-weight: 400;">Account</a>.</p>
               </td>
             </tr>
           </table>

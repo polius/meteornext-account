@@ -8,6 +8,7 @@ class Account:
         query = """
             SELECT 
                 a.id,
+                a.name,
                 a.email,
                 a.password,
                 m.account_id IS NULL AS 'verified',
@@ -29,6 +30,7 @@ class Account:
         query = """
             SELECT 
                 a.id,
+                a.name,
                 a.email,
                 a.password,
                 m.account_id IS NULL AS 'verified',
@@ -51,6 +53,7 @@ class Account:
         query = """
             SELECT 
                 a.id,
+                a.name,
                 a.email,
                 a.password,
                 m.account_id IS NULL AS 'verified',
@@ -71,6 +74,7 @@ class Account:
     def get_profile(self, account_id):
         query = """
             SELECT
+                a.name,
                 a.email,
                 a.created_date,
                 CASE
@@ -96,14 +100,14 @@ class Account:
         """
         return self._sql.execute(query, (account_id))[0]
 
-    def get_payments(self, account_id):
+    def get_invoices(self, account_id):
         query = """
-            SELECT pa.stripe_id AS 'invoice_id', pa.created_date, pr.resources, pa.price, pa.status, pa.invoice
-            FROM payments pa
-            JOIN subscriptions s ON s.id = pa.subscription_id AND s.account_id = %s
+            SELECT i.created_date, p.resources, i.price, i.status, i.invoice_url
+            FROM invoices i
+            JOIN subscriptions s ON s.id = i.subscription_id AND s.account_id = %s
             JOIN licenses l ON l.id = s.license_id
-            JOIN products pr ON pr.id = s.product_id
-            ORDER BY pa.id DESC
+            JOIN products p ON p.id = s.product_id
+            ORDER BY i.id DESC
         """
         return self._sql.execute(query, (account_id))
 
@@ -114,10 +118,10 @@ class Account:
         now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
         # Create account
         query = """
-            INSERT INTO accounts (email, password, ip, created_date)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO accounts (name, email, password, ip, created_date)
+            VALUES (%s, %s, %s, %s, %s)
         """
-        account_id = self._sql.execute(query, (data['email'], data['password'], data['ip'], now))
+        account_id = self._sql.execute(query, (data['name'], data['email'], data['password'], data['ip'], now))
 
         # Enable sentry
         query = """
@@ -162,13 +166,13 @@ class Account:
     ###########
     # PROFILE #
     ###########
-    def change_password(self, account):
+    def change_name(self, account_id, name):
         query = """
             UPDATE accounts
-            SET `password` = %s
+            SET name = %s
             WHERE id = %s
         """
-        self._sql.execute(query, (account['password'], account['id']))
+        self._sql.execute(query, (name, account_id))
 
     def change_email(self, account_id, email):
         query = """
@@ -177,6 +181,14 @@ class Account:
             WHERE id = %s
         """
         self._sql.execute(query, (email, account_id))
+
+    def change_password(self, account):
+        query = """
+            UPDATE accounts
+            SET `password` = %s
+            WHERE id = %s
+        """
+        self._sql.execute(query, (account['password'], account['id']))
     
     def delete(self, account_id):
         now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
@@ -283,9 +295,9 @@ class Account:
     ###########
     # BILLING #
     ###########
-    def new_purchase(self, subscription_stripe, date, price, status, stripe_id, next_payment_attempt, invoice):
+    def new_purchase(self, subscription_id, created_date, price, status, stripe_id, next_payment_attempt, invoice_url):
         query = """
-            INSERT INTO payments (subscription_id, created_date, price, status, stripe_id, next_payment_attempt, invoice)
+            INSERT INTO invoices (subscription_id, created_date, price, status, stripe_id, next_payment_attempt, invoice_url)
             SELECT
                 id AS 'subscription_id',
                 FROM_UNIXTIME(%s) AS 'created_date',
@@ -293,17 +305,15 @@ class Account:
                 %s AS 'status',
                 %s AS 'stripe_id',
                 %s AS 'next_payment_attempt',
-                %s AS 'invoice'
+                %s AS 'invoice_url'
             FROM subscriptions
             WHERE stripe_id = %s
             ON DUPLICATE KEY UPDATE
                 created_date = VALUES(created_date),
-                price = VALUES(price),
                 status = VALUES(status),
-                next_payment_attempt = VALUES(next_payment_attempt),
-                invoice = VALUES(invoice);
+                next_payment_attempt = VALUES(next_payment_attempt);
         """
-        self._sql.execute(query, (date, price, status, stripe_id, next_payment_attempt, invoice, subscription_stripe))
+        self._sql.execute(query, (created_date, price, status, stripe_id, next_payment_attempt, invoice_url, subscription_id))
 
     def new_subscription(self, account_id, product_id, price_id, stripe_id, date):
         query = """
@@ -314,9 +324,9 @@ class Account:
                 (SELECT id FROM products WHERE stripe_id = %(product_id)s) AS 'product_id',
                 (SELECT id FROM prices WHERE stripe_id = %(price_id)s) AS 'price_id',
                 %(stripe_id)s AS 'stripe_id',
-                FROM_UNIXTIME(%(date)s) AS 'start_date'
+                FROM_UNIXTIME(%(start_date)s) AS 'start_date'
         """
-        self._sql.execute(query, {"account_id": account_id, "product_id": product_id, "price_id": price_id, "stripe_id": stripe_id, "date": date})
+        self._sql.execute(query, {"account_id": account_id, "product_id": product_id, "price_id": price_id, "stripe_id": stripe_id, "start_date": date})
 
     def remove_subscription(self, stripe_subscription_id):
         now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
@@ -327,12 +337,12 @@ class Account:
         """
         self._sql.execute(query, (now, stripe_subscription_id))
 
-    def expire_payment(self, stripe_invoice_id):
+    def expire_invoice(self, stripe_invoice_id):
         query = """
-            UPDATE payments
-            SET status = 'expired'
+            UPDATE invoices
+            SET status = 'expired',
+                invoice_url = NULL
             WHERE stripe_id = %s
-            AND status = 'unpaid'
         """
         self._sql.execute(query, (stripe_invoice_id))
 

@@ -54,7 +54,7 @@
             </tr>
             <tr>
               <td bgcolor="#ffffff" align="left" style="padding: 10px 30px 15px 30px; color: #393d4d; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 25px;">
-                <p style="margin: 0; font-weight:400"><span style="font-weight:600">€{PRICE}</span> has been charged to the card on your account.</p>
+                <p style="margin: 0; font-weight:400"><span style="font-weight:600">{PRICE}€</span> has been charged to the card on your account.</p>
               </td>
             </tr>
             <tr>
@@ -73,13 +73,25 @@
               </td>
             </tr>
             <tr>
-              <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 0px 30px; color: #393d4d; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 25px;">
-                <p style="margin: 0; font-weight:400"><span style="font-weight:600">Invoice ID:</span> {INVOICE_ID}</p>
+              <td bgcolor="#ffffff" align="left">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td bgcolor="#ffffff" align="center" style="padding: 20px 30px 5px 30px;">
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td align="center" style="border-radius: 20px;">
+                            <a href="{INVOICE_URL}" target="_blank" style="font-size: 16px; font-family: Lato, Helvetica, Arial, sans-serif; font-weight: 500; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; width:100%; padding-top:12px; padding-bottom:12px; border-radius: 5px; background-color: #2196f3; display: inline-block;">See invoice details</a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
             <tr>
-              <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 15px 30px; color: #393d4d; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 25px;">
-                <p>You can view your invoices and manage your subscription from your <a href="https://account.meteornext.io" target="_blank" style="color:#2196f3; margin: 0; font-weight: 400;">Account</a>.</p>
+              <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 10px 30px; color: #393d4d; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 400; line-height: 25px; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;">
+                <p>You can view your invoices and manage your subscription in your <a href="https://account.meteornext.io" target="_blank" style="color:#2196f3; margin: 0; font-weight: 400;">Account</a>.</p>
               </td>
             </tr>
           </table>

@@ -49,16 +49,23 @@ class Stripe:
     # Internal Methods #
     ####################
     def subscription_created(self, data):
-        # Remove last subscriptions
         subscriptions = stripe.Subscription.list(customer=data['object']['customer'])
         for subscription in subscriptions['data'][1:]:
+            # Expire unpaid payments and mark unpaid invoices to 'void'
+            invoices = stripe.Invoice.list(subscription=subscription['id'])['data']
+            for invoice in invoices:
+                if invoice['status'] == 'open':
+                    stripe.Invoice.void_invoice(invoice['id'])
+                    self._account.expire_invoice(invoice['id'])
+            # Remove last subscription
             stripe.Subscription.delete(subscription['id'])
             self._account.remove_subscription(subscription['id'])
 
     def subscription_updated(self, data):
         if data['object']['status'] == 'unpaid':
+            stripe.Invoice.void_invoice(data['object']['latest_invoice'])
             stripe.Subscription.delete(data['object']['id'])
-            self._account.expire_payment(data['object']['latest_invoice'])
+            self._account.expire_invoice(data['object']['latest_invoice'])
             self._account.remove_subscription(data['object']['id'])
             self._account.downgrade_license(data['object']['id'])
 
@@ -66,7 +73,6 @@ class Stripe:
         # Get common information
         account = self._account.get_by_email(data['object']['customer_email'])[0]
         product = self._account.get_products_by_stripe(data['object']['lines']['data'][0]['plan']['product'])[0]
-        subscription_stripe = data['object']['subscription']
         account_id = account['id']
         product_id = product['id']
 
@@ -78,47 +84,43 @@ class Stripe:
         stripe_id = data['object']['subscription']
         product_id = data['object']['lines']['data'][0]['price']['product']
         price_id = data['object']['lines']['data'][0]['price']['id']
-        created = data['object']['created'],
-        self._account.new_subscription(account['id'], product_id, price_id, stripe_id, created)
+        created_date = data['object']['created'],
+        self._account.new_subscription(account['id'], product_id, price_id, stripe_id, created_date)
 
         # Create entry to the payments table
+        subscription_id = data['object']['subscription']
         price = data['object']['amount_paid'] / 100
         status = 'paid'
         stripe_id = data['object']['id']
         next_payment_attempt = data['object']['next_payment_attempt']
-        invoice = data['object']['hosted_invoice_url']
-        self._account.new_purchase(subscription_stripe, created, price, status, stripe_id, next_payment_attempt, invoice)
+        invoice_url = data['object']['hosted_invoice_url']
+        self._account.new_purchase(subscription_id, created_date, price, status, stripe_id, next_payment_attempt, invoice_url)
 
         # Send email
         email = account['email']
-        name = stripe.Customer.list_payment_methods(data['object']['customer'], type="card")['data'][0]['billing_details']['name']
+        name = account['name']
         date = datetime.datetime.utcfromtimestamp(data['object']['created'])
         date = f"{date.strftime('%B')} {date.strftime('%d')}, {date.strftime('%Y')}"
         resources = product['resources']
-        self._mail.send_payment_success_email(email, price, name, date, resources, stripe_id)
+        self._mail.send_payment_success_email(email, price, name, date, resources, invoice_url)
 
     def invoice_payment_failed(self, data):
         if data['object']['billing_reason'] == 'subscription_cycle':
-            # Get common information
-            account = self._account.get_by_customer(data['object']['customer'])[0]
-            subscription_stripe = data['object']['subscription']
             # Create entry to the payments table
-            account_id = account['id']
-            created = data['object']['created']
+            subscription_id = data['object']['subscription']
+            created_date = data['object']['created']
             price = data['object']['amount_due'] / 100
             status = 'unpaid'
             stripe_id = data['object']['id']
             next_payment_attempt = data['object']['next_payment_attempt']
-            invoice = None
-            self._account.new_purchase(subscription_stripe, created, price, status, stripe_id, next_payment_attempt, invoice)
-            # Add entry to mail table
-            code = secrets.token_urlsafe(64)
-            self._account.create_mail(account_id, 'update_payment', code)
+            invoice_url = data['object']['hosted_invoice_url']
+            self._account.new_purchase(subscription_id, created_date, price, status, stripe_id, next_payment_attempt, invoice_url)
+
             # Send email
             payment_methods = stripe.PaymentMethod.list(customer=data['object']['customer'], type="card")['data']
             email = data['object']['customer_email']
             card = payment_methods[0]['card']['last4']
-            self._mail.send_payment_failed_email(email, price, card, code, next_payment_attempt)
+            self._mail.send_payment_failed_email(email, price, card, invoice_url, next_payment_attempt)
 
     def customer_source_expiring(self, data):
         account = self._account.get_by_email(data['object']['owner']['email'])[0]
@@ -135,10 +137,12 @@ class Stripe:
 
     def payment_method_attached(self, data):
         # Get all customer payment methods
-        payment_methods = stripe.PaymentMethod.list(customer=data['object']['customer'], type="card")['data'][1:]
+        payment_methods = stripe.PaymentMethod.list(customer=data['object']['customer'], type="card")['data']
         # Delete old payment methods
+        latest_payment = max(payment_methods, key=lambda x: x['created'])['id']
         for i in payment_methods:
-            stripe.PaymentMethod.detach(i['id'])
+            if i['id'] != latest_payment:
+                stripe.PaymentMethod.detach(i['id'])
         # Update customer's name and assign the current payment method as a default
         stripe.Customer.modify(data['object']['customer'], name=data['object']['billing_details']['name'], invoice_settings={"default_payment_method":data['object']['id']})
         # Expire mail codes

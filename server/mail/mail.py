@@ -73,7 +73,7 @@ class Mail:
             flush()
             raise
 
-    def send_payment_success_email(self, email, price, name, date, resources, stripe_id):
+    def send_payment_success_email(self, email, price, name, date, resources, invoice_url):
         # Get email template
         with open(os.path.dirname(__file__) + "/payment_success.html", "r") as fopen:
             HTML_EMAIL_CONTENT = fopen.read()
@@ -82,7 +82,7 @@ class Mail:
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NAME}', name)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{DATE}', date)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{RESOURCES}', str(resources))
-        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{INVOICE_ID}', stripe_id)
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{INVOICE_URL}', invoice_url)
         # Send mail
         request = self._ses.send_email(
             Source="Meteor Next <no-reply@meteornext.io>",
@@ -105,19 +105,21 @@ class Mail:
         if request['ResponseMetadata']['HTTPStatusCode'] != 200:
             raise Exception()
 
-    def send_payment_failed_email(self, email, price, card, code, next_payment_attempt):
+    def send_payment_failed_email(self, email, price, card, invoice_url, next_payment_attempt):
         # Get email template
         with open(os.path.dirname(__file__) + "/payment_failed.html", "r") as fopen:
             HTML_EMAIL_CONTENT = fopen.read()
         # Add parameters
-        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CODE}', code)
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{INVOICE_URL}', invoice_url)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{PRICE}', str(price))
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD}', str(card))
         if next_payment_attempt is None:
             HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NEXT_PAYMENT_ATTEMPT}', 'This payment attempt was the last one. Your licence has automatically been changed to 1 Server.')
+            HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{INVOICE_STYLE}', 'style="display: none"')
         else:
             next_payment_attempt = datetime.utcfromtimestamp(int(next_payment_attempt)).strftime('%a, %d %b %Y %H:%M:%S') + ' UTC+0'
-            HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NEXT_PAYMENT_ATTEMPT}', f"The next payment attempt will be made at {next_payment_attempt}.")
+            HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NEXT_PAYMENT_ATTEMPT}', f"The next and last payment attempt will be made in 3 days ({next_payment_attempt}). If the next payment attempt does not succeed the license will be automatically changed to 1 Server.")
+            HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{INVOICE_STYLE}', '')
         # Send mail
         request = self._ses.send_email(
             Source="Meteor Next <no-reply@meteornext.io>",
