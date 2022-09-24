@@ -2,7 +2,7 @@
   <div>
     <div class="text-h6 font-weight-medium">Change email</div>
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">We will email you a confirmation when changing your email, so please expect that email after submitting.</div>
-    <v-form ref="form" @submit.prevent>
+    <v-form ref="emailForm" @submit.prevent>
       <div class="text-body-2 font-weight-medium" style="margin-top:15px">New email</div>
       <v-text-field flat v-model="item" :readonly="loading" solo :rules="emailRules" style="padding-top:5px" hide-details v-on:keyup.enter="submitEmail()"></v-text-field>
     </v-form>
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     submitEmail() {
-      if (!this.$refs.form.validate()) {
+      if (!this.$refs.emailForm.validate()) {
         EventBus.$emit('send-notification', 'Please make sure all required fields are filled out correctly', '#EF5354')
         return
       }

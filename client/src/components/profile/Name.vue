@@ -2,9 +2,9 @@
   <div>
     <div class="text-h6 font-weight-medium">Change name</div>
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">We will use this name for when we send you emails. Should be the customer's full name or business name.</div>
-    <v-form ref="form" @submit.prevent>
+    <v-form ref="nameForm" @submit.prevent>
       <div class="text-body-2 font-weight-medium" style="margin-top:15px">New name</div>
-      <v-text-field flat v-model="item" :readonly="loading" solo style="padding-top:5px" hide-details v-on:keyup.enter="submitName()"></v-text-field>
+      <v-text-field flat v-model="item" :readonly="loading" solo :rules="[v => !!v || '']" style="padding-top:5px" hide-details v-on:keyup.enter="submitName()" required></v-text-field>
     </v-form>
     <v-btn :loading="loading" color="info" @click="submitName" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Change name</v-btn>
   </div>
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     submitName() {
-      if (!this.$refs.form.validate()) {
+      if (!this.$refs.nameForm.validate()) {
         EventBus.$emit('send-notification', 'Please make sure all required fields are filled out correctly', '#EF5354')
         return
       }

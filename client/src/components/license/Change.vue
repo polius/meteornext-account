@@ -19,7 +19,7 @@
                       <v-progress-circular indeterminate></v-progress-circular>
                     </div>
                     <div v-else-if="$route.params.id !== undefined && $route.params.id == 'success'" style="margin-top:20px">
-                      <v-icon size="40" color="#20bf6b" style="margin-right:10px">fas fa-check-circle</v-icon>
+                      <v-icon size="35" color="#20bf6b" style="margin-right:10px">fas fa-check-circle</v-icon>
                       <p style="color:white; font-size:19px; margin-top:25px; margin-bottom:25px">License successfully changed</p>
                       <div v-if="license != null && (license.resources > 1 || license.resources == -1)" class="text-body-1" style="margin-top:20px; margin-bottom:15px; color:#f6f6f6">Thank you for your purchase!</div>
                       <v-btn @click="goBack" color="info" style="margin-top:10px">Go To Account</v-btn>
