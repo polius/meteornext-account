@@ -1,4 +1,5 @@
 import os
+import uuid
 from datetime import datetime
 from boto3.session import Session
 from sentry_sdk import capture_exception, flush
@@ -14,6 +15,8 @@ class Mail:
             # Get email template
             with open(os.path.dirname(__file__) + "/verify_email.html", "r") as fopen:
                 HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}', code)
+            # Add parameters
+            HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{RANDOM}', str(uuid.uuid4()))
             # Send mail
             request = self._ses.send_email(
                 Source="Meteor Next <no-reply@meteornext.io>",
@@ -46,6 +49,8 @@ class Mail:
             # Get email template
             with open(os.path.dirname(__file__) + "/reset_password.html", "r") as fopen:
                 HTML_EMAIL_CONTENT = fopen.read().replace('{CODE}', code)
+            # Add parameters
+            HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{RANDOM}', str(uuid.uuid4()))
             # Send mail
             request = self._ses.send_email(
                 Source="Meteor Next <no-reply@meteornext.io>",
@@ -83,6 +88,7 @@ class Mail:
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{DATE}', date)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{RESOURCES}', str(resources))
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{INVOICE_URL}', invoice_url)
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{RANDOM}', str(uuid.uuid4()))
         # Send mail
         request = self._ses.send_email(
             Source="Meteor Next <no-reply@meteornext.io>",
@@ -113,6 +119,7 @@ class Mail:
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{INVOICE_URL}', invoice_url)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{PRICE}', str(price))
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD}', str(card))
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{RANDOM}', str(uuid.uuid4()))
         if next_payment_attempt is None:
             HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{NEXT_PAYMENT_ATTEMPT}', 'This payment attempt was the last one. Your licence has automatically been changed to 1 Server.')
             HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{INVOICE_STYLE}', 'style="display: none"')
@@ -150,6 +157,7 @@ class Mail:
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CODE}', code)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD}', card)
         HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{CARD_NUMBER}', str(card_number))
+        HTML_EMAIL_CONTENT = HTML_EMAIL_CONTENT.replace('{RANDOM}', str(uuid.uuid4()))
         # Send mail
         request = self._ses.send_email(
             Source="Meteor Next <no-reply@meteornext.io>",
