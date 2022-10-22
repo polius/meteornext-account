@@ -2,7 +2,7 @@
   <div style="height:100%">
     <v-main style="height:100%">
       <v-container grid-list-xl text-center style="height:100%; display:flex; justify-content:center; align-items:center;">
-        <v-layout row wrap align-center style="max-width:500px;">
+        <v-layout row wrap align-center style="max-width:800px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
               <div>
@@ -19,9 +19,10 @@
                       <v-progress-circular indeterminate></v-progress-circular>
                     </div>
                     <div v-else-if="$route.params.id !== undefined && $route.params.id == 'success'" style="margin-top:20px">
-                      <v-icon size="35" color="#20bf6b" style="margin-right:10px">fas fa-check-circle</v-icon>
-                      <p style="color:white; font-size:19px; margin-top:25px; margin-bottom:25px">License successfully changed</p>
-                      <div v-if="license != null && (license.resources > 1 || license.resources == -1)" class="text-body-1" style="margin-top:20px; margin-bottom:15px; color:#f6f6f6">Thank you for your purchase!</div>
+                      <p style="color:white; font-size:19px; margin-top:30px; margin-bottom:30px"><v-icon size="22" color="#20bf6b" style="margin-right:10px; padding-bottom:3px">fas fa-check-circle</v-icon>License successfully changed</p>
+                      <!-- <div v-if="license != null && (license.resources > 1 || license.resources == -1)" class="text-body-1" style="margin-top:20px; margin-bottom:15px; color:#f6f6f6">Thank you for your purchase!</div> -->
+                      <div class="text-body-1" style="color:#f6f6f6; margin-top:15px; margin-bottom:15px">Don't forget to refresh the license in your app to update the number of resources.</div>
+                      <a href="https://docs.meteornext.io/guides/administration.html#license" target="_blank"><v-img src="https://docs.meteornext.io/assets/admin-settings-license.4343a336.png" style="margin-bottom:10px"></v-img></a>
                       <v-btn @click="goBack" color="info" style="margin-top:10px">Go To Account</v-btn>
                     </div>
                     <div v-else style="margin-top:20px">
