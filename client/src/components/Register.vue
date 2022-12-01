@@ -4,8 +4,9 @@
       <v-container grid-list-xl text-center style="height:100%; display:flex; justify-content:center; align-items:center;">
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
-            <v-slide-y-transition mode="out-in">
-              <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
+            <div style="color: black; font-size: 2rem">Coming Soon...</div>
+            <!-- <v-slide-y-transition mode="out-in">
+              <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.8)">
                 <v-card-text>
                   <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                   <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
@@ -26,7 +27,7 @@
                   </v-form>
                 </v-card-text>
               </v-card>
-            </v-slide-y-transition>
+            </v-slide-y-transition> -->
           </v-flex>
         </v-layout>
       </v-container>
@@ -35,7 +36,7 @@
 </template>
 
 <script>
-import VueHcaptcha from '@hcaptcha/vue-hcaptcha';
+// import VueHcaptcha from '@hcaptcha/vue-hcaptcha';
 import axios from 'axios'
 import EventBus from '../js/event-bus'
 
@@ -53,7 +54,7 @@ export default {
     token: '',
     verify: false,
   }),
-  components: { VueHcaptcha },
+  // components: { VueHcaptcha },
   methods: {
     onVerify (token) {
       this.token = token

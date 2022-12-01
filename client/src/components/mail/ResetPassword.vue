@@ -6,10 +6,10 @@
           <v-flex>
             <v-slide-y-transition mode="out-in">
               <div>
-                <div @click="goBack" style="text-align:left; margin-bottom:5px; color:#f6f6f6; font-size:17px; font-weight:400; cursor:pointer; width:56px">
-                  <v-icon size="15" style="margin-right:5px; padding-bottom:3px">fas fa-arrow-left</v-icon>Back
+                <div @click="goBack" style="text-align:center; margin-bottom:5px; color:#183153; font-size:16px; font-weight:400; cursor:pointer; width:80px; background-color:rgba(61, 61, 80, 0.05); padding:10px; border-radius:5px">
+                  <v-icon size="15" style="margin-right:8px; padding-bottom:3px; color:#183153">fas fa-arrow-left</v-icon>Back
                 </div>
-                <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
+                <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.8)">
                   <v-card-text>
                     <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                     <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
@@ -18,7 +18,7 @@
                     <div v-if="$route.params.code === undefined">
                       <div v-if="!completed">
                         <v-form ref="form" @submit.prevent>
-                          <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">Email</div>
+                          <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:white">Email</div>
                           <v-text-field flat v-model="item.email" type="email" :readonly="loading" :rules="emailRules" solo v-on:keyup.enter="submitEmail()" style="padding-top:5px" hide-details autofocus></v-text-field>
                         </v-form>
                         <v-btn block x-large :loading="loading" color="info" @click="submitEmail" style="margin-top:20px">SUBMIT</v-btn>
@@ -31,9 +31,9 @@
                     <div v-else>
                       <div v-if="valid != null && valid" style="margin-top:20px; margin-bottom:10px">
                         <v-form ref="form" @submit.prevent>
-                          <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">New password</div>
+                          <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:white">New password</div>
                           <v-text-field flat v-model="item.password" :readonly="loading" type="password" :rules="[v => !!v || '']" v-on:keyup.enter="submitPassword" solo style="padding-top:5px" autocomplete="new-password" hint="Use 8 or more characters with a mix of letters and numbers" persistent-hint autofocus></v-text-field>
-                          <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:#e2e2e2">Confirm new password</div>
+                          <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:white">Confirm new password</div>
                           <v-text-field flat v-model="item.password2" type="password" :readonly="loading" :rules="[v => !!v || '']" v-on:keyup.enter="submitPassword" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
                         </v-form>
                         <v-btn block x-large :loading="loading" color="info" @click="submitPassword" style="margin-top:20px">RESET PASSWORD</v-btn>

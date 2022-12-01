@@ -19,7 +19,7 @@
 <style>
 @media (max-width: 599px) {
   #app {
-    background-position: -200px;
+    background-position: -600px;
     background-size: auto 100% !important;
   }
 }
