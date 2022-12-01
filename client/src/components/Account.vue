@@ -9,16 +9,25 @@
     </v-toolbar>
     <v-container style="max-width:min(100%,65em); padding:0px">
       <v-tabs v-model="tab" background-color="transparent" center-active centered slider-color="white" height="55px">
-        <v-tab :style="`font-weight: 600; font-size:${isMobile ? '14px' : '14.5px'}; color:white`">License</v-tab>
-        <v-tab :style="`font-weight: 600; font-size:${isMobile ? '14px' : '14.5px'}; color:white`">Billing</v-tab>
-        <v-tab :style="`font-weight: 600; font-size:${isMobile ? '14px' : '14.5px'}; color:white`">Profile</v-tab>
+        <v-tab class="tab" style="font-weight: 600; font-size:15px; color:white; background-color: rgba(61, 61, 80, 0.05);">License</v-tab>
+        <v-tab class="tab" style="font-weight: 600; font-size:15px; color:white; background-color: rgba(61, 61, 80, 0.05);">Billing</v-tab>
+        <v-tab class="tab" style="font-weight: 600; font-size:15px; color:white; background-color: rgba(61, 61, 80, 0.05);">Profile</v-tab>
       </v-tabs>
-      <License v-show="tab == 0" :account="account" :style="`background-color:rgba(61, 61, 80, 0.75); border-radius:${isMobile ? '0px' : '5px'}; padding:20px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
-      <Billing v-show="tab == 1" :account="account" :style="`background-color:rgba(61, 61, 80, 0.75); border-radius:${isMobile ? '0px' : '5px'}; padding:20px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
-      <Profile v-show="tab == 2" :account="account" :style="`background-color:rgba(61, 61, 80, 0.75); border-radius:${isMobile ? '0px' : '5px'}; padding:20px; margin-bottom:${isMobile ? '0px' : '20px'}`"/>
+      <License v-show="tab == 0" :account="account" class="section" style="background-color:rgba(61, 61, 80, 0.75); border-radius:5px; padding:20px; margin-bottom:20px"/>
+      <Billing v-show="tab == 1" :account="account" class="section" style="background-color:rgba(61, 61, 80, 0.75); border-radius:5px; padding:20px; margin-bottom:20px"/>
+      <Profile v-show="tab == 2" :account="account" class="section" style="background-color:rgba(61, 61, 80, 0.75); border-radius:5px; padding:20px; margin-bottom:20px"/>
     </v-container>
   </div>
 </template>
+
+<style>
+@media (max-width: 1040px) {
+  .section {
+    border-radius: 0px !important;
+    margin-bottom: 0px !important;
+  }
+}
+</style>
 
 <script>
 import EventBus from '../js/event-bus'
@@ -32,15 +41,12 @@ export default {
   data: () => ({
     account: {},
     tab: 0,
-    isMobile: false,
   }),
   components: { Profile, License, Billing },
   beforeDestroy () {
     if (typeof window === 'undefined') return
-    window.removeEventListener('resize', this.onResize, { passive: true })
   },
   created() {
-    this.onResize()
     this.getAccount()
     if (this.$route.params.path !== undefined) {
       if (this.$route.params.path == 'billing') this.tab = 1
@@ -48,7 +54,6 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener('resize', this.onResize, { passive: true })
     EventBus.$on('get-account', this.getAccount)
     if (this.$route.path == '/license') this.tab = 0
     else if (this.$route.path == '/billing') this.tab = 1
@@ -62,9 +67,6 @@ export default {
     }
   },
   methods: {
-    onResize () {
-      this.isMobile = window.innerWidth < 1040
-    },
     getAccount() {
       axios.get('/account')
         .then((response) => {

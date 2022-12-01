@@ -1,6 +1,6 @@
 <template>
   <!-- <v-app :style="{ height:'100%', padding:'0px', backgroundColor: 'transparent', backgroundImage: 'url(' + require('@/assets/bg.png') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }"> -->
-  <v-app style="height:100%; padding:0px; background-color:transparent; background-image: url('https://www.meteornext.io/assets/bg.png'); background-repeat:no-repeat; background-size:cover">
+  <v-app>
     <v-main>
       <router-view/>
     </v-main>
@@ -15,6 +15,23 @@
 
 <style src="@/fonts/roboto.css"></style>
 <style src="@/fonts/materialicons.css"></style>
+
+<style>
+@media (max-width: 599px) {
+  #app {
+    background-position: -200px;
+    background-size: auto 100% !important;
+  }
+}
+#app {
+  height: 100%;
+  padding: 0px;
+  background-color: transparent;
+  background-image: url('https://www.meteornext.io/assets/bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
 
 <script>
 import EventBus from './js/event-bus'
