@@ -2,14 +2,14 @@
   <div style="height:100%">
     <v-main style="height:100%">
       <v-container grid-list-xl text-center style="height:100%; display:flex; justify-content:center; align-items:center;">
-        <v-layout row wrap align-center style="max-width:800px;">
+        <v-layout row wrap align-center style="max-width:600px;">
           <v-flex>
             <v-slide-y-transition mode="out-in">
               <div>
-                <div @click="goBack" v-if="$route.params.id === undefined" style="text-align:left; margin-bottom:5px; color:#f6f6f6; font-size:17px; font-weight:400; cursor:pointer; width:56px">
-                  <v-icon size="15" style="margin-right:5px; padding-bottom:3px">fas fa-arrow-left</v-icon>Back
+                <div @click="goBack" style="text-align:center; margin-bottom:5px; color:#183153; font-size:16px; font-weight:400; cursor:pointer; width:80px; background-color:rgba(61, 61, 80, 0.05); padding:10px; border-radius:5px">
+                  <v-icon size="15" style="margin-right:8px; padding-bottom:3px; color:#183153">fas fa-arrow-left</v-icon>Back
                 </div>
-                <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.7)">
+                <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.8)">
                   <v-card-text>
                     <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                     <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
