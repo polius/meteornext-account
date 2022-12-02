@@ -4,7 +4,7 @@
       <v-container grid-list-xl text-center style="height:100%; display:flex; justify-content:center; align-items:center;">
         <v-layout row wrap align-center style="max-width:500px;">
           <v-flex>
-            <div style="color: black; font-size: 2rem">Coming Soon...</div>
+            <div style="color: #183153; font-size: 2rem">Coming Soon...</div>
             <!-- <v-slide-y-transition mode="out-in">
               <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.8)">
                 <v-card-text>

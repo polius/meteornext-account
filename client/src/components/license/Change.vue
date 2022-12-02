@@ -6,10 +6,10 @@
           <v-flex>
             <v-slide-y-transition mode="out-in">
               <div>
-                <div @click="goBack" style="text-align:center; margin-bottom:5px; color:#183153; font-size:16px; font-weight:400; cursor:pointer; width:80px; background-color:rgba(61, 61, 80, 0.05); padding:10px; border-radius:5px">
-                  <v-icon size="15" style="margin-right:8px; padding-bottom:3px; color:#183153">fas fa-arrow-left</v-icon>Back
+                <div @click="goBack" style="text-align:center; margin-bottom:5px; font-size:16px; font-weight:400; cursor:pointer; width:80px; background-color:rgba(61, 61, 80, 0.1); padding:10px; border-radius:5px">
+                  <v-icon size="15" style="margin-right:8px; padding-bottom:3px">fas fa-arrow-left</v-icon>Back
                 </div>
-                <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.8)">
+                <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.75)">
                   <v-card-text>
                     <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
                     <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
@@ -36,7 +36,7 @@
                           <span style="font-size:20px">{{ license.priceInteger == 0 ? '' : license.priceDecimal }}</span>
                           <span v-if="license.priceInteger != 0" class="text-h6 font-weight-light" style="color:#e2e2e2; font-size:20px!important; margin-left:5px">/ Month</span>
                         </p>
-                        <div class="text-body-1 font-weight-regular" style="color:#e2e2e2">Enter the amount of servers</div>
+                        <div class="text-body-1 font-weight-regular" style="color:white">Enter the amount of servers</div>
                         <v-text-field :readonly="resourcesText == 'Unlimited'" @keypress="isNumber($event)" @input="calculatePrice" solo v-model="resourcesText" class="centered-input" style="width:120px; margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:6px" hide-details></v-text-field>
                         <v-slider @input="calculatePrice" :readonly="loading" v-model="resourcesSlider" min="1" max="500" style="margin-left:50px; margin-right:50px" hide-details></v-slider>
                         <div v-if="resourcesText != 'Unlimited'" class="text-body-1 font-weight-regular" style="color:#e2e2e2">{{ `Avg. ${license.priceAverage}€ per server` }}</div>
@@ -91,10 +91,10 @@
 
 <style scoped>
 ::v-deep .centered-input .v-input__control {
-  border: 1px solid rgba(61, 61, 80, 0.3) !important;
+  border: 1px solid rgba(61, 61, 80, 0.2) !important;
 }
 ::v-deep .centered-input .v-input__control .v-input__slot {
-  background-color:rgba(61, 61, 80, 0.4) !important;
+  background-color:rgba(61, 61, 80, 0.3) !important;
 }
 ::v-deep .centered-input input {
   text-align: center;

@@ -17,12 +17,6 @@
 <style src="@/fonts/materialicons.css"></style>
 
 <style>
-@media (max-width: 599px) {
-  #app {
-    background-position: -600px;
-    background-size: auto 100% !important;
-  }
-}
 #app {
   height: 100%;
   padding: 0px;
