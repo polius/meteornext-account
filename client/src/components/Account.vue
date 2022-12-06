@@ -2,7 +2,7 @@
   <div style="height: calc(100% - 64px)">
     <v-toolbar color="rgba(50, 52, 69, 0.8)" style="max-height:64px; z-index:1">
       <v-img :src="require('../assets/logo.png')" max-height="40" max-width="40" contain style="margin-bottom:2px"></v-img>
-      <v-toolbar-title style="color:white; margin-left:10px">Meteor Next | Account</v-toolbar-title>
+      <v-toolbar-title style="color:white; margin-left:10px; cursor:default">Meteor Next | Account</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn @click="logout" class="d-none d-sm-flex" text style="color:white; height:45px"><v-icon size="20" style="margin-right:10px">fas fa-sign-out-alt</v-icon>Logout</v-btn>
       <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout" style="color:white"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
