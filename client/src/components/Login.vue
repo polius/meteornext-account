@@ -50,6 +50,9 @@
 </template>
 
 <style scoped>
+div {
+  cursor:default !important;
+}
 .link:hover {
   color: #2196f3;
   cursor: pointer;

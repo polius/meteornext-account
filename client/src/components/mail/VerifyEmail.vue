@@ -6,7 +6,7 @@
           <v-flex>
             <v-slide-y-transition mode="out-in">
               <div>
-                <div @click="goBack" style="text-align:center; margin-bottom:5px; font-size:16px; font-weight:400; cursor:pointer; width:80px; background-color:rgba(61, 61, 80, 0.5); padding:10px; border-radius:5px">
+                <div @click="goBack" style="text-align:center; margin-bottom:5px; font-size:16px; font-weight:400; cursor:pointer!important; width:80px; background-color:rgba(61, 61, 80, 0.5); padding:10px; border-radius:5px">
                   <v-icon size="15" style="margin-right:8px; padding-bottom:3px">fas fa-arrow-left</v-icon>Back
                 </div>
                 <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.8)">
@@ -31,6 +31,9 @@
 </template>
 
 <style scoped>
+div {
+  cursor:default !important;
+}
 ::v-deep .v-main::before {
   content: "";
   position: absolute;

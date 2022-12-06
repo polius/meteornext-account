@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-h6 font-weight-medium left" style="letter-spacing:1px!important; text-align:center">PROFILE</div>
+    <div class="text-h6 font-weight-medium left" style="letter-spacing:1px!important; text-align:center; cursor:default">PROFILE</div>
     <v-divider style="margin-top:15px; margin-bottom:20px"></v-divider>
     <Name :account="account"/>
     <v-divider style="margin-top:20px; margin-bottom:20px"></v-divider>
