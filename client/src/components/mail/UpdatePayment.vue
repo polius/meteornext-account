@@ -11,7 +11,7 @@
                 </div>
                 <v-card style="border-radius:5px; background-color:rgba(61, 61, 80, 0.8)">
                   <v-card-text>
-                    <v-avatar :size="100" style="margin-top:10px;"><img :src="require('@/assets/logo.png')" /></v-avatar>
+                    <v-avatar :size="100" style="margin-top:10px;"><img src="https://meteornext.io/assets/logo.png" /></v-avatar>
                     <div class="display-2 white--text" style="margin-top:10px;"><span style="font-weight:500">Meteor</span> Next</div>
                     <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | Update Payment</div>
                     <v-divider></v-divider>

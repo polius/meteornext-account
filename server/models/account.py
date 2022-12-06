@@ -90,13 +90,10 @@ class Account:
 
     def get_license(self, account_id):
         query = """
-            SELECT prod.resources, IFNULL(pric.price, 0) AS 'price', l.access_key, l.secret_key, l.in_use, l.unregistered_date
+            SELECT p.resources, IFNULL(l.price, 0) AS 'price', l.access_key, l.secret_key, l.in_use, l.unregistered_date
             FROM licenses l
-            JOIN products prod ON prod.id = l.product_id
-            LEFT JOIN prices pric ON pric.product_id = prod.id
+            JOIN products p ON p.id = l.product_id
             WHERE l.account_id = %s
-            ORDER BY l.id DESC
-            LIMIT 1
         """
         return self._sql.execute(query, (account_id))[0]
 
@@ -251,20 +248,14 @@ class Account:
     ###########   
     def get_product_by_resources(self, resources):
         query = """
-            SELECT pro.*, pri.stripe_id AS 'price_stripe_id'
+            SELECT pri.stripe_id AS 'price_stripe_id'
             FROM products pro
-            LEFT JOIN prices pri ON pri.product_id = pro.id
+            LEFT JOIN prices pri ON pri.product_id = pro.id AND pri.is_default = 1
             WHERE pro.resources = %s
+            ORDER BY pri.id DESC
+            LIMIT 1
         """
         return self._sql.execute(query, (resources))[0]
-
-    def get_products_by_stripe(self, stripe_id):
-        query = """
-            SELECT *
-            FROM products
-            WHERE stripe_id = %s
-        """
-        return self._sql.execute(query, (stripe_id))
 
     def unregister_license(self, account_id):
         now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
@@ -276,19 +267,24 @@ class Account:
         """
         self._sql.execute(query, (now, account_id))
 
-    def change_license(self, account_id, product_id):
+    def change_license(self, account_id, product_id, price_id, price):
         query = """
             UPDATE licenses
-            SET product_id = %s
+            SET
+                product_id = (SELECT id FROM products WHERE stripe_id = %s),
+                price_id = (SELECT id FROM prices WHERE stripe_id = %s),
+                price = %s
             WHERE account_id = %s
         """
-        self._sql.execute(query, (product_id, account_id))
+        self._sql.execute(query, (product_id, price_id, price, account_id))
 
     def downgrade_license(self, stripe_subscription_id):
         query = """
             UPDATE licenses
             JOIN subscriptions s ON s.license_id = licenses.id AND s.stripe_id = %s
-            SET licenses.product_id = (SELECT id FROM products WHERE resources = 1)
+            SET
+                licenses.product_id = (SELECT id FROM products WHERE resources = 1),
+                licenses.pricing_id = NULL
         """
         self._sql.execute(query, (stripe_subscription_id))
 

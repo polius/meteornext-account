@@ -70,15 +70,6 @@ class Stripe:
             self._account.downgrade_license(data['object']['id'])
 
     def invoice_paid(self, data):
-        # Get common information
-        account = self._account.get_by_email(data['object']['customer_email'])[0]
-        product = self._account.get_products_by_stripe(data['object']['lines']['data'][0]['plan']['product'])[0]
-        account_id = account['id']
-        product_id = product['id']
-
-        # Update licence entry
-        self._account.change_license(account_id, product_id)
-
         # Create entry to the subscriptions table
         account = self._account.get_by_customer(data['object']['customer'])[0]
         stripe_id = data['object']['subscription']
@@ -96,12 +87,15 @@ class Stripe:
         invoice_url = data['object']['hosted_invoice_url']
         self._account.new_purchase(subscription_id, created_date, price, status, stripe_id, next_payment_attempt, invoice_url)
 
+        # Update licence entry
+        self._account.change_license(account['id'], product_id, price_id, price)
+
         # Send email
         email = account['email']
         name = account['name']
         date = datetime.datetime.utcfromtimestamp(data['object']['created'])
         date = f"{date.strftime('%B')} {date.strftime('%d')}, {date.strftime('%Y')}"
-        resources = product['resources']
+        resources = self._account.get_license(account['id'])['resources']
         self._mail.send_payment_success_email(email, price, name, date, resources, invoice_url)
 
     def invoice_payment_failed(self, data):

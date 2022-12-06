@@ -1,5 +1,4 @@
 <template>
-  <!-- <v-app :style="{ height:'100%', padding:'0px', backgroundColor: 'transparent', backgroundImage: 'url(' + require('@/assets/bg.png') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' }"> -->
   <v-app>
     <v-main>
       <router-view/>

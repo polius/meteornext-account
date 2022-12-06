@@ -64,9 +64,11 @@ CREATE TABLE `prices` (
   `price` DOUBLE NOT NULL,
   `product_id` INT UNSIGNED NOT NULL,
   `stripe_id` VARCHAR(255) NULL COMMENT 'price_id',
+  `is_default` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE `stripe_id` (`stripe_id`),
   INDEX `product_id` (`product_id`),
+  INDEX `is_default` (`is_default`),
   FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
@@ -74,6 +76,8 @@ CREATE TABLE `licenses` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `account_id` INT UNSIGNED NOT NULL,
   `product_id` INT UNSIGNED NOT NULL,
+  `price_id` INT UNSIGNED NULL,
+  `price` DOUBLE NULL,
   `access_key` VARCHAR(255) NOT NULL,
   `secret_key` VARCHAR(255) NOT NULL,
   `in_use` TINYINT(1) NOT NULL DEFAULT '0',
@@ -84,9 +88,11 @@ CREATE TABLE `licenses` (
   PRIMARY KEY (`id`),
   UNIQUE `account_id` (`account_id`),
   INDEX `product_id` (`product_id`),
+  INDEX `price_id` (`price_id`),
   INDEX `in_use` (`in_use`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`price_id`) REFERENCES `prices` (`id`) ON DELETE CASCADE,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `subscriptions` (
