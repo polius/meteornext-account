@@ -10,7 +10,7 @@
         </div>
       </template>
     </v-checkbox>
-    <v-btn :loading="loading" color="#eb4d4b" @click="deleteAccount" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
+    <v-btn :disabled="!confirm" :loading="loading" color="#eb4d4b" @click="deleteAccount" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Delete account</v-btn>
     <v-dialog v-model="dialog" width="640px">
       <v-card>
         <v-toolbar dense flat color="rgb(50, 50, 60)" style="border:solid rgba(255, 255, 255, 0.12) 1px">
@@ -48,6 +48,12 @@
     </v-dialog>
   </div>
 </template>
+
+<style scoped>
+div {
+  cursor:default !important;
+}
+</style>
 
 <script>
 import axios from 'axios'

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="text-h6 font-weight-medium">Change password</div>
+    <div class="text-h6 font-weight-medium">Password</div>
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">The new password has to meet the following requirements: Minimum 8 characters, at least one letter and at least one number.</div>
-    <v-form ref="passwordForm" @submit.prevent>
+    <v-form @submit.prevent>
       <div class="text-body-2 font-weight-medium" style="margin-top:15px">Current password</div>
       <v-text-field flat v-model="item.current" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details></v-text-field>
       <div class="text-body-2 font-weight-medium" style="margin-top:15px">New password</div>
@@ -10,11 +10,14 @@
       <div class="text-body-2 font-weight-medium" style="margin-top:15px">Confirm new password</div>
       <v-text-field flat v-model="item.repeat" :readonly="loading" type="password" :rules="[v => !!v || '']" solo style="padding-top:5px" autocomplete="new-password" hide-details v-on:keyup.enter="submitPassword()"></v-text-field>
     </v-form>
-    <v-btn :loading="loading" color="#2196f3" @click="submitPassword" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Change password</v-btn>
+    <v-btn :disabled="(item.current.trim() == '' || item.new.trim() == '' || item.repeat.trim() == '')" :loading="loading" color="#2196f3" @click="submitPassword" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Change password</v-btn>
   </div>
 </template>
 
 <style scoped>
+div {
+  cursor:default !important;
+}
 ::v-deep .v-input--is-focused .v-input__control {
   border: 1px solid #2196f3 !important; /* #005fcc */
 }
@@ -37,11 +40,6 @@ export default {
   }),
   methods: {
     submitPassword() {
-      // Check if all fields are filled
-      if (!this.$refs.passwordForm.validate()) {
-        EventBus.$emit('send-notification', 'Please make sure all required fields are filled out correctly', '#EF5354')
-        return
-      }
       this.loading = true
       const payload = this.item
       axios.post('/profile/password', payload)

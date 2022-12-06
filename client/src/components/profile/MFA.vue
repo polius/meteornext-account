@@ -124,6 +124,12 @@
   </div>
 </template>
 
+<style scoped>
+div {
+  cursor:default !important;
+}
+</style>
+
 <script>
 import EventBus from '../../js/event-bus.js'
 

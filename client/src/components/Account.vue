@@ -7,12 +7,12 @@
       <v-btn @click="logout" class="d-none d-sm-flex" text style="color:white; height:45px"><v-icon size="20" style="margin-right:10px">fas fa-sign-out-alt</v-icon>Logout</v-btn>
       <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout" style="color:white"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
     </v-toolbar>
-    <v-container style="max-width:min(100%,65em); padding:0px">
-      <v-tabs v-model="tab" background-color="transparent" center-active centered slider-color="white" height="55px">
-        <v-tab class="tab" style="font-weight: 600; font-size:15px; color:white; background-color: rgba(61, 61, 80, 0.15);">License</v-tab>
-        <v-tab class="tab" style="font-weight: 600; font-size:15px; color:white; background-color: rgba(61, 61, 80, 0.15);">Billing</v-tab>
-        <v-tab class="tab" style="font-weight: 600; font-size:15px; color:white; background-color: rgba(61, 61, 80, 0.15);">Profile</v-tab>
-      </v-tabs>
+    <v-tabs v-model="tab" background-color="rgba(61, 61, 80, 0.4)" center-active centered slider-color="white" height="55px">
+      <v-tab class="tab" style="font-weight: 600; font-size:15px; color:white">License</v-tab>
+      <v-tab class="tab" style="font-weight: 600; font-size:15px; color:white">Billing</v-tab>
+      <v-tab class="tab" style="font-weight: 600; font-size:15px; color:white">Profile</v-tab>
+    </v-tabs>
+    <v-container class="container" style="max-width:min(100%,65em); padding:0px; margin-top:50px">
       <License v-show="tab == 0" :account="account" class="section" style="background-color:rgba(61, 61, 80, 0.75); border-radius:5px; padding:20px; margin-bottom:20px"/>
       <Billing v-show="tab == 1" :account="account" class="section" style="background-color:rgba(61, 61, 80, 0.75); border-radius:5px; padding:20px; margin-bottom:20px"/>
       <Profile v-show="tab == 2" :account="account" class="section" style="background-color:rgba(61, 61, 80, 0.75); border-radius:5px; padding:20px; margin-bottom:20px"/>
@@ -25,6 +25,9 @@
   .section {
     border-radius: 0px !important;
     margin-bottom: 0px !important;
+  }
+  .container {
+    margin-top: 0px!important;
   }
 }
 </style>

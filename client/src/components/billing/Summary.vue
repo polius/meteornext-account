@@ -1,13 +1,14 @@
 <template>
   <div>
-    <div class="text-h6 font-weight-medium" style="letter-spacing:1px!important">BILLING</div>
-    <div class="body-1 font-weight-light" style="margin-top:15px">Here are your billing details.</div>
+    <div class="text-h6 font-weight-medium left" style="letter-spacing:1px!important; text-align:center">BILLING</div>
+    <v-divider style="margin-top:15px; margin-bottom:20px"></v-divider>
+    <div class="text-h6 font-weight-medium">Billing details</div>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Card</div>
-    <v-text-field :loading="account.billing === undefined" flat readonly solo v-model="card" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field :loading="account.billing === undefined" flat readonly solo v-model="card" class="no-edit" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Last four digits</div>
-    <v-text-field :loading="account.billing === undefined" flat readonly solo v-model="last4" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field :loading="account.billing === undefined" flat readonly solo v-model="last4" class="no-edit" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Expiration date</div>
-    <v-text-field :loading="account.billing === undefined" flat readonly solo v-model="expiration" style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field :loading="account.billing === undefined" flat readonly solo v-model="expiration" class="no-edit" style="padding-top:5px" hide-details></v-text-field>
     <v-btn :disabled="account.billing === undefined" :loading="loading" color="#2196f3" @click="submitPaymentMethodChange" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px; margin-right:10px">{{ card == '-' ? 'Add payment method' : 'Update payment method' }}</v-btn>
     <v-btn :disabled="account.billing === undefined || account.billing.details.card === undefined" :loading="loading" color="#f18805" @click="dialog = true" style="font-size:0.95rem; font-weight:400; text-transform:none; color:white; margin-top:20px">Remove payment method</v-btn>
     <v-dialog v-model="dialog" width="640px">
@@ -39,6 +40,14 @@
 </template>
 
 <style scoped>
+@media (max-width: 1040px) {
+  .left {
+    text-align:left !important;
+  }
+}
+div {
+  cursor:default !important;
+}
 ::v-deep .v-input--is-focused .v-input__control {
   border: 1px solid #2196f3 !important;
 }
@@ -47,6 +56,12 @@
 }
 ::v-deep .v-input__slot {
   background-color:rgba(61, 61, 80, 0.75) !important;
+}
+::v-deep .no-edit div div {
+  cursor:default !important;
+}
+::v-deep .no-edit div div input {
+  cursor:default !important;
 }
 </style>
 

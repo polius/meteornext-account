@@ -26,6 +26,12 @@
   </div>
 </template>
 
+<style scoped>
+div {
+  cursor:default !important;
+}
+</style>
+
 <script>
 import moment from 'moment'
 

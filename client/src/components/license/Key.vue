@@ -3,12 +3,13 @@
     <div class="text-h6 font-weight-medium">License key</div>
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:10px">Use the following credentials to register your copy of Meteor Next.</div>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Access Key</div>
-    <v-text-field :loading="account.license === undefined" flat @click="$event.target.select()" solo v-model="access_key" readonly style="padding-top:5px" hide-details></v-text-field>
+    <v-text-field :loading="account.license === undefined" flat @click="$event.target.select()" solo v-model="access_key" readonly class="no-edit" style="padding-top:5px" hide-details></v-text-field>
     <div class="text-body-2 font-weight-medium" style="margin-top:15px">Secret Key</div>
-    <v-text-field :loading="account.license === undefined" flat @focus="showSecretKey = true" @blur="showSecretKey = false" @click="$event.target.select()" solo v-model="secret_key" readonly :type="showSecretKey ? 'text' : 'password'" style="padding-top:5px" hide-details></v-text-field>
-    <div v-if="in_use != null" class="body-1" style="margin-top:15px"><v-icon :style="`font-size:16px; margin-right:10px; margin-bottom:3px; color:${in_use ? '#f18805' : '#20bf6b'}`">fas fa-circle</v-icon>{{ in_use ? 'License in use.' : 'License ready to be registered.' }}</div>
+    <v-text-field :loading="account.license === undefined" flat @focus="showSecretKey = true" @blur="showSecretKey = false" @click="$event.target.select()" solo v-model="secret_key" readonly :type="showSecretKey ? 'text' : 'password'" class="no-edit" style="padding-top:5px" hide-details></v-text-field>
+    <div v-if="in_use != null" class="body-1" style="margin-top:15px"><v-icon :style="`font-size:16px; margin-right:10px; margin-bottom:3px; color:${in_use ? '#f18805' : '#20bf6b'}`">fas fa-circle</v-icon>{{ in_use ? 'License registered.' : 'License ready to be registered.' }}</div>
     <div class="text-body-1 font-weight-light" style="margin-top:15px">A license key can be used only in one device. To be able to use it in another device, first you have to unregister it from the first one.</div>
-    <v-btn :disabled="!in_use" @click="dialog = true" color="info" title="Unregister your existing license to use it in another computer" style="font-size:0.95rem; letter-spacing:1px; font-weight:400; text-transform:none; color:white; margin-top:15px">Unregister license</v-btn>
+    <v-btn :disabled="in_use" @click="dialog = true" color="info" title="Unregister your existing license to use it in another computer" style="font-size:0.95rem; letter-spacing:1px; font-weight:400; text-transform:none; color:white; margin-top:15px; margin-right:10px">Unregister license</v-btn>
+    <v-btn text title="Go to the Meteor Next documentation" href="https://docs.meteornext.io/getting-started.html" target="_blank" style="font-size:0.95rem; letter-spacing:1px; font-weight:400; text-transform:none; color:white; margin-top:15px">Getting started</v-btn>
     <v-dialog v-model="dialog" width="640px">
       <v-card>
         <v-toolbar dense flat color="rgb(50, 50, 60)" style="border:solid rgba(255, 255, 255, 0.12) 1px">
@@ -38,6 +39,9 @@
 </template>
 
 <style scoped>
+div {
+  cursor:default !important;
+}
 ::v-deep .v-input--is-focused .v-input__control {
   border: 1px solid #2196f3 !important;
 }
@@ -46,6 +50,12 @@
 }
 ::v-deep .v-input__slot {
   background-color:rgba(61, 61, 80, 0.75) !important;
+}
+::v-deep .no-edit div div {
+  cursor:default !important;
+}
+::v-deep .no-edit div div input {
+  cursor:default !important;
 }
 </style>
 
