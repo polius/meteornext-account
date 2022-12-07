@@ -2,7 +2,7 @@
   <div style="height:100%">
     <v-main style="height:100%">
       <v-container grid-list-xl text-center style="height:100%; display:flex; justify-content:center; align-items:center;">
-        <v-layout row wrap align-center style="max-width:800px;">
+        <v-layout row wrap align-center :style="`max-width:${$route.path.endsWith('success') ? 800 : 600}px`">
           <v-flex>
             <v-slide-y-transition mode="out-in">
               <div>
