@@ -88,7 +88,8 @@ class Stripe:
         self._account.new_purchase(subscription_id, created_date, price, status, stripe_id, next_payment_attempt, invoice_url)
 
         # Update licence entry
-        self._account.change_license(account['id'], product_id, price_id, price)
+        price_excluding_tax = data['object']['total_excluding_tax'] / 100
+        self._account.change_license(account['id'], product_id, price_id, price_excluding_tax)
 
         # Send email
         email = account['email']
