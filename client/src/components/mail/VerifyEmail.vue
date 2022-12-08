@@ -16,8 +16,9 @@
                     <div class="headline white--text" style="font-size:1.3rem!important; margin-top:10px; margin-bottom:20px">ACCOUNT | Verify Email</div>
                     <v-divider></v-divider>
                     <div style="margin-top:20px; margin-bottom:10px">
-                      <v-icon size="40" color="#f0ad4e" style="margin-right:10px">fas fa-exclamation-triangle</v-icon>
-                      <p style="color:white; font-size:19px; margin-top:25px; margin-bottom:25px">This link has expired</p>
+                      <v-progress-circular v-show="valid" :size="40" color="primary" indeterminate></v-progress-circular>
+                      <v-icon v-show="!valid" size="34" color="orange" style="margin-right:10px">fas fa-exclamation-triangle</v-icon>
+                      <p v-show="!valid" style="color:white; font-size:19px; margin-top:20px">This link has expired</p>
                     </div>
                   </v-card-text>
                 </v-card>

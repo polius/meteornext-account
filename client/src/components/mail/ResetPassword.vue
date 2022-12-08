@@ -39,8 +39,8 @@
                         <v-btn block x-large :loading="loading" color="info" @click="submitPassword" style="margin-top:20px">RESET PASSWORD</v-btn>
                       </div>
                       <div v-else-if="valid != null && !valid" style="margin-top:20px; margin-bottom:10px">
-                        <v-icon size="40" color="#f0ad4e" style="margin-right:10px">fas fa-exclamation-triangle</v-icon>
-                        <p style="color:white; font-size:19px; margin-top:25px; margin-bottom:25px">This link has expired</p>
+                        <v-icon size="34" color="orange" style="margin-right:10px">fas fa-exclamation-triangle</v-icon>
+                        <p style="color:white; font-size:19px; margin-top:20px">This link has expired</p>
                       </div>
                     </div>
                   </v-card-text>
