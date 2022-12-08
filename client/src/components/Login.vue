@@ -26,8 +26,10 @@
                       </v-card>
                     </div>
                     <div v-else>
-                      <v-text-field ref="email" filled v-model="email" name="email" label="Email" type="email" :rules="[v => !!v || '']" required v-on:keyup.enter="login()" style="margin-bottom:20px" hide-details autofocus></v-text-field>
-                      <v-text-field ref="password" filled v-model="password" name="password" label="Password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="login()" hide-details></v-text-field>
+                      <div class="text-body-2 font-weight-medium" style="margin-top:15px; text-align:left; color:white">Email</div>
+                      <v-text-field ref="email" solo v-model="email" name="email" type="email" :rules="[v => !!v || '']" required v-on:keyup.enter="login()" style="padding-top:5px; margin-bottom:10px" hide-details autofocus></v-text-field>
+                      <div class="text-body-2 font-weight-medium" style="text-align:left; color:white">Password</div>
+                      <v-text-field ref="password" solo v-model="password" name="password" :rules="[v => !!v || '']" required type="password" v-on:keyup.enter="login()"  style="padding-top:5px" hide-details></v-text-field>
                       <p style="margin-top:8px; margin-bottom:8px; text-align:right; color:#e2e2e2"><span @click="resetPassword" class="link">Forgot password?</span></p>
                     </div>
                   </v-form>
@@ -54,8 +56,17 @@ div {
   cursor:default !important;
 }
 .link:hover {
-  color: #2196f3;
+  color: white;
   cursor: pointer;
+}
+::v-deep .v-input--is-focused .v-input__control {
+  border: 1px solid #2196f3 !important;
+}
+::v-deep .v-input__control {
+  border: 1px solid #b6b6b6 !important;
+}
+::v-deep .v-input__slot {
+  background-color:rgba(61, 61, 80, 0.75) !important;
 }
 </style>
 
