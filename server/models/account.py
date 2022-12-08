@@ -284,7 +284,8 @@ class Account:
             JOIN subscriptions s ON s.license_id = licenses.id AND s.stripe_id = %s
             SET
                 licenses.product_id = (SELECT id FROM products WHERE resources = 1),
-                licenses.price_id = NULL
+                licenses.price_id = NULL,
+                licenses.price = NULL
         """
         self._sql.execute(query, (stripe_subscription_id))
 
