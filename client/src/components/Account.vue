@@ -4,7 +4,9 @@
       <v-img src="https://meteornext.io/assets/logo.png" max-height="40" max-width="40" contain style="margin-bottom:2px"></v-img>
       <v-toolbar-title style="color:white; margin-left:10px; cursor:default">Meteor Next | Account</v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn @click="contact" class="d-none d-sm-flex" text style="color:white; height:45px"><v-icon size="18" style="margin-right:10px">fas fa-question</v-icon>Contact</v-btn>
       <v-btn @click="logout" class="d-none d-sm-flex" text style="color:white; height:45px"><v-icon size="20" style="margin-right:10px">fas fa-sign-out-alt</v-icon>Logout</v-btn>
+      <v-btn @click="contact" icon class="d-flex d-sm-none" title="Contact" style="color:white"><v-icon size="20">fas fa-question</v-icon></v-btn>
       <v-btn @click="logout" icon class="d-flex d-sm-none" title="Logout" style="color:white"><v-icon>fas fa-sign-out-alt</v-icon></v-btn>
     </v-toolbar>
     <v-tabs v-model="tab" background-color="rgba(61, 61, 80, 0.4)" center-active centered slider-color="white" height="55px">
@@ -17,6 +19,16 @@
       <Billing v-show="tab == 1" :account="account" class="section" style="background-color:rgba(61, 61, 80, 0.75); border-radius:5px; padding:20px; margin-bottom:20px"/>
       <Profile v-show="tab == 2" :account="account" class="section" style="background-color:rgba(61, 61, 80, 0.75); border-radius:5px; padding:20px; margin-bottom:20px"/>
     </v-container>
+    <v-footer padless>
+      <div style="margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:15px">
+        <a href="https://www.meteornext.io/terms-of-service" target="_blank" style="text-decoration:none; color:white; padding:15px">Terms of Service</a>
+        <span>|</span>
+        <a href="https://www.meteornext.io/privacy" target="_blank" style="text-decoration:none; color:white; padding:15px">Privacy</a>
+        <span>|</span>
+        <a href="https://www.meteornext.io/cookies" target="_blank" style="text-decoration:none; color:white; padding:15px">Cookies</a>
+      </div>
+      <div style="width:100%; color:white; text-align: center; font-size:14px; padding-bottom:15px">Copyright © {{ new Date().getFullYear() }} Meteor Next</div>
+    </v-footer>
   </div>
 </template>
 
@@ -79,6 +91,9 @@ export default {
           if ([401,422,503].includes(error.response.status)) this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
           else EventBus.$emit('send-notification', error.response.data.message !== undefined ? error.response.data.message : 'Internal Server Error', '#EF5354')
         })
+    },
+    contact() {
+      window.open("https://www.meteornext.io/contact", '_blank')
     },
     logout() {
       this.$store.dispatch('app/logout').then(() => this.$router.push('/login'))
