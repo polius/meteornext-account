@@ -20,9 +20,9 @@ class Profile:
         # Init blueprint
         profile_blueprint = Blueprint('profile', __name__, template_folder='profile')
 
-        @profile_blueprint.route('/profile/name', methods=['POST'])
+        @profile_blueprint.route('/profile', methods=['POST'])
         @jwt_required()
-        def profile_name_method():
+        def profile_method():
             # Get account
             account = self._account.get(get_jwt_identity())[0]
 
@@ -34,53 +34,66 @@ class Profile:
             data = request.get_json()
 
             # Check parameters
-            if 'name' not in data:
+            if 'name' not in data or 'email' not in data:
                 return jsonify({'message': 'Insufficient parameters'}), 400
             if len(data['name']) > 100:
                 return jsonify({'message': 'The name exceeds the maximum length allowed.'}), 400
-
-            # Change name
-            try:
-                self._account.change_name(account['id'], data['name'])
-                stripe.Customer.modify(account['stripe_id'], name=data['name'])
-                return jsonify({'message': 'Name successfully changed'}), 200
-            except Exception:
-                return jsonify({'message': 'An error occurred changing the name. Please try again later.'}), 400
-
-        @profile_blueprint.route('/profile/email', methods=['POST'])
-        @jwt_required()
-        def profile_email_method():
-            # Get account
-            account = self._account.get(get_jwt_identity())[0]
-
-            # Check disabled
-            if account['disabled']:
-                return jsonify({"message": "Account disabled"}), 401
-
-            # Get Request Json
-            data = request.get_json()
-
-            # Check parameters
-            if 'email' not in data:
-                return jsonify({'message': 'Insufficient parameters'}), 400
             if len(data['email']) > 100:
                 return jsonify({'message': 'The email exceeds the maximum length allowed.'}), 400
 
             # Check email
-            if account['email'] == data['email']:
-                return jsonify({'message': 'The new email can not be the same as the current one'}), 400
             account2 = self._account.get_by_email(data['email'])
-            if len(account2) > 0 and account2['id'] != account['id']:
-                return jsonify({'message': 'This mail is already registered'}), 400
+            if len(account2) > 0 and account2[0]['id'] != account['id']:
+                return jsonify({'message': 'This email is already registered.'}), 400
+
+            # Check vat number
+            company_name = None if data['company_name'].strip() == '' else data['company_name']
+            vat_number = None if data['vat_number'].strip() == '' else data['vat_number']
+            if not vat_number:
+                # Delete previous customer vat number
+                tax_ids = stripe.Customer.list_tax_ids(account['stripe_id'])['data']
+                for tax_id in tax_ids:
+                    stripe.Customer.delete_tax_id(account['stripe_id'], tax_id['id'])
+                self._account.remove_vat(account['id'])
+                # Update customer to apply taxes
+                stripe.Customer.modify(account['stripe_id'], tax_exempt='none')
+            elif not (vat_number == account['vat_number'] and account['vat_status'] == 'verified'):
+                # Delete previous customer vat number
+                tax_ids = stripe.Customer.list_tax_ids(account['stripe_id'])['data']
+                for tax_id in tax_ids:
+                    stripe.Customer.delete_tax_id(account['stripe_id'], tax_id['id'])
+                self._account.remove_vat(account['id'])
+                # Update customer to apply taxes
+                stripe.Customer.modify(account['stripe_id'], tax_exempt='none')
+                # Assign new vat number to customer
+                try:
+                    stripe.Customer.create_tax_id(account['stripe_id'], type="eu_vat", value=vat_number)
+                except Exception as e:
+                    return jsonify({'message': 'Invalid EU VAT number.'}), 400
+                else:
+                    self._account.add_vat(account['id'], vat_number)
+
+            # Change profile
+            self._account.change_profile(account['id'], data['name'], company_name)
+
+            # Change Stripe account name
+            if data['name'] != account['name']:
+                try:
+                    stripe.Customer.modify(account['stripe_id'], name=data['name'])
+                except Exception:
+                    return jsonify({'message': 'An error occurred changing the name. Please try again later.'}), 400
 
             # Send confirmation mail
-            try:
-                code = secrets.token_urlsafe(64)
-                self._account.create_mail(account['id'], 'verify_email', code, data['email'])
-                self._mail.send_verify_email(data['email'], code)
-                return jsonify({'message': 'Please verify your email address'}), 200
-            except Exception:
-                return jsonify({'message': 'An error occurred sending the verification mail. Please try again later.'}), 400
+            if data['email'] != account['email']:
+                try:
+                    code = secrets.token_urlsafe(64)
+                    self._account.create_mail(account['id'], 'verify_email', code, data['email'])
+                    self._mail.send_verify_email(data['email'], code)
+                except Exception:
+                    return jsonify({'message': 'An error occurred sending the verification mail. Please try again later.'}), 400
+
+            # Send confirmation message
+            return jsonify({'message': 'Profile saved.'}), 200
 
         @profile_blueprint.route('/profile/password', methods=['POST'])
         @jwt_required()

@@ -2,6 +2,7 @@ CREATE TABLE `accounts` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
+  `company_name` VARCHAR(255) NULL,
   `password` VARCHAR(255) NOT NULL,
   `stripe_id` VARCHAR(255) NULL COMMENT 'customer_id',
   `last_login` DATETIME NULL,
@@ -15,6 +16,15 @@ CREATE TABLE `accounts` (
   INDEX `last_login` (`last_login`),
   INDEX `created_date` (`created_date`),
   INDEX `deleted_date` (`deleted_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+
+CREATE TABLE `accounts_vat` (
+  `account_id` INT UNSIGNED NOT NULL,
+  `vat_number` VARCHAR(255) NOT NULL,
+  `status` VARCHAR(255) NOT NULL DEFAULT 'pending',
+  `verified_address` VARCHAR(255) NULL,
+  `verified_name` VARCHAR(255) NULL,
+  PRIMARY KEY (`account_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `mail` (

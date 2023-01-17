@@ -19,16 +19,6 @@
       <Billing v-show="tab == 1" :account="account" class="section" style="background-color:rgba(61, 61, 80, 0.75); border-radius:5px; padding:20px; margin-bottom:20px"/>
       <Profile v-show="tab == 2" :account="account" class="section" style="background-color:rgba(61, 61, 80, 0.75); border-radius:5px; padding:20px; margin-bottom:20px"/>
     </v-container>
-    <v-footer padless>
-      <div style="margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:15px">
-        <a href="https://www.meteornext.io/terms-of-service" target="_blank" style="text-decoration:none; color:white; padding:15px">Terms of Service</a>
-        <span>|</span>
-        <a href="https://www.meteornext.io/privacy" target="_blank" style="text-decoration:none; color:white; padding:15px">Privacy</a>
-        <span>|</span>
-        <a href="https://www.meteornext.io/cookies" target="_blank" style="text-decoration:none; color:white; padding:15px">Cookies</a>
-      </div>
-      <div style="width:100%; color:white; text-align: center; font-size:14px; padding-bottom:15px">Copyright © {{ new Date().getFullYear() }} Meteor Next</div>
-    </v-footer>
   </div>
 </template>
 

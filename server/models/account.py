@@ -10,6 +10,11 @@ class Account:
                 a.id,
                 a.name,
                 a.email,
+                a.company_name,
+                av.vat_number,
+                av.status AS 'vat_status',
+                av.verified_address AS 'vat_verified_address',
+                av.verified_name AS 'vat_verified_name',
                 a.password,
                 m.account_id IS NULL AS 'verified',
                 a.disabled,
@@ -21,6 +26,7 @@ class Account:
                 END AS 'mfa'
             FROM accounts a
             LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id
+            LEFT JOIN accounts_vat av ON av.account_id = a.id
             LEFT JOIN mail m ON m.account_id = a.id AND m.action = 'verify_email'
             WHERE a.id = %s
         """
@@ -32,6 +38,11 @@ class Account:
                 a.id,
                 a.name,
                 a.email,
+                a.company_name,
+                av.vat_number,
+                av.status AS 'vat_status',
+                av.verified_address AS 'vat_verified_address',
+                av.verified_name AS 'vat_verified_name',
                 a.password,
                 m.account_id IS NULL AS 'verified',
                 a.disabled,
@@ -43,6 +54,7 @@ class Account:
                 END AS 'mfa'
             FROM accounts a
             LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id
+            LEFT JOIN accounts_vat av ON av.account_id = a.id
             LEFT JOIN mail m ON m.account_id = a.id AND m.action = 'verify_email'
             WHERE a.email = %s
             AND a.deleted_date IS NULL;
@@ -55,6 +67,11 @@ class Account:
                 a.id,
                 a.name,
                 a.email,
+                a.company_name,
+                av.vat_number,
+                av.status AS 'vat_status',
+                av.verified_address AS 'vat_verified_address',
+                av.verified_name AS 'vat_verified_name',
                 a.password,
                 m.account_id IS NULL AS 'verified',
                 a.disabled,
@@ -66,6 +83,7 @@ class Account:
                 END AS 'mfa'
             FROM accounts a
             LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id
+            LEFT JOIN accounts_vat av ON av.account_id = a.id
             LEFT JOIN mail m ON m.account_id = a.id AND m.action = 'verify_email'
             WHERE a.stripe_id = %s
         """
@@ -76,7 +94,11 @@ class Account:
             SELECT
                 a.name,
                 a.email,
-                a.created_date,
+                a.company_name,
+                av.vat_number,
+                av.status AS 'vat_status',
+                av.verified_address AS 'vat_verified_address',
+                av.verified_name AS 'vat_verified_name',
                 CASE
                     WHEN mfa.2fa_hash IS NOT NULL THEN '2fa'
                     WHEN mfa.webauthn_pub_key IS NOT NULL THEN 'webauthn'
@@ -84,6 +106,7 @@ class Account:
                 END AS 'mfa'
             FROM accounts a
             LEFT JOIN accounts_mfa mfa ON mfa.account_id = a.id
+            LEFT JOIN accounts_vat av ON av.account_id = a.id
             WHERE id = %s
         """
         return self._sql.execute(query, (account_id))
@@ -163,13 +186,15 @@ class Account:
     ###########
     # PROFILE #
     ###########
-    def change_name(self, account_id, name):
+    def change_profile(self, account_id, name, company_name):
         query = """
             UPDATE accounts
-            SET name = %s
+            SET
+                `name` = %s,
+                `company_name` = %s
             WHERE id = %s
         """
-        self._sql.execute(query, (name, account_id))
+        self._sql.execute(query, (name, company_name, account_id))
 
     def change_email(self, account_id, email):
         query = """
@@ -242,6 +267,32 @@ class Account:
             WHERE id = %s
         """
         self._sql.execute(query, (data['stripe_id'], data['account_id']))
+
+    def add_vat(self, account_id, vat_number):
+        query = """
+            INSERT INTO `accounts_vat` (`account_id`, `vat_number`)
+            VALUES (%s, %s)
+        """
+        self._sql.execute(query, (account_id, vat_number))
+
+    def update_vat(self, data):
+        query = """
+            UPDATE `accounts_vat`
+            SET
+                `status` = %s,
+                `verified_address` = %s,
+                `verified_name` = %s
+            WHERE `account_id` = %s
+            AND `vat_number` = %s
+        """
+        self._sql.execute(query, (data['status'], data['verified_address'], data['verified_name'], data['account_id'], data['vat_number']))
+
+    def remove_vat(self, account_id):
+        query = """
+            DELETE FROM accounts_vat
+            WHERE account_id = %s
+        """
+        self._sql.execute(query, (account_id))
 
     ###########
     # LICENSE #

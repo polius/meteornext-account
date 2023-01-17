@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-h6 font-weight-medium">Password</div>
+    <div class="text-h6 font-weight-medium">Change password</div>
     <div class="body-1 font-weight-light" style="margin-top:15px; margin-bottom:15px">The new password has to meet the following requirements: Minimum 8 characters, at least one letter and at least one number.</div>
     <v-form @submit.prevent>
       <div class="text-body-2 font-weight-medium" style="margin-top:15px">Current password</div>

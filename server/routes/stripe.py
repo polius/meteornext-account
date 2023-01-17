@@ -40,6 +40,8 @@ class Stripe:
                 self.customer_source_expiring(event['data'])
             elif event['type'] == 'payment_method.attached':
                 self.payment_method_attached(event['data'])
+            elif event['type'] == 'customer.tax_id.updated':
+                self.customer_tax_id_updated(event['data'])
 
             return jsonify({'status': 'success'})
 
@@ -143,3 +145,18 @@ class Stripe:
         # Expire mail codes
         account = self._account.get_by_customer(data['object']['customer'])[0]
         self._account.clean_mail(account['id'], 'update_payment')
+
+    def customer_tax_id_updated(self, data):
+        # Update customer vat validation data
+        account = self._account.get_by_customer(data['object']['customer'])[0]
+        vat_data = {
+            "account_id": account['id'],
+            "vat_number": data['object']['value'],
+            "status": data['object']['verification']['status'],
+            "verified_address": data['object']['verification']['verified_address'],
+            "verified_name": data['object']['verification']['verified_name']
+        }
+        self._account.update_vat(vat_data)
+
+        # Update customer to reverse tax
+        stripe.Customer.modify(data['object']['customer'], tax_exempt='reverse')

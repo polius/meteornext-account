@@ -3,6 +3,16 @@
     <v-main>
       <router-view/>
     </v-main>
+    <v-footer padless>
+      <div style="margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:15px">
+        <a href="https://www.meteornext.io/terms-of-service" target="_blank" style="text-decoration:none; color:white; padding:15px">Terms of Service</a>
+        <span>|</span>
+        <a href="https://www.meteornext.io/privacy" target="_blank" style="text-decoration:none; color:white; padding:15px">Privacy</a>
+        <span>|</span>
+        <a href="https://www.meteornext.io/cookies" target="_blank" style="text-decoration:none; color:white; padding:15px">Cookies</a>
+      </div>
+      <div style="width:100%; color:white; text-align: center; font-size:14px; padding-bottom:15px">Copyright © {{ new Date().getFullYear() }} Meteor Next</div>
+    </v-footer>
     <v-snackbar v-model="snackbar" :multi-line="false" :timeout="snackbarTimeout" :color="snackbarColor" top style="padding-top:0px;">
       {{ snackbarText }}
       <template v-slot:action="{ attrs }">
