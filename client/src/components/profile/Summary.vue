@@ -2,17 +2,14 @@
     <div>
       <v-form ref="summaryForm" @submit.prevent>
         <div class="text-body-2 font-weight-medium" style="margin-top:15px">Name</div>
-        <div class="font-weight-light" style="font-size:15px; margin-top:5px">We will use this name for when we send you emails. Should be the customer's full name.</div>
+        <div class="font-weight-light" style="font-size:15px; margin-top:5px">We will use this name for when we send you emails. Should be the customer's full name or the company name.</div>
         <v-text-field flat v-model="item.name" solo :rules="[v => !!v || '']" style="padding-top:5px" hide-details required></v-text-field>
         <div class="text-body-2 font-weight-medium" style="margin-top:15px">Email</div>
         <div class="font-weight-light" style="font-size:15px; margin-top:5px">We will email you a confirmation when changing your email, so please expect that email after submitting.</div>
         <v-text-field flat v-model="item.email" :readonly="loading" solo :rules="emailRules" style="padding-top:5px" hide-details></v-text-field>
-        <div class="text-body-2 font-weight-medium" style="margin-top:15px">Company name <span class="font-weight-light">(optional)</span></div>
-        <div class="font-weight-light" style="font-size:15px; margin-top:5px">This field is mandatory if you want to enter the EU VAT number.</div>
-        <v-text-field flat v-model="item.company_name" :readonly="loading" solo style="padding-top:5px" hide-details></v-text-field>
         <div class="text-body-2 font-weight-medium" style="margin-top:15px">EU VAT number <span class="font-weight-light">(optional)</span></div>
         <div class="font-weight-light" style="font-size:15px; margin-top:5px">Enter the EU VAT number of your company. Applicable for European companies. <a href="https://www.meteornext.io/vat-number" target="_blank" style="color:rgb(63, 165, 251); text-decoration:none; font-weight:400;">More information</a></div>
-        <v-text-field flat v-model="item.vat_number" :readonly="loading" solo placeholder="e.g. EU123456789" :rules="[v => !v || item.company_name && !!v || '']" style="padding-top:5px" hide-details>
+        <v-text-field flat v-model="item.vat_number" :readonly="loading" solo placeholder="e.g. EU123456789" style="padding-top:5px" hide-details>
           <v-tooltip v-if="vat.status == 'pending'" top slot="append">
             <template v-slot:activator="{ on, attrs }">
               <v-icon size="20" color="orange" v-bind="attrs" v-on="on" style="cursor:default">fas fa-spinner</v-icon>
@@ -72,7 +69,7 @@
   export default {
     data: () => ({
       loading: true,
-      item: { name: '', email: '', company_name: '', vat_number: '' },
+      item: { name: '', email: '', vat_number: '' },
       vat: { status: '', verified_address: '', verified_name: '' },
       emailRules: [
         v => !!v || 'E-mail is required',
@@ -87,7 +84,6 @@
         this.item = {
           name: data.profile.name,
           email: data.profile.email,
-          company_name: data.profile.company_name ? data.profile.company_name : '',
           vat_number: data.profile.vat_number ? data.profile.vat_number : '',
         }
         this.vat = {

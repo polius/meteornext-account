@@ -2,7 +2,6 @@ CREATE TABLE `accounts` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `company_name` VARCHAR(255) NULL,
   `password` VARCHAR(255) NOT NULL,
   `stripe_id` VARCHAR(255) NULL COMMENT 'customer_id',
   `last_login` DATETIME NULL,

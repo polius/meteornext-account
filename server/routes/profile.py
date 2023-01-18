@@ -34,11 +34,11 @@ class Profile:
             data = request.get_json()
 
             # Check parameters
-            if 'name' not in data or 'email' not in data:
+            if 'name' not in data or 'email' not in data or len(data['name'].strip()) == 0 or len(data['email'].strip()) == 0:
                 return jsonify({'message': 'Insufficient parameters'}), 400
-            if len(data['name']) > 100:
+            if len(data['name'].strip()) > 100:
                 return jsonify({'message': 'The name exceeds the maximum length allowed.'}), 400
-            if len(data['email']) > 100:
+            if len(data['email'].strip()) > 100:
                 return jsonify({'message': 'The email exceeds the maximum length allowed.'}), 400
 
             # Check email
@@ -47,7 +47,6 @@ class Profile:
                 return jsonify({'message': 'This email is already registered.'}), 400
 
             # Check vat number
-            company_name = None if data['company_name'].strip() == '' else data['company_name']
             vat_number = None if data['vat_number'].strip() == '' else data['vat_number']
             if not vat_number:
                 # Delete previous customer vat number
@@ -73,8 +72,8 @@ class Profile:
                 else:
                     self._account.add_vat(account['id'], vat_number)
 
-            # Change profile
-            self._account.change_profile(account['id'], data['name'], company_name)
+            # Change name
+            self._account.change_name(account['id'], data['name'])
 
             # Change Stripe account name
             if data['name'] != account['name']:

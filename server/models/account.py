@@ -10,7 +10,6 @@ class Account:
                 a.id,
                 a.name,
                 a.email,
-                a.company_name,
                 av.vat_number,
                 av.status AS 'vat_status',
                 av.verified_address AS 'vat_verified_address',
@@ -38,7 +37,6 @@ class Account:
                 a.id,
                 a.name,
                 a.email,
-                a.company_name,
                 av.vat_number,
                 av.status AS 'vat_status',
                 av.verified_address AS 'vat_verified_address',
@@ -67,7 +65,6 @@ class Account:
                 a.id,
                 a.name,
                 a.email,
-                a.company_name,
                 av.vat_number,
                 av.status AS 'vat_status',
                 av.verified_address AS 'vat_verified_address',
@@ -94,7 +91,6 @@ class Account:
             SELECT
                 a.name,
                 a.email,
-                a.company_name,
                 av.vat_number,
                 av.status AS 'vat_status',
                 av.verified_address AS 'vat_verified_address',
@@ -186,15 +182,13 @@ class Account:
     ###########
     # PROFILE #
     ###########
-    def change_profile(self, account_id, name, company_name):
+    def change_name(self, account_id, name):
         query = """
             UPDATE accounts
-            SET
-                `name` = %s,
-                `company_name` = %s
+            SET `name` = %s
             WHERE id = %s
         """
-        self._sql.execute(query, (name, company_name, account_id))
+        self._sql.execute(query, (name, account_id))
 
     def change_email(self, account_id, email):
         query = """
