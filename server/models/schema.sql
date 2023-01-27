@@ -15,7 +15,7 @@ CREATE TABLE `accounts` (
   INDEX `last_login` (`last_login`),
   INDEX `created_date` (`created_date`),
   INDEX `deleted_date` (`deleted_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `accounts_vat` (
   `account_id` INT UNSIGNED NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE `accounts_vat` (
   `verified_address` VARCHAR(255) NULL,
   `verified_name` VARCHAR(255) NULL,
   PRIMARY KEY (`account_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `mail` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -36,7 +36,7 @@ CREATE TABLE `mail` (
   PRIMARY KEY (`id`),
   UNIQUE `account_id__action` (`account_id`, `action`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `accounts_mfa` (
   `account_id` INT UNSIGNED NOT NULL,
@@ -48,14 +48,14 @@ CREATE TABLE `accounts_mfa` (
   `created_date` DATETIME NOT NULL,
   PRIMARY KEY (`account_id`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `accounts_sentry` (
   `account_id` INT UNSIGNED NOT NULL,
   `sentry_enabled` TINYINT(1) UNSIGNED NOT NULL,
   PRIMARY KEY (`account_id`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `products` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -66,7 +66,7 @@ CREATE TABLE `products` (
   UNIQUE `name` (`name`),
   UNIQUE `resources` (`resources`),
   UNIQUE `stripe_id` (`stripe_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `prices` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -79,7 +79,7 @@ CREATE TABLE `prices` (
   INDEX `product_id` (`product_id`),
   INDEX `is_default` (`is_default`),
   FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `licenses` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -101,8 +101,8 @@ CREATE TABLE `licenses` (
   INDEX `in_use` (`in_use`),
   FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`price_id`) REFERENCES `prices` (`id`) ON DELETE CASCADE,
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+  FOREIGN KEY (`price_id`) REFERENCES `prices` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `subscriptions` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -123,7 +123,7 @@ CREATE TABLE `subscriptions` (
   FOREIGN KEY (`license_id`) REFERENCES `licenses` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`price_id`) REFERENCES `prices` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE `invoices` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -138,4 +138,4 @@ CREATE TABLE `invoices` (
   INDEX `subscription_id` (`subscription_id`),
   UNIQUE `stripe_id` (`stripe_id`),
   FOREIGN KEY (`subscription_id`) REFERENCES `subscriptions` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;

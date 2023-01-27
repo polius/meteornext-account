@@ -1,6 +1,9 @@
 # Create the container from the alpine nginx image
 FROM nginx:alpine
 
+# Define variable
+ARG production
+
 # Copy the web client application into nginx
 COPY dist/client.tar.gz /usr/share/nginx/html/
 
@@ -44,7 +47,8 @@ RUN apk update && \
     chmod 750 /root && \
     chmod +x /root/start.sh && \
     find /usr/share/nginx/html -type d -print0 | xargs -0 chmod 755 && \
-    find /usr/share/nginx/html -type f -print0 | xargs -0 chmod 644
+    find /usr/share/nginx/html -type f -print0 | xargs -0 chmod 644 && \
+    if [ $production = '1' ]; then rm -rf /root/server.conf; fi
 
 # Start nginx and keep the process from backgrounding and the container from quitting
 CMD ["/root/start.sh"]

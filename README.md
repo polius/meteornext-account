@@ -65,3 +65,9 @@ reboot
 ```
 docker builder prune
 ```
+
+### Connect to the ECS Task
+
+```
+aws ecs execute-command --cluster meteornext --task task_id --container meteornext-account --interactive --command "/bin/sh"
+```

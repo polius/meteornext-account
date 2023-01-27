@@ -21,10 +21,10 @@
                     <div v-else-if="$route.params.id !== undefined && $route.params.id == 'success'" style="margin-top:20px">
                       <p style="color:white; font-size:19px; margin-top:30px; margin-bottom:30px"><v-icon size="22" color="#20bf6b" style="margin-right:10px; padding-bottom:3px">fas fa-check-circle</v-icon>License successfully changed</p>
                       <div class="text-body-1" style="color:#f6f6f6; margin-top:15px; margin-bottom:15px"><v-icon size="20" color="orange" style="margin-right:10px; padding-bottom:4px">fas fa-star</v-icon>Don't forget to <span style="color:white; font-weight: 500">REFRESH</span> the license in your app to update the number of resources.</div>
-                      <v-img @click="overlay = !overlay" src="https://docs.meteornext.io/assets/admin-settings-license.4343a336.png" style="margin-bottom:10px; border-radius:5px"></v-img>
+                      <v-img @click="overlay = !overlay" src="https://docs.meteornext.io/assets/admin-settings-license-4343a336.png" style="margin-bottom:10px; border-radius:5px"></v-img>
                       <v-overlay :value="overlay" style="width:100%; padding:12px">
                         <v-btn large @click="overlay = false" style="margin-bottom:20px"><v-icon style="margin-right:10px; font-size:15px; padding-bottom:1px">fas fa-times</v-icon>Close</v-btn>
-                        <v-img src="https://docs.meteornext.io/assets/admin-settings-license.4343a336.png" style="border-radius:5px; max-width:1500px; margin:auto"></v-img>
+                        <v-img src="https://docs.meteornext.io/assets/admin-settings-license-4343a336.png" style="border-radius:5px; max-width:1500px; margin:auto"></v-img>
                       </v-overlay>
                       <v-btn @click="goBack" color="info" style="margin-top:10px">Go To Account</v-btn>
                     </div>
@@ -39,7 +39,7 @@
                           <span style="font-size:20px">{{ license.priceInteger == 0 ? '' : license.priceDecimal }}</span>
                           <span v-if="license.priceInteger != 0" class="text-h6 font-weight-light" style="color:#e2e2e2; font-size:20px!important; margin-left:5px">/ Month</span>
                         </p>
-                        <div class="text-body-1 font-weight-regular" style="color:white">Enter the amount of servers</div>
+                        <div class="text-body-1 font-weight-regular" style="color:white; font-size:1.05rem!important">Enter the amount of servers</div>
                         <v-text-field :readonly="resourcesText == 'Unlimited'" @keypress="isNumber($event)" @input="calculatePrice" solo v-model="resourcesText" class="centered-input" style="width:120px; margin-left:auto; margin-right:auto; margin-top:15px; margin-bottom:6px" hide-details></v-text-field>
                         <v-slider @input="calculatePrice" :readonly="loading" v-model="resourcesSlider" min="1" max="500" style="margin-left:50px; margin-right:50px" hide-details></v-slider>
                         <div v-if="resourcesText != 'Unlimited'" class="text-body-1 font-weight-regular" style="color:#e2e2e2">{{ `Avg. ${license.priceAverage}€ per server` }}</div>
@@ -207,21 +207,25 @@ export default {
           this.resourcesSlider = resources
         },0)
       }
-      else if (resources > 1) {
+      else if (resources < 5) {
+        this.license.priceInteger = 50
+        this.license.priceDecimal = '.00'
+        this.license.priceAverage = '10.00'
+      }
+      else if (resources >= 5) {
         // Calculate Servers Count
         if (resources > max_servers) resources = max_servers
 
         // Calculate Servers Pricing
         let price_x_server = max_price_x_server
-        if (resources < 5) price_x_server = max_price_x_server
-        else if (resources > 5) price_x_server = max_price_x_server - (((max_price_x_server - max_price_reduction) / max_servers) * resources)
-        const new_price = (resources < 5) ? 5 * max_price_x_server : price_x_server * resources
+        if (resources > 10) price_x_server = max_price_x_server - (((max_price_x_server - max_price_reduction) / max_servers) * resources)
+        const new_price = price_x_server * resources
 
         // Assign components values
         this.license.priceInteger = Math.trunc(new_price)
         this.license.priceDecimal = ('.' + Math.trunc((new_price - Math.trunc(new_price)) * 100) + '0').substring(0,3)
         this.license.priceAverage = parseFloat(price_x_server).toFixed(2)
-        
+
         // Modify UI resources
         setTimeout(() => {
           this.resourcesText = resources

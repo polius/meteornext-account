@@ -139,10 +139,10 @@ class Account:
         """
         account_id = self._sql.execute(query, (data['name'], data['email'], data['password'], data['ip'], now))
 
-        # Enable sentry
+        # Disable sentry
         query = """
             INSERT INTO accounts_sentry (account_id, sentry_enabled)
-            VALUES (%s, 1)
+            VALUES (%s, 0)
         """
         self._sql.execute(query, (account_id))
 
