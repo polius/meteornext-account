@@ -25,5 +25,4 @@ pnpm-debug.log*
 
 # Python files
 __pycache__
-server/server.conf
 *.pyc
